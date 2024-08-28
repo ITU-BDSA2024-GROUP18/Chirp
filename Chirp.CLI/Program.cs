@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 
+string timeFormat = "MM/dd/yy HH:mm:ss";
+
 if (args.Length < 1) 
 {  
     Console.WriteLine("How to use the program: \n" + 
@@ -10,6 +12,14 @@ if (args.Length < 1)
 if (args[0] == "read")
 {
     Read();
+} 
+else if (args[0]  == "cheep")
+{
+    if (args.Length < 2)
+    {
+        Console.WriteLine("You are missing a message to cheep :(");
+    }
+    Cheep(args[1]);
 }
 
 void Read()
@@ -30,12 +40,35 @@ void Read()
 
         Console.WriteLine(cheep);
     }
+}
 
-    string FromUnixTimeToDateTime(string timestamp)
+void Cheep(string message)
+{
+    string author = Environment.UserName;
+    long timestamp = FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture));
+
+    string chirp = $"{author},\"{message}\",{timestamp}";
+
+    using StreamWriter sw = File.AppendText("chirp_cli_db.csv");
+    sw.WriteLine(chirp);
+}
+
+string FromUnixTimeToDateTime(string timestamp)
+{
+    int timestampConverted = int.Parse(timestamp);
+    DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestampConverted);
+    string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
+    return correctFormatTimestamp;
+}
+
+long FromDateTimeToUnix(string dateTimeStamp)
+{
+
+    //checks if it can parse this exact format to a unix timestamp, if so returns a DateTime object that is then converted to unix timestamp
+    if (DateTime.TryParseExact(dateTimeStamp, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedTime))
     {
-        int timestampConverted = int.Parse(timestamp);
-        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestampConverted);
-        string correctFormatTimestamp = dto.ToLocalTime().ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture);
-        return correctFormatTimestamp;
+        long timestamp = new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
+        return timestamp;
     }
+    return -1;
 }
