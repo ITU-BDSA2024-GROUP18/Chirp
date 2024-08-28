@@ -63,8 +63,9 @@ string FromUnixTimeToDateTime(string timestamp)
 
 long FromDateTimeToUnix(string dateTimeStamp)
 {
-
-    //checks if it can parse this exact format to a unix timestamp, if so returns a DateTime object that is then converted to unix timestamp
+    // tries to parse the provided date&time string into a DateTime object
+    // using the specified format, invariant culture, and no additional styles
+    // If the parsing is successful, parsedTime will contain the converted DateTime
     if (DateTime.TryParseExact(dateTimeStamp, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedTime))
     {
         long timestamp = new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
