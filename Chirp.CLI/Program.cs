@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using CsvHelper;
+using SimpleDB;
 
 string timeFormat = "MM/dd/yy HH:mm:ss";
 
@@ -22,41 +24,38 @@ else if (args[0]  == "cheep")
     Cheep(args[1]);
 }
 
+
+
 void Read()
 {
-    string[] lines = File.ReadAllLines("chirp_cli_db.csv");
-
-    for (int i = 1; i < lines.Length; i++)
+    using (var reader = new StreamReader("chirp_cli_db.csv"))
+    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     {
-        string[] cheepData = lines[i].Split('"');
-
-        string author = cheepData[0].TrimEnd(',');
-        string message = cheepData[1];
-        string timestamp = cheepData[2].TrimStart(',');
-
-        string dateTime = FromUnixTimeToDateTime(timestamp);
-
-        string cheep = $"{author} @ {dateTime} : {message}";
-
-        Console.WriteLine(cheep);
+        csv.GetRecords<Cheep>();     
+        //For printing to terminal:
+        foreach (var record in csv.GetRecords<Cheep>())
+                {
+                    Console.WriteLine($"{record.Author} @ {FromUnixTimeToDateTime(record.Timestamp)} : {record.Message}");
+                }  
     }
 }
 
+
 void Cheep(string message)
 {
-    string author = Environment.UserName;
-    long timestamp = FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture));
+    using (var writer = new StreamWriter("chirp_cli_db.csv"))
+    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    {
+        Cheep cheep = new Cheep(Environment.UserName, message, 
+                      FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture)));
 
-    string chirp = $"{author},\"{message}\",{timestamp}";
-
-    using StreamWriter sw = File.AppendText("chirp_cli_db.csv");
-    sw.WriteLine(chirp);
+        csv.WriteRecord(cheep);
+    }
 }
 
-string FromUnixTimeToDateTime(string timestamp)
+string FromUnixTimeToDateTime(long timestamp)
 {
-    int timestampConverted = int.Parse(timestamp);
-    DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestampConverted);
+    DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
     string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
     return correctFormatTimestamp;
 }
@@ -66,3 +65,5 @@ long FromDateTimeToUnix(string dateTimeStamp)
     DateTime parsedTime = DateTime.Parse(dateTimeStamp, CultureInfo.InvariantCulture);
     return new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
 }
+
+public record Cheep(string Author, string Message, long Timestamp);
