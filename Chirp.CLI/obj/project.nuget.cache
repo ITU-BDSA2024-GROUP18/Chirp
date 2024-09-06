@@ -1,14 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "5nVamQF7Aq4HKIWaEQPz0vKbNvoRrcmCdtSqUfQA+IUaiUGHjrc/tzEifmRZAT4e+ANrW2XW1lBZxGACbEi9tQ==",
+  "dgSpecHash": "p0CmpWA51vj78aqM+7cjkQ1B/eARMvGqxmlXbqljgaHmOi2086lI6xt/yq4Z5KenLcYkb4Hy9Q0FGRZ4izowTg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ander\\OneDrive\\Skrivebord\\ITU\\BDSA2024\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
+  "projectFilePath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\ander\\.nuget\\packages\\csvhelper\\33.0.1\\csvhelper.33.0.1.nupkg.sha512",
-    "C:\\Users\\ander\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.16\\microsoft.aspnetcore.app.ref.7.0.16.nupkg.sha512",
-    "C:\\Users\\ander\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.16\\microsoft.netcore.app.host.win-x64.7.0.16.nupkg.sha512",
-    "C:\\Users\\ander\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.16\\microsoft.netcore.app.ref.7.0.16.nupkg.sha512",
-    "C:\\Users\\ander\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.16\\microsoft.windowsdesktop.app.ref.7.0.16.nupkg.sha512"
+    "C:\\Users\\asger\\.nuget\\packages\\csvhelper\\33.0.1\\csvhelper.33.0.1.nupkg.sha512"
   ],
   "logs": []
 }

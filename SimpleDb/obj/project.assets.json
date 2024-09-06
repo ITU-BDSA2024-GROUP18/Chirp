@@ -1,56 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {
-      "CsvHelper/33.0.1": {
-        "type": "package",
-        "compile": {
-          "lib/net7.0/CsvHelper.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net7.0/CsvHelper.dll": {
-            "related": ".xml"
-          }
-        }
-      }
-    }
+    "net7.0": {}
   },
-  "libraries": {
-    "CsvHelper/33.0.1": {
-      "sha512": "fev4lynklAU2A9GVMLtwarkwaanjSYB4wUqO2nOJX5hnzObORzUqVLe+bDYCUyIIRQM4o5Bsq3CcyJR89iMmEQ==",
-      "type": "package",
-      "path": "csvhelper/33.0.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "csvhelper.33.0.1.nupkg.sha512",
-        "csvhelper.nuspec",
-        "lib/net462/CsvHelper.dll",
-        "lib/net462/CsvHelper.xml",
-        "lib/net47/CsvHelper.dll",
-        "lib/net47/CsvHelper.xml",
-        "lib/net48/CsvHelper.dll",
-        "lib/net48/CsvHelper.xml",
-        "lib/net6.0/CsvHelper.dll",
-        "lib/net6.0/CsvHelper.xml",
-        "lib/net7.0/CsvHelper.dll",
-        "lib/net7.0/CsvHelper.xml",
-        "lib/net8.0/CsvHelper.dll",
-        "lib/net8.0/CsvHelper.xml",
-        "lib/netstandard2.0/CsvHelper.dll",
-        "lib/netstandard2.0/CsvHelper.xml",
-        "lib/netstandard2.1/CsvHelper.dll",
-        "lib/netstandard2.1/CsvHelper.xml"
-      ]
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net7.0": [
-      "CsvHelper >= 33.0.1"
-    ]
+    "net7.0": []
   },
   "packageFolders": {
     "C:\\Users\\asger\\.nuget\\packages\\": {},
@@ -59,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
-      "projectName": "Chirp.CLI",
-      "projectPath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\Chirp.CLI\\Chirp.CLI.csproj",
+      "projectUniqueName": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\SimpleDb\\SimpleDb.csproj",
+      "projectName": "SimpleDb",
+      "projectPath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\SimpleDb\\SimpleDb.csproj",
       "packagesPath": "C:\\Users\\asger\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\Chirp.CLI\\obj\\",
+      "outputPath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\SimpleDb\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -96,12 +51,6 @@
     "frameworks": {
       "net7.0": {
         "targetAlias": "net7.0",
-        "dependencies": {
-          "CsvHelper": {
-            "target": "Package",
-            "version": "[33.0.1, )"
-          }
-        },
         "imports": [
           "net461",
           "net462",
