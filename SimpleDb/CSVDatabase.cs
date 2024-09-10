@@ -12,12 +12,11 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         using (var reader = new StreamReader(csvPath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-            return csv.GetRecords<T>();
-            //For printing to terminal:
-            /*foreach (var record in csv.GetRecords<Cheep>())
-                    {
-                        Console.WriteLine($"{record.Author} @ {FromUnixTimeToDateTime(record.Timestamp)} : {record.Message}");
-                    }  */
+
+            //if this was not converted to a list, the IEnumerable would sort of "disappear
+            //because the function only uses CsvReader until it returns. Needs more explanation
+            return csv.GetRecords<T>().ToList();
+           
         }
     }
 
@@ -27,10 +26,8 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            /*Cheep cheep = new Cheep(Environment.UserName, message, 
-                        FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture))); */
-
-            csv.NextRecord();
+           
+            csv.NextRecord(); //acts as an "enter" button, so the new record gets written on its own line
             csv.WriteRecord(record);
         }
     }

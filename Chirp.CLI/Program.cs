@@ -15,7 +15,16 @@ if (args.Length < 1)
 
 if (args[0] == "read")
 {
-    db.Read();
+     IEnumerable<Cheep> cheepList = db.Read();
+
+     foreach(Cheep cheep in cheepList){
+
+
+        Console.WriteLine($"{cheep.Author},{FromUnixTimeToDateTime(cheep.Timestamp)},{cheep.Message}");
+
+        
+
+     }
 } 
 else if (args[0]  == "cheep")
 {
@@ -35,12 +44,12 @@ else if (args[0]  == "cheep")
     }
 
     //For printing purposes.
-    /*string FromUnixTimeToDateTime(long timestamp)
+    string FromUnixTimeToDateTime(long timestamp)
         {
             DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
             string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
             return correctFormatTimestamp;
         }
-    */
+    
 
 record Cheep(string Author, string Message, long Timestamp);
