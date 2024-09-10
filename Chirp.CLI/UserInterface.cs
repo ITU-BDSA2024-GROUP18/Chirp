@@ -1,8 +1,10 @@
-using System.Globalization;
-
 namespace Chirp.CLI;
 
-public class UserInterface
+using System.Globalization;
+
+
+
+public static class UserInterface
 {
     const string timeFormat = "MM/dd/yy HH:mm:ss";
     public static void PrintCheeps(IEnumerable<Cheep> cheepList)
