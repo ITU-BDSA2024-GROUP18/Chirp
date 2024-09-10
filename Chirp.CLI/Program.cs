@@ -12,9 +12,11 @@ const string usage = @"Chirp.CLI Version.
     Usage:
         chirp read
         chirp cheep <message>
+        chirp help
         chirp --version
 
     Options:
+        help     Displays usage options
         --version  Show version.";
 
 var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
@@ -34,6 +36,10 @@ else if (arguments["cheep"].IsTrue)
 
     db.Store(new Cheep(Environment.UserName, args[1],
              FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture))));
+}
+else if (arguments["help"].IsTrue)
+{
+    Console.WriteLine(usage);
 }
 
 long FromDateTimeToUnix(string dateTimeStamp)
