@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using CsvHelper;
-using SimpleDB;
+//using SimpleDB;
 
 string timeFormat = "MM/dd/yy HH:mm:ss";
 
@@ -43,12 +43,14 @@ void Read()
 
 void Cheep(string message)
 {
-    using (var writer = new StreamWriter("chirp_cli_db.csv"))
+    using (var stream = File.Open("chirp_cli_db.csv", FileMode.Append))
+    using (var writer = new StreamWriter(stream))
     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         Cheep cheep = new Cheep(Environment.UserName, message, 
                       FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture)));
 
+        csv.NextRecord();
         csv.WriteRecord(cheep);
     }
 }
