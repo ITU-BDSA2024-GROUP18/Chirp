@@ -1,5 +1,5 @@
-using System.ComponentModel.Design;
 using System.Globalization;
+using Chirp.CLI;
 using SimpleDb;
 
 string timeFormat = "MM/dd/yy HH:mm:ss";
@@ -15,17 +15,7 @@ if (args.Length < 1)
 
 if (args[0] == "read")
 {
-    IEnumerable<Cheep> cheepList = db.Read();
-
-    foreach (Cheep cheep in cheepList)
-    {
-
-
-        Console.WriteLine($"{cheep.Author} @ {FromUnixTimeToDateTime(cheep.Timestamp)}: {cheep.Message}");
-
-
-
-    }
+    UserInterface.PrintCheeps(db.Read());
 }
 else if (args[0] == "cheep")
 {
@@ -44,13 +34,4 @@ long FromDateTimeToUnix(string dateTimeStamp)
     return new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
 }
 
-//For printing purposes.
-string FromUnixTimeToDateTime(long timestamp)
-{
-    DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
-    string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
-    return correctFormatTimestamp;
-}
-
-
-record Cheep(string Author, string Message, long Timestamp);
+public record Cheep(string Author, string Message, long Timestamp);
