@@ -6,34 +6,35 @@ string timeFormat = "MM/dd/yy HH:mm:ss";
 
 IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
 
-if (args.Length < 1) 
-{  
-    Console.WriteLine("How to use the program: \n" + 
-                    " dotnet run -- <read> (Displays all cheeps in DB) \n" + 
+if (args.Length < 1)
+{
+    Console.WriteLine("How to use the program: \n" +
+                    " dotnet run -- <read> (Displays all cheeps in DB) \n" +
                     " dotnet run -- <cheep> [message] (Cheep a message to the DB)");
 }
 
 if (args[0] == "read")
 {
-     IEnumerable<Cheep> cheepList = db.Read();
+    IEnumerable<Cheep> cheepList = db.Read();
 
-     foreach(Cheep cheep in cheepList){
+    foreach (Cheep cheep in cheepList)
+    {
 
 
-        Console.WriteLine($"{cheep.Author},{FromUnixTimeToDateTime(cheep.Timestamp)},{cheep.Message}");
+        Console.WriteLine($"{cheep.Author} @ {FromUnixTimeToDateTime(cheep.Timestamp)}: {cheep.Message}");
 
-        
 
-     }
-} 
-else if (args[0]  == "cheep")
+
+    }
+}
+else if (args[0] == "cheep")
 {
     if (args.Length < 2)
     {
         Console.WriteLine("You are missing a message to cheep :(");
     }
 
-    db.Store(new Cheep(Environment.UserName, args[1], 
+    db.Store(new Cheep(Environment.UserName, args[1],
              FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture))));
 }
 
@@ -45,11 +46,11 @@ long FromDateTimeToUnix(string dateTimeStamp)
 
 //For printing purposes.
 string FromUnixTimeToDateTime(long timestamp)
-    {
-        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
-        string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
-        return correctFormatTimestamp;
-    }
+{
+    DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
+    string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
+    return correctFormatTimestamp;
+}
 
 
 record Cheep(string Author, string Message, long Timestamp);
