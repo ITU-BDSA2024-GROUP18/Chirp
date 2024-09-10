@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.CLI", "Chirp.CLI\Chirp.CLI.csproj", "{0C052BFC-1AE0-4B5E-B150-F6D74E284669}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDb", "SimpleDb\SimpleDb.csproj", "{E93573E6-6D53-47A2-A072-CF9E032555AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0C052BFC-1AE0-4B5E-B150-F6D74E284669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C052BFC-1AE0-4B5E-B150-F6D74E284669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C052BFC-1AE0-4B5E-B150-F6D74E284669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
