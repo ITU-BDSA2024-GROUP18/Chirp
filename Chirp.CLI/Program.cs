@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Globalization;
 using SimpleDb;
 
@@ -37,19 +37,19 @@ else if (args[0]  == "cheep")
              FromDateTimeToUnix(DateTime.Now.ToString(timeFormat, CultureInfo.InvariantCulture))));
 }
 
-    long FromDateTimeToUnix(string dateTimeStamp)
+long FromDateTimeToUnix(string dateTimeStamp)
+{
+    DateTime parsedTime = DateTime.Parse(dateTimeStamp, CultureInfo.InvariantCulture);
+    return new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
+}
+
+//For printing purposes.
+string FromUnixTimeToDateTime(long timestamp)
     {
-        DateTime parsedTime = DateTime.Parse(dateTimeStamp, CultureInfo.InvariantCulture);
-        return new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
+        DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
+        string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
+        return correctFormatTimestamp;
     }
 
-    //For printing purposes.
-    string FromUnixTimeToDateTime(long timestamp)
-        {
-            DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
-            string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
-            return correctFormatTimestamp;
-        }
-    
 
 record Cheep(string Author, string Message, long Timestamp);
