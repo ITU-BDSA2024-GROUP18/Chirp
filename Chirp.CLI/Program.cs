@@ -1,25 +1,33 @@
 using System.Globalization;
 using Chirp.CLI;
+using DocoptNet;
 using SimpleDb;
 
 string timeFormat = "MM/dd/yy HH:mm:ss";
 
 IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
 
-if (args.Length < 1)
-{
-    Console.WriteLine("How to use the program: \n" +
-                    " dotnet run -- <read> (Displays all cheeps in DB) \n" +
-                    " dotnet run -- <cheep> [message] (Cheep a message to the DB)");
-}
+const string usage = @"Chirp.CLI Version.
 
-if (args[0] == "read")
+    Usage:
+        chirp read
+        chirp cheep <message>
+        chirp --version
+
+    Options:
+        --version  Show version.";
+
+var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
+
+
+if (arguments["read"].IsTrue)
 {
     UserInterface.PrintCheeps(db.Read());
 }
-else if (args[0] == "cheep")
+else if (arguments["cheep"].IsTrue)
 {
-    if (args.Length < 2)
+    string message = arguments["<message>"].ToString();
+    if (string.IsNullOrEmpty(message))
     {
         Console.WriteLine("You are missing a message to cheep :(");
     }
