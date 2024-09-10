@@ -1,4 +1,4 @@
-namespace SimpleDB;
+namespace SimpleDb;
 
 interface IDatabaseRepository<T>
 {

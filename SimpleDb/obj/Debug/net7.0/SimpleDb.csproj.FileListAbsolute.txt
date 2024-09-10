@@ -1,0 +1,6 @@
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.AssemblyInfoInputs.cache
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.AssemblyInfo.cs
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.csproj.CoreCompileInputs.cache
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.sourcelink.json
+C:\Users\ander\OneDrive\Skrivebord\ITU\BDSA2024\Chirp\SimpleDb\obj\Debug\net7.0\SimpleDb.csproj.AssemblyReference.cache

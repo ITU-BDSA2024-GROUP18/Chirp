@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "yU92gCyZHH2kWNID/diS5upcghRPBbt+SCvKV5mVNvySKhEYr2c9YMXxigf4ag5coE8lc2vYD/EtjVlrEqEK4Q==",
+  "dgSpecHash": "VOBGLIm8yS11QEC8LSqTX8TWMmVbGIHKVukkmwGY47iIBKOM6CdUPWcg2Y6G8yS9iDfo8H0bNUmaak83oWlN5A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\asger\\ITU\\7.semester\\BDSA\\Chirp\\SimpleDb\\SimpleDb.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\ander\\OneDrive\\Skrivebord\\ITU\\BDSA2024\\Chirp\\SimpleDb\\SimpleDb.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ander\\.nuget\\packages\\csvhelper\\33.0.1\\csvhelper.33.0.1.nupkg.sha512",
+    "C:\\Users\\ander\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.16\\microsoft.netcore.app.ref.7.0.16.nupkg.sha512",
+    "C:\\Users\\ander\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.16\\microsoft.windowsdesktop.app.ref.7.0.16.nupkg.sha512",
+    "C:\\Users\\ander\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.16\\microsoft.aspnetcore.app.ref.7.0.16.nupkg.sha512"
+  ],
   "logs": []
 }
