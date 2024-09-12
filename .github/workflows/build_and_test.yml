@@ -2,9 +2,9 @@ name: .NET Build and Test
 
 on:
   push:
-    branches: [Asger-Github-actions-demo]
+    branches: [Session_3_Exercise_1.a]
   pull_request:
-    branches: [Asger-Github-actions-demo]
+    branches: [Session_3_Exercise_1.a]
 
 jobs:
   build:
