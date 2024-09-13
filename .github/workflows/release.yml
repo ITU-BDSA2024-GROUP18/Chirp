@@ -31,6 +31,9 @@ jobs:
       - name: Build Chirp.CLI executable
         run: dotnet publish src/Chirp.CLI/Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false
 
+      - name: List publish directory for debugging
+        run: ls -R src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}
+
       - name: Create ZIP archive
         run: |
           zip -r chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
