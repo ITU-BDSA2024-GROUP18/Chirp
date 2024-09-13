@@ -39,6 +39,9 @@ jobs:
           cd src/Chirp.CLI/bin/Release/net7.0/publish
           zip -r ../../../chirp-${{ matrix.os }}.zip ./*
 
+      - name: List files for debugging
+        run: ls -l src/Chirp.CLI/bin/Release/net7.0/
+
   release:
     needs: build
     runs-on: ubuntu-latest
