@@ -29,7 +29,7 @@ jobs:
         run: dotnet restore src/SimpleDb/SimpleDb.csproj
 
       - name: Build Chirp.CLI executable
-        run: dotnet publish src/Chirp.CLI/Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false -o ./output
+        run: dotnet publish src/Chirp.CLI/Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false ./output
 
       - name: Create ZIP archive
         run: |
