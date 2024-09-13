@@ -34,12 +34,12 @@ jobs:
       - name: List publish directory for debugging
         run: ls -R src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}
 
-      - name: Create ZIP archive
+      - name: Create ZIP archive in /tmp/
         run: |
-          zip -r src/Chirp.CLI/bin/Release/net7.0/chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
-      
-      - name: List files for debugging
-        run: ls -l src/Chirp.CLI/bin/Release/net7.0/
+          zip -r /tmp/chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
+
+      - name: List files in /tmp/ after ZIP creation
+        run: ls -l /tmp/
 
       - name: Test write permissions
         run: touch src/Chirp.CLI/bin/Release/net7.0/test-file.txt
