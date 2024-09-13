@@ -23,13 +23,13 @@ jobs:
           dotnet-version: '7.0.x'
 
       - name: Install dependencies for Chirp.CLI
-        run: dotnet restore Chirp/src/Chirp.CLI/Chirp.CLI.csproj
+        run: dotnet restore src\Chirp.CLI\Chirp.CLI.csproj
 
       - name: Install dependencies for SimpleDb
-        run: dotnet restore Chirp/src/SimpleDb/SimpleDb.csproj
+        run: dotnet restore src\SimpleDb\SimpleDb.csproj
 
       - name: Build Chirp.CLI executable
-        run: dotnet publish Chirp/src/Chirp.CLI/Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false -o ./output
+        run: dotnet publish src\Chirp.CLI\Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false -o ./output
 
       - name: Create ZIP archive
         run: |
