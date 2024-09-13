@@ -36,7 +36,8 @@ jobs:
 
       - name: Create ZIP archive
         run: |
-          zip -r chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
+          zip -r src/Chirp.CLI/bin/Release/net7.0/chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
+      
 
       - name: List files for debugging
         run: ls -l src/Chirp.CLI/bin/Release/net7.0/
