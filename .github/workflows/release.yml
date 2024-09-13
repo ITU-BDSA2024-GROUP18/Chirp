@@ -50,8 +50,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            src/Chirp.CLI/bin/Release/net7.0/chirp-linux-x64.zip
-            src/Chirp.CLI/bin/Release/net7.0/chirp-osx-x64.zip
-            src/Chirp.CLI/bin/Release/net7.0/chirp-win-x64.zip   
+            chirp-linux-x64.zip
+            chirp-osx-x64.zip
+            chirp-win-x64.zip   
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
