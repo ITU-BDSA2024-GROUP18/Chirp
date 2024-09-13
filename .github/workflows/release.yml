@@ -35,22 +35,11 @@ jobs:
         run: |
           zip -r chirp-${{ matrix.os }}.zip ./output
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: chirp-${{ matrix.os }}
-          path: chirp-${{ matrix.os }}.zip
-
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: chirp-${{ matrix.os }}
-
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
