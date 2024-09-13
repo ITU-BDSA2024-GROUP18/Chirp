@@ -1,56 +1,59 @@
-name: Publish
+name: Build and Release Chirp
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  release:
-    name: Release
+  build:
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        kind: ['linux', 'windows', 'macOS']
-        include:
-          - kind: linux
-            os: ubuntu-latest
-            target: linux-x64
-          - kind: windows
-            os: windows-latest
-            target: win-x64
-          - kind: macOS
-            os: macos-latest
-            target: osx-x64
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.0
+          dotnet-version: '7.0.x'
 
-      - name: Build
-        shell: bash
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build Chirp executable
+        run: dotnet publish -c Release -r ${{ matrix.os }} --self-contained false -o ./output
+
+      - name: Create ZIP archive
         run: |
-          tag=$(git describe --tags --abbrev=0)
-          release_name="Chirp-$tag-${{ matrix.target }}"
+          zip -r chirp-${{ matrix.os }}.zip ./output
 
-          # Build everything
-          dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: chirp-${{ matrix.os }}
+          path: chirp-${{ matrix.os }}.zip
 
-          # Pack files
-          # Pack to zip for Windows
-          7z a -tzip "${release_name}.zip" "./${release_name}/*"
-          
-          fi
+  release:
+    needs: build
+    runs-on: ubuntu-latest
 
-          # Delete output directory
-          rm -r "$release_name"
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: chirp-${{ matrix.os }}
 
-      - name: Publish
+      - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          files: "Chirp.CLI*"
+          files: |
+            chirp-ubuntu-latest.zip
+            chirp-macos-latest.zip
+            chirp-windows-latest.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
