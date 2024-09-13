@@ -54,8 +54,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            chirp-linux-x64.zip
-            chirp-osx-x64.zip
-            chirp-win-x64.zip   
+            /tmp/chirp-linux-x64.zip
+            /tmp/chirp-osx-x64.zip
+            /tmp/chirp-win-x64.zip   
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
