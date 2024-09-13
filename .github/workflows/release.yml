@@ -38,9 +38,12 @@ jobs:
         run: |
           zip -r src/Chirp.CLI/bin/Release/net7.0/chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
       
-
       - name: List files for debugging
         run: ls -l src/Chirp.CLI/bin/Release/net7.0/
+
+      - name: Test write permissions
+        run: touch src/Chirp.CLI/bin/Release/net7.0/test-file.txt
+      
 
   release:
     needs: build
