@@ -1,10 +1,6 @@
 name: .NET Build and Test
 
-on:
-  push:
-    branches: [Session_3_Exercise_1.a]
-  pull_request:
-    branches: [Session_3_Exercise_1.a]
+on: [push, pull_request]
 
 jobs:
   build:
