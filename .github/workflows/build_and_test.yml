@@ -1,0 +1,24 @@
+name: .NET Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Restore dependencies for chirp
+        run: dotnet restore src/Chirp.CLI/Chirp.CLI.csproj
+
+      - name: Restore dependencies for simpledb
+        run: dotnet restore src/SimpleDb/SimpleDb.csproj
+
+      - name: Build
+        run: dotnet build
+      - name: Test
+        run: dotnet test --no-build --verbosity normal

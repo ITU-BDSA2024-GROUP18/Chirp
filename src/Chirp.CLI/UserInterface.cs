@@ -13,8 +13,9 @@ public static class UserInterface
         }
     }
 
-    //For printing purposes.
+
     public static string FromUnixTimeToDateTime(long timestamp)
+      
     {
         DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(timestamp);
         string correctFormatTimestamp = dto.ToLocalTime().ToString(timeFormat, CultureInfo.InvariantCulture);
