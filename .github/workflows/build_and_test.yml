@@ -16,7 +16,7 @@ jobs:
         run: dotnet restore src/Chirp.CLI/Chirp.CLI.csproj
 
       - name: Restore dependencies for simpledb
-        run: src/SimpleDb/SimpleDb.csproj
+        run: dotnet restore src/SimpleDb/SimpleDb.csproj
 
       - name: Build
         run: dotnet build --no-restore
