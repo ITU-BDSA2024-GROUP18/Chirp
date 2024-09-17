@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.CLI", "Chirp.CLI\Chir
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDb", "SimpleDb\SimpleDb.csproj", "{E93573E6-6D53-47A2-A072-CF9E032555AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A34F619C-476A-41C0-B9E6-81FEC9282DE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CLI.Tests", "test\Chirp.CLI.Tests\Chirp.CLI.Tests.csproj", "{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDb.Tests", "test\SimpleDb.Tests\SimpleDb.Tests.csproj", "{0A5D0637-9163-416C-AF8D-65C20E750C4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,11 +27,23 @@ Global
 		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93573E6-6D53-47A2-A072-CF9E032555AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A5D0637-9163-416C-AF8D-65C20E750C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A5D0637-9163-416C-AF8D-65C20E750C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A5D0637-9163-416C-AF8D-65C20E750C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A5D0637-9163-416C-AF8D-65C20E750C4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95AFC122-9AD1-4DCF-A7BC-DC3A41A9F7A2}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D48E0609-36EB-4E9B-8CC7-6D1E7BAF18AC} = {A34F619C-476A-41C0-B9E6-81FEC9282DE5}
+		{0A5D0637-9163-416C-AF8D-65C20E750C4D} = {A34F619C-476A-41C0-B9E6-81FEC9282DE5}
 	EndGlobalSection
 EndGlobal
