@@ -5,7 +5,7 @@ using SimpleDb;
 
 string timeFormat = "MM/dd/yy HH:mm:ss";
 
-IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
+IDatabaseRepository<Cheep> db = CSVDatabase<Cheep>.Instance;
 
 const string usage = @"Chirp.CLI Version.
 
