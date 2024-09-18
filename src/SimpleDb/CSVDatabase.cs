@@ -5,19 +5,18 @@ using CsvHelper;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
+    //Singleton pattern starts
     private string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
 
     private static CSVDatabase<T>? instance = null;
 
-    // public CSVDatabase(string csvPath)
-    // {
-    //     this.csvPath = csvPath;
-    // }
-
+    //A single constructor, which is private and parameterless. 
+    //This prevents other classes from instantiating it (which would be a violation of the pattern)
     private CSVDatabase()
     {
     }
-
+    //creates an instance of database - It is not thread safe, as many threads could evaluate line_23 to true, concurrently, 
+    //but its ok for now!
     public static CSVDatabase<T> Instance
     {
         get
@@ -31,7 +30,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         }
     }
 
-
+    //Method below can override the field csvPath which has been set when an instance is created
     public void Set_path(string path)
 
     {
@@ -39,6 +38,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 
 
     }
+    //Singleton pattern ends
 
     public IEnumerable<T> Read(int? limit = null)
     {
@@ -48,12 +48,12 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
             //if this was not converted to a list, the IEnumerable would sort of "disappear
             //because the function only uses CsvReader until it returns. Needs more explanation
             var records = csv.GetRecords<T>().ToList();
-            
+
             if (limit.HasValue)
             {
-                return records.Take(limit.Value).ToList();   
+                return records.Take(limit.Value).ToList();
             }
-            else 
+            else
             {
                 return records;
             }
