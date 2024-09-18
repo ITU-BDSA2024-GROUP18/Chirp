@@ -10,12 +10,13 @@ IDatabaseRepository<Cheep> db = new CSVDatabase<Cheep>();
 const string usage = @"Chirp.CLI Version.
 
     Usage:
-        chirp read
+        chirp read [--limit=<n>]
         chirp cheep <message>
         chirp help
         chirp --version
 
     Options:
+        --limit=<n>  Limit the number of cheeps to read (default: no limit).
         help     Displays usage options
         --version  Show version.";
 
@@ -24,7 +25,12 @@ var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
 
 if (arguments["read"].IsTrue)
 {
-    UserInterface.PrintCheeps(db.Read());
+    int? limit = null;
+    if (arguments["--limit"] != null)
+    {
+        limit = int.Parse(arguments["--limit"].ToString());
+    }
+    UserInterface.PrintCheeps(db.Read(limit));
 }
 else if (arguments["cheep"].IsTrue)
 {
