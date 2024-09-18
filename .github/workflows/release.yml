@@ -3,7 +3,7 @@ name: Build and Release Chirp
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
 
 jobs:
   build:
@@ -20,42 +20,77 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: 7.0.x
 
       - name: Install dependencies for Chirp.CLI
-        run: dotnet restore src/Chirp.CLI/Chirp.CLI.csproj
+        working-directory: src/Chirp.CLI
+        run: dotnet restore
 
-      - name: Install dependencies for SimpleDb
-        run: dotnet restore src/SimpleDb/SimpleDb.csproj
-
-      - name: Build Chirp.CLI executable
-        run: dotnet publish src/Chirp.CLI/Chirp.CLI.csproj -c Release -r ${{ matrix.os }} --self-contained false
-
-      - name: List publish directory for debugging
-        run: ls -R src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}
-
-      - name: Create ZIP archive in /tmp/
-        run: |
-          zip -r /tmp/chirp-${{ matrix.os }}.zip src/Chirp.CLI/bin/Release/net7.0/${{ matrix.os }}/publish
-
-      - name: List files in /tmp/ after ZIP creation
-        run: ls -l /tmp/
-
-      - name: Test write permissions
-        run: touch src/Chirp.CLI/bin/Release/net7.0/test-file.txt
-      
+      - name: Build Chirp.CLI
+        working-directory: src/Chirp.CLI
+        run: dotnet build
+  
+  
 
   release:
+    name: Create Release
     needs: build
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        kind: ['linux', 'windows', 'macOS']
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x64
+          - kind: macOS
+            os: macos-latest
+            target: osx-x64
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
         with:
-          files: |
-            /tmp/chirp-linux-x64.zip
-            /tmp/chirp-osx-x64.zip
-            /tmp/chirp-win-x64.zip   
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          dotnet-version: 7.0.x
+
+      - name: Build
+        shell: bash
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          release_name="Chirp.CLI-$tag-${{ matrix.target }}"
+
+          # Build everything
+          dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+
+          # Pack files
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            # Pack to zip for Windows
+            7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          else
+          tar czvf "${release_name}.tar.gz" "$release_name"
+          fi
+
+          # Delete output directory
+          rm -r "$release_name"
+    
+      - name: Publish
+          uses: softprops/action-gh-release@v1
+          with:
+            files: "Chirp.CLI*"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+# Documentation / Inspiration
+# 
+# https://github.com/actions/setup-dotnet
+# https://patriksvensson.se/posts/2020/03/creating-release-artifacts-with-github-actions
+# https://github.com/patriksvensson/dotnet-release-artifacts/blob/master/.github/workflows/ci.yaml
