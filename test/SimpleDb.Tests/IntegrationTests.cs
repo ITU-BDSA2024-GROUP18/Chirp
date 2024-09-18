@@ -29,10 +29,9 @@ namespace SimpleDb.Tests
         public void StoreAndRetrieveEntry_Success()
         {
             // Arrange
-            string db = "test_chirp_cli_db.csv";
 
             var database = CSVDatabase<Cheep>.Instance;
-            database.Set_path(db);
+            database.Set_path(testCsvPath);
             var cheep = new Cheep
             {
                 Author = "Omar",
@@ -53,9 +52,8 @@ namespace SimpleDb.Tests
         public void StoreMultipleEntriesAndRetrieve_Success()
         {
             // Arrange
-            string db = "test_chirp_cli_db.csv";
             var database = CSVDatabase<Cheep>.Instance;
-            database.Set_path(db);
+            database.Set_path(testCsvPath);
             var cheep1 = new Cheep
             {
                 Author = "Omar",
