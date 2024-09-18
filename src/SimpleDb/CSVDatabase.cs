@@ -22,11 +22,18 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
         using (var reader = new StreamReader(csvPath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-
             //if this was not converted to a list, the IEnumerable would sort of "disappear
             //because the function only uses CsvReader until it returns. Needs more explanation
-            return csv.GetRecords<T>().ToList();
-
+            var records = csv.GetRecords<T>().ToList();
+            
+            if (limit.HasValue)
+            {
+                return records.Take(limit.Value).ToList();   
+            }
+            else 
+            {
+                return records;
+            }
         }
     }
 
