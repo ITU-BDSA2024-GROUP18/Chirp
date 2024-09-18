@@ -5,16 +5,39 @@ using CsvHelper;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
-    readonly string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
+    private string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
 
-    public CSVDatabase()
+    private static CSVDatabase<T>? instance = null;
+
+    // public CSVDatabase(string csvPath)
+    // {
+    //     this.csvPath = csvPath;
+    // }
+
+    private CSVDatabase()
     {
-        this.csvPath = "../Chirp.CLI/chirp_cli_db.csv";
     }
 
-    public CSVDatabase(string csvPath)
+    public static CSVDatabase<T> Instance
     {
-        this.csvPath = csvPath;
+        get
+        {
+            if (instance == null)
+            {
+
+                instance = new CSVDatabase<T>();
+            }
+            return instance;
+        }
+    }
+
+
+    public void Set_path(string path)
+
+    {
+        csvPath = path;
+
+
     }
 
     public IEnumerable<T> Read(int? limit = null)
@@ -33,7 +56,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
     public void Store(T record)
     {
         var fileExists = File.Exists(csvPath);
-        
+
         using (var stream = File.Open(csvPath, FileMode.Append))
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
