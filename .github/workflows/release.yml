@@ -30,7 +30,7 @@ jobs:
         working-directory: src/Chirp.CLI
         run: dotnet build
   
-  
+
 
   release:
     name: Create Release
@@ -82,11 +82,11 @@ jobs:
           rm -r "$release_name"
     
       - name: Publish
-          uses: softprops/action-gh-release@v1
-          with:
-            files: "Chirp.CLI*"
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "Chirp.CLI*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 # Documentation / Inspiration
