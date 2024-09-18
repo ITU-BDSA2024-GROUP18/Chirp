@@ -14,24 +14,25 @@ public class ChirpCliTests
 
     public ChirpCliTests()
     {
-        CreateTestCsv(); 
+        CreateTestCsv();
     }
 
     [Fact]
     public void TestReadWithLimit()
     {
         // Arrange
-        var csvDatabase = new CSVDatabase<Cheep>(TestCsvPath);
+        var csvDatabase = CSVDatabase<Cheep>.Instance;
+        csvDatabase.Set_path(TestCsvPath);
         var stringWriter = new StringWriter();
         Console.SetOut(stringWriter); // Redirect console output to StringWriter
 
         // Act
-        UserInterface.PrintCheeps(csvDatabase.Read(1)); 
+        UserInterface.PrintCheeps(csvDatabase.Read(1));
 
         // Assert
         var output = stringWriter.ToString().Trim();
-        Assert.Contains("Omar @ 01/01/24 00:00:00: Message 1", output); 
-        Assert.DoesNotContain("Asger", output); 
+        Assert.Contains("Omar @ 01/01/24 00:00:00: Message 1", output);
+        Assert.DoesNotContain("Asger", output);
 
         // Cleanup
         Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
@@ -42,7 +43,8 @@ public class ChirpCliTests
     public void TestCheepWithMessage()
     {
         // Arrange
-        var csvDatabase = new CSVDatabase<Cheep>(TestCsvPath);
+        var csvDatabase = CSVDatabase<Cheep>.Instance;
+        csvDatabase.Set_path(TestCsvPath);
         var testCheep = new Cheep("Author", "New message!", 1726660160);
 
         // Act
@@ -68,7 +70,7 @@ public class ChirpCliTests
         using (var writer = new StreamWriter(File.Open(TestCsvPath, FileMode.Create)))
         using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            csv.WriteRecords(cheeps); 
+            csv.WriteRecords(cheeps);
         }
     }
 
@@ -81,6 +83,6 @@ public class ChirpCliTests
     [Fact]
     public void Dispose()
     {
-        File.Delete(TestCsvPath); 
+        File.Delete(TestCsvPath);
     }
 }
