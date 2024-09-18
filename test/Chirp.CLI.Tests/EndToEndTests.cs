@@ -38,6 +38,24 @@ public class ChirpCliTests
         stringWriter.Dispose();
     }
 
+    [Fact]
+    public void TestCheepWithMessage()
+    {
+        // Arrange
+        var csvDatabase = new CSVDatabase<Cheep>(TestCsvPath);
+        var testCheep = new Cheep("Author", "New message!", 1726660160);
+
+        // Act
+        csvDatabase.Store(testCheep);
+
+        var allCheeps = csvDatabase.Read().ToList(); // Read all cheeps to find the new one
+        var output = allCheeps.Find(cheep => cheep.Author == "Author" && cheep.Message == "New message!");
+
+        // Assert
+        Assert.NotNull(output);
+        Assert.Equal("New message!", output.Message);
+    }
+
     private void CreateTestCsv()
     {
         var cheeps = new List<Cheep>
