@@ -5,17 +5,40 @@ using CsvHelper;
 
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
-    readonly string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
+    //Singleton pattern starts
+    private string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
 
-    public CSVDatabase()
+    private static CSVDatabase<T>? instance = null;
+
+    //A single constructor, which is private and parameterless. 
+    //This prevents other classes from instantiating it (which would be a violation of the pattern)
+    private CSVDatabase()
     {
-        this.csvPath = "../Chirp.CLI/chirp_cli_db.csv";
+    }
+    //creates an instance of database - It is not thread safe, as many threads could evaluate line_23 to true, concurrently, 
+    //but its ok for now!
+    public static CSVDatabase<T> Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+
+                instance = new CSVDatabase<T>();
+            }
+            return instance;
+        }
     }
 
-    public CSVDatabase(string csvPath)
+    //Method below can override the field csvPath which has been set when an instance is created
+    public void Set_path(string path)
+
     {
-        this.csvPath = csvPath;
+        csvPath = path;
+
+
     }
+    //Singleton pattern ends
 
     public IEnumerable<T> Read(int? limit = null)
     {
@@ -25,12 +48,12 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
             //if this was not converted to a list, the IEnumerable would sort of "disappear
             //because the function only uses CsvReader until it returns. Needs more explanation
             var records = csv.GetRecords<T>().ToList();
-            
+
             if (limit.HasValue)
             {
-                return records.Take(limit.Value).ToList();   
+                return records.Take(limit.Value).ToList();
             }
-            else 
+            else
             {
                 return records;
             }
@@ -40,7 +63,7 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
     public void Store(T record)
     {
         var fileExists = File.Exists(csvPath);
-        
+
         using (var stream = File.Open(csvPath, FileMode.Append))
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))

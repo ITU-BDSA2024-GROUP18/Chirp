@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace SimpleDb.Tests
@@ -28,7 +29,9 @@ namespace SimpleDb.Tests
         public void StoreAndRetrieveEntry_Success()
         {
             // Arrange
-            var database = new CSVDatabase<Cheep>(testCsvPath);
+
+            var database = CSVDatabase<Cheep>.Instance;
+            database.Set_path(testCsvPath);
             var cheep = new Cheep
             {
                 Author = "Omar",
@@ -49,7 +52,8 @@ namespace SimpleDb.Tests
         public void StoreMultipleEntriesAndRetrieve_Success()
         {
             // Arrange
-            var database = new CSVDatabase<Cheep>(testCsvPath);
+            var database = CSVDatabase<Cheep>.Instance;
+            database.Set_path(testCsvPath);
             var cheep1 = new Cheep
             {
                 Author = "Omar",
