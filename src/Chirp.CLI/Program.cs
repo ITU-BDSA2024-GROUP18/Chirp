@@ -26,7 +26,9 @@ var arguments = new Docopt().Apply(usage, args, version: "1.0", exit: true)!;
 if (arguments["read"].IsTrue)
 {
     int? limit = null;
-    if (arguments["--limit"] != null)
+    //Check if --limit is different from null or empty string, to ensure that the absence of a limit argument,
+    //does not get treated as an empty string.
+    if (arguments["--limit"] != null && arguments["--limit"].ToString() != "")
     {
         limit = int.Parse(arguments["--limit"].ToString());
     }
