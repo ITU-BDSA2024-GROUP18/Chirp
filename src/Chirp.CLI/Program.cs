@@ -56,4 +56,5 @@ long FromDateTimeToUnix(string dateTimeStamp)
     return new DateTimeOffset(parsedTime).ToUnixTimeSeconds();
 }
 
+#pragma warning disable CA1050 // Declare types in namespaces
 public record Cheep(string Author, string Message, long Timestamp);
