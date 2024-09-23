@@ -7,9 +7,14 @@ var db = CSVDatabase<Cheep>.Instance;
 
 //Get request
 
-app.MapGet("/cheeps", () =>
+app.MapGet("/cheeps", (int? limit) =>
 {
     var cheeps = db.Read();
+
+    if (limit.HasValue && limit.Value > 0)
+    {
+        cheeps = cheeps.Take(limit.Value).ToList();
+    }
 
     return Results.Ok(cheeps);
 
