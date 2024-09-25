@@ -67,7 +67,7 @@ jobs:
           release_name="Chirp.CLI-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+          dotnet publish src/Chirp.CLI/Chirp.CLI.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
 
           # Pack files
 
