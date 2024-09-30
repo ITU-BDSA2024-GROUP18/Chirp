@@ -14,7 +14,6 @@ public class CheepService : ICheepService
 {
 
     private readonly string _connection_string = "/tmp/chirp.db";
-    private readonly string sqlQuery = @"SELECT u.username, m.text, m.pub_date FROM message m join user u ON m.author_id = u.user_id ORDER by m.pub_date desc";
 
 
     // These would normally be loaded from a database for example
@@ -26,6 +25,12 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps()
     {
+        string GetCheepsQuery = @"SELECT u.username, m.text, m.pub_date 
+                                FROM message m 
+                                JOIN user u ON m.author_id = u.user_id 
+                                ORDER by m.pub_date desc";
+
+
         var cheeps = new List<CheepViewModel>();
 
         using (var connection = new SqliteConnection($"Data Source={_connection_string}"))
@@ -33,7 +38,7 @@ public class CheepService : ICheepService
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
+            command.CommandText = GetCheepsQuery;
 
             using var reader = command.ExecuteReader();
 
@@ -54,13 +59,41 @@ public class CheepService : ICheepService
         }
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    public List<CheepViewModel> GetCheepsFromAuthor(string authorQuery)
     {
 
-        var cheeps = GetCheeps();
+        string GetCheepsFromAuthorQuery = @$"SELECT u.username, m.text, m.pub_date 
+                                            FROM message m 
+                                            JOIN user u ON m.author_id = u.user_id
+                                            WHERE u.username = '{authorQuery}'
+                                            ORDER by m.pub_date desc";
+
+        var cheeps = new List<CheepViewModel>();
+
+        using (var connection = new SqliteConnection($"Data Source={_connection_string}"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = GetCheepsFromAuthorQuery;
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var author = reader.GetString(0);
+                var message = reader.GetString(1);
+                var timeDouble = reader.GetDouble(2);
+                string timestamp = UnixTimeStampToDateTimeString(timeDouble);
+
+                var cheep = new CheepViewModel(author, message, timestamp);
+
+                cheeps.Add(cheep);
+            }
 
 
-        return cheeps.Where(x => x.Author == author).ToList();
+            return cheeps;
+        }
     }
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
