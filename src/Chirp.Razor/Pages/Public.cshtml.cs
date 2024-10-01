@@ -13,9 +13,11 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet()
+    public ActionResult OnGet([FromQuery] int page)
     {
-        Cheeps = _service.GetCheeps();
+        //Ensure first page is returned on invalid query value for page
+        if (page <= 0) page = 1;
+        Cheeps = _service.GetCheeps(page);
         return Page();
     }
 }
