@@ -5,16 +5,16 @@ using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Http.Extensions;
 
 
-namespace Chirp.Razor; 
+namespace Chirp.Razor;
 
 
 public class DbFacade
-    {
+{
 
     private readonly string _connection_string = "/tmp/chirp.db";
 
     //Embedded SQLite scripts, to be used if path from connection_string does not exist
-    private readonly IFileProvider embeddedFile; 
+    private readonly IFileProvider embeddedFile;
 
 
     //Initialize DbFacade
@@ -24,7 +24,8 @@ public class DbFacade
         //embeddedFile = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
     }
 
-    public string QueryBuilder(string? authorQuery){
+    public string QueryBuilder(string? authorQuery)
+    {
 
 
         //Base query for username, text, pub_date
@@ -34,17 +35,18 @@ public class DbFacade
 
 
         //If an author name (authorQuery) has been provided, append a WHERE clause to the query
-        if (authorQuery != null) SQLiteQuery += $"WHERE u.username = '{authorQuery}'";
+        if (authorQuery != null) SQLiteQuery += $" WHERE u.username = '{authorQuery}'";
 
         //Order by date/time in a descending order
-        SQLiteQuery += "ORDER by m.pub_date desc";
+        SQLiteQuery += " ORDER BY m.pub_date DESC";
 
         return SQLiteQuery;
 
 
     }
 
-    public SqliteConnection DBConnectionManager(){
+    public SqliteConnection DBConnectionManager()
+    {
 
         //Makes a connection to the database tmp/chirp.db (temporary)
         var connection = new SqliteConnection($"Data Source={_connection_string}");
@@ -54,40 +56,39 @@ public class DbFacade
         return connection;
     }
 
-    public List<CheepViewModel> ReadCheepsFromQuery(SqliteConnection connection, string SQLquery){
-        
-    
+    public List<CheepViewModel> ReadCheepsFromQuery(SqliteConnection connection, string SQLquery)
+    {
+
+
         connection.Open();
 
         var command = connection.CreateCommand();
 
         command.CommandText = SQLquery;
 
-         using var reader = command.ExecuteReader();
+        using var reader = command.ExecuteReader();
 
-         var cheeps = new List<CheepViewModel>();
+        var cheeps = new List<CheepViewModel>();
 
-            while (reader.Read())
-            {
-                var author = reader.GetString(0);
-                var message = reader.GetString(1);
-                var timeDouble = reader.GetDouble(2);
-                string timestamp = UnixTimeStampToDateTimeString(timeDouble);
+        while (reader.Read())
+        {
+            var author = reader.GetString(0);
+            var message = reader.GetString(1);
+            var timeDouble = reader.GetDouble(2);
+            string timestamp = UnixTimeStampToDateTimeString(timeDouble);
 
-                var cheep = new CheepViewModel(author, message, timestamp);
+            var cheep = new CheepViewModel(author, message, timestamp);
 
-                cheeps.Add(cheep);
-            }
+            cheeps.Add(cheep);
+        }
 
-            connection.Close();
+        connection.Close();
 
-            return cheeps;
-
-
+        return cheeps;
 
     }
 
-     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
+    private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -95,7 +96,7 @@ public class DbFacade
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
 
-    }
+}
 
 
-    
+
