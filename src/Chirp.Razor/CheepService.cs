@@ -18,7 +18,7 @@ public class CheepService : ICheepService
 {
 
 
-    private readonly string _connection_string = "/tmp/chirp.db";
+    
 
     private DbFacade db = new DbFacade();
 

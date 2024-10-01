@@ -29,6 +29,8 @@ public class DbFacade
 
         }
 
+        seedDatabase();
+
         
     }
 
@@ -43,6 +45,26 @@ public class DbFacade
 
 
         return myQuery;
+    }
+
+    public void seedDatabase(){
+
+        var connection = DBConnectionManager();
+
+        connection.Open();
+
+        var command = connection.CreateCommand();
+
+        command.CommandText = readEmbeddedQuery("schema.sql");
+
+        command.ExecuteNonQuery();
+
+        command.CommandText = readEmbeddedQuery("dump.sql");
+
+        command.ExecuteNonQuery();
+
+
+
     }
 
 
