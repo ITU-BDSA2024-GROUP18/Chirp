@@ -29,7 +29,10 @@ public class CheepService : ICheepService
         var connection = db.DBConnectionManager();
 
         // Build query without author param
-        var query_string = db.QueryBuilder(null);
+        var query_string = @$"SELECT u.username, m.text, m.pub_date 
+                              FROM message m 
+                              JOIN user u ON m.author_id = u.user_id
+                              ORDER BY m.pub_date DESC";
 
 
         var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
@@ -44,7 +47,11 @@ public class CheepService : ICheepService
         var connection = db.DBConnectionManager();
 
         // Build query with author paramater
-        var query_string = db.QueryBuilder(authorQuery);
+        var query_string = @$"SELECT u.username, m.text, m.pub_date 
+                              FROM message m 
+                              JOIN user u ON m.author_id = u.user_id
+                              WHERE u.username = '{authorQuery}'
+                              ORDER BY m.pub_date DESC";
 
         // Retreive all cheeps from a single user database
         var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);

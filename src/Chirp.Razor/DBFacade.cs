@@ -67,7 +67,7 @@ public class DbFacade
 
     }
 
-
+    /*
     public string QueryBuilder(string? authorQuery)
     {
 
@@ -88,6 +88,7 @@ public class DbFacade
 
 
     }
+    */
 
     public SqliteConnection DBConnectionManager()
     {
