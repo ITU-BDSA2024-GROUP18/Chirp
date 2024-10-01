@@ -11,7 +11,7 @@ namespace Chirp.Razor;
 public class DbFacade
 {
 
-    private readonly string _connection_string = "/tmp/chirp.db";
+    private readonly string? _connection_string = "/tmp/chirp.db";
 
     //Embedded SQLite scripts, to be used if path from connection_string does not exist
     private readonly IFileProvider embeddedFile;
@@ -20,9 +20,31 @@ public class DbFacade
     //Initialize DbFacade
     public DbFacade()
     {
-        //Should only use embedded file when connection_string to database 
-        //embeddedFile = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+        /*_connection_string = Environment.GetEnvironmentVariable("CHIRPDBPATH");
+
+        //Consider maybe moving this to the DBConnectionManager function (AJ)
+        if (_connection_string == null){
+
+            _connection_string = Path.GetTempPath() + "chirp.db";
+
+        }*/
+
+        
     }
+
+    public string readEmbeddedQuery (string queryPath){
+
+
+        var unEmbedder = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+        using var streamEmbedded = unEmbedder.GetFileInfo(queryPath).CreateReadStream();
+        using var streamReader = new StreamReader(streamEmbedded);
+
+        var myQuery = streamReader.ReadToEnd();
+
+
+        return myQuery;
+    }
+
 
     public string QueryBuilder(string? authorQuery)
     {
