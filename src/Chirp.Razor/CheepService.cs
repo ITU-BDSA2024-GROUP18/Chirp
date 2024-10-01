@@ -1,6 +1,9 @@
 using System.Data;
 using Microsoft.Data.Sqlite;
 
+//always define namespace everywhere except for Program.cs
+namespace Chirp.Razor;
+
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
@@ -14,8 +17,8 @@ public interface ICheepService
 public class CheepService : ICheepService
 {
 
+    
     private readonly string _connection_string = "/tmp/chirp.db";
-
 
     // These would normally be loaded from a database for example
     // private static readonly List<CheepViewModel> _cheeps = new()
@@ -34,6 +37,8 @@ public class CheepService : ICheepService
 
         var cheeps = new List<CheepViewModel>();
 
+        //If initiating SqliteConnection with a data source that does not exists, it does not throw an error
+        //Instead it creates a new blank database
         using (var connection = new SqliteConnection($"Data Source={_connection_string}"))
         {
             connection.Open();
@@ -66,7 +71,7 @@ public class CheepService : ICheepService
         string GetCheepsFromAuthorQuery = @$"SELECT u.username, m.text, m.pub_date 
                                             FROM message m 
                                             JOIN user u ON m.author_id = u.user_id
-                                            WHERE u.username = @AUTHOR
+                                            WHERE u.username = '{authorQuery}'
                                             ORDER by m.pub_date desc";
 
         var cheeps = new List<CheepViewModel>();
@@ -81,11 +86,6 @@ public class CheepService : ICheepService
             //Set the SQL command to GetCheepsFromAuthorQuery string
             command.CommandText = GetCheepsFromAuthorQuery;
 
-            //Add a varying parameter @AUTHOR in the collection of parameters used by the command
-            command.Parameters.Add("@AUTHOR", SqliteType.Text);
-
-            //Set the varying parameter to the authorQuery string that was passed to the function
-            command.Parameters["@AUTHOR"].Value = authorQuery;
 
             using var reader = command.ExecuteReader();
 
