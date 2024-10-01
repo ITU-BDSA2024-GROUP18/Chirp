@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 public record CheepViewModel(string Author, string Message, string Timestamp);
@@ -36,7 +37,7 @@ public class CheepService : ICheepService
         using (var connection = new SqliteConnection($"Data Source={_connection_string}"))
         {
             connection.Open();
-
+            
             var command = connection.CreateCommand();
             command.CommandText = GetCheepsQuery;
 
@@ -65,7 +66,7 @@ public class CheepService : ICheepService
         string GetCheepsFromAuthorQuery = @$"SELECT u.username, m.text, m.pub_date 
                                             FROM message m 
                                             JOIN user u ON m.author_id = u.user_id
-                                            WHERE u.username = '{authorQuery}'
+                                            WHERE u.username = @AUTHOR
                                             ORDER by m.pub_date desc";
 
         var cheeps = new List<CheepViewModel>();
@@ -74,8 +75,17 @@ public class CheepService : ICheepService
         {
             connection.Open();
 
+            //Create a SqliteCommand
             var command = connection.CreateCommand();
+
+            //Set the SQL command to GetCheepsFromAuthorQuery string
             command.CommandText = GetCheepsFromAuthorQuery;
+
+            //Add a varying parameter @AUTHOR in the collection of parameters used by the command
+            command.Parameters.Add("@AUTHOR", SqliteType.Text);
+
+            //Set the varying parameter to the authorQuery string that was passed to the function
+            command.Parameters["@AUTHOR"].Value = authorQuery;
 
             using var reader = command.ExecuteReader();
 
