@@ -1,30 +1,58 @@
+using System.Data;
+using Microsoft.Data.Sqlite;
+
+//always define namespace everywhere except for Program.cs
+namespace Chirp.Razor;
+
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
 {
     public List<CheepViewModel> GetCheeps();
     public List<CheepViewModel> GetCheepsFromAuthor(string author);
+
+
 }
 
 public class CheepService : ICheepService
 {
-    // These would normally be loaded from a database for example
-    private static readonly List<CheepViewModel> _cheeps = new()
-        {
-            new CheepViewModel("Helge", "Hello, BDSA students!", UnixTimeStampToDateTimeString(1690892208)),
-            new CheepViewModel("Adrian", "Hej, velkommen til kurset.", UnixTimeStampToDateTimeString(1690895308)),
-        };
+
+
+    
+
+    private DbFacade db = new DbFacade();
 
     public List<CheepViewModel> GetCheeps()
     {
-        return _cheeps;
+
+        // Establish connection
+        var connection = db.DBConnectionManager();
+
+        // Build query without author param
+        var query_string = db.QueryBuilder(null);
+
+
+        var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
+
+        return Cheep_list;
+
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    public List<CheepViewModel> GetCheepsFromAuthor(string authorQuery)
     {
-        // filter by the provided author name
-        return _cheeps.Where(x => x.Author == author).ToList();
+        // Establish connection
+        var connection = db.DBConnectionManager();
+
+        // Build query with author paramater
+        var query_string = db.QueryBuilder(authorQuery);
+
+        // Retreive all cheeps from a single user database
+        var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
+
+        return Cheep_list;
+
     }
+
 
     private static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {

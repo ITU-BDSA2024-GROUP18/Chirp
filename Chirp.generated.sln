@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.CSVDBService", "src\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVDBService.Tests", "test\CSVDBService.Tests\CSVDBService.Tests.csproj", "{DB963D2E-3D04-4F76-8DC6-02B7A7D9C371}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chirp.Razor", "src\Chirp.Razor\Chirp.Razor.csproj", "{BA89EAE7-8FBD-4F98-803F-56435B78E096}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
