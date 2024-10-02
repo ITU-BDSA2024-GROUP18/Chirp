@@ -6,7 +6,7 @@ using CsvHelper;
 public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 {
     //Singleton pattern starts
-    private string csvPath = "../Chirp.CLI/chirp_cli_db.csv";
+    private string csvPath = Path.Combine(AppContext.BaseDirectory, "chirp_cli_db.csv");
 
     private static CSVDatabase<T>? instance = null;
 
@@ -32,11 +32,8 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 
     //Method below can override the field csvPath which has been set when an instance is created
     public void Set_path(string path)
-
     {
         csvPath = path;
-
-
     }
     //Singleton pattern ends
 
@@ -62,19 +59,10 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 
     public void Store(T record)
     {
-        var fileExists = File.Exists(csvPath);
-
         using (var stream = File.Open(csvPath, FileMode.Append))
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            if (!fileExists)
-            {
-                // Write the header only if the file does not exist
-                csv.WriteHeader<T>();
-                csv.NextRecord();
-            }
-
             csv.NextRecord(); //acts as an "enter" button, so the new record gets written on its own line
             csv.WriteRecord(record);
         }
