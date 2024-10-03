@@ -14,7 +14,7 @@ public class DbFacade
     private readonly string? _connection_string;
 
     //Embedded SQLite scripts, to be used if path from connection_string does not exist
-    private readonly IFileProvider embeddedFile;
+    //private readonly IFileProvider embeddedFile;
 
 
     //Initialize DbFacade
@@ -23,18 +23,20 @@ public class DbFacade
         _connection_string = Environment.GetEnvironmentVariable("CHIRPDBPATH");
 
         //Consider maybe moving this to the DBConnectionManager function (AJ)
-        if (_connection_string == null){
+        if (_connection_string == null)
+        {
 
-            _connection_string = Path.GetTempPath() + "chirp.db";
+            _connection_string = Path.Combine(AppContext.BaseDirectory, Path.GetTempPath() + "chirp.db");
 
         }
 
         seedDatabase();
 
-        
+
     }
 
-    public string readEmbeddedQuery (string queryPath){
+    public string readEmbeddedQuery(string queryPath)
+    {
 
 
         var unEmbedder = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
@@ -47,7 +49,8 @@ public class DbFacade
         return myQuery;
     }
 
-    public void seedDatabase(){
+    public void seedDatabase()
+    {
 
         var connection = DBConnectionManager();
 
@@ -55,11 +58,11 @@ public class DbFacade
 
         var command = connection.CreateCommand();
 
-        command.CommandText = readEmbeddedQuery("schema.sql");
+        command.CommandText = readEmbeddedQuery("/data/schema.sql");
 
         command.ExecuteNonQuery();
 
-        command.CommandText = readEmbeddedQuery("dump.sql");
+        command.CommandText = readEmbeddedQuery("data/dump.sql");
 
         command.ExecuteNonQuery();
 
