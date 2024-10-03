@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 public class ChirpApiTests
 {
-    private const string BaseUrl = "http://localhost:5117";
+    private const string BaseUrl = "https://bdsagroup18testcli.azurewebsites.net";
     private readonly HttpClient _client;
 
     public ChirpApiTests()
@@ -27,7 +27,7 @@ public class ChirpApiTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var cheeps = await response.Content.ReadFromJsonAsync<List<Cheep>>();
         Assert.NotNull(cheeps);
-        Assert.True(cheeps.Count > 0); 
+        Assert.True(cheeps.Count > 0);
     }
 
     [Fact]

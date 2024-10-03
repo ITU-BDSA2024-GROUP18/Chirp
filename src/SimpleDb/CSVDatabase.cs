@@ -59,13 +59,19 @@ public sealed class CSVDatabase<T> : IDatabaseRepository<T>
 
     public void Store(T record)
     {
+        var fileExists = File.Exists(csvPath);
         using (var stream = File.Open(csvPath, FileMode.Append))
         using (var writer = new StreamWriter(stream))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
+            if (!fileExists)
+            {
+                // Write the header only if the file does not exist
+                csv.WriteHeader<T>();
+                csv.NextRecord();
+            }
             csv.NextRecord(); //acts as an "enter" button, so the new record gets written on its own line
             csv.WriteRecord(record);
         }
     }
 }
-

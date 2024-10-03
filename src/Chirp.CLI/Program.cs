@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 // Create an HTTP client object
-var baseURL = "http://localhost:5117";
+var baseURL = "https://bdsagroup18testcli.azurewebsites.net/";
 using HttpClient client = new();
 client.DefaultRequestHeaders.Accept.Clear();
 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
