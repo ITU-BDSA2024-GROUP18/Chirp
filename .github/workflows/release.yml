@@ -112,17 +112,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy:
-    name: Deploy to Azure  
-    needs: release          
-    runs-on: ubuntu-latest  
-    steps:
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: ${{ env.APP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: "${{ env.FILE_PATH }}"
+  #deploy:
+    #name: Deploy to Azure  
+    #needs: release          
+    #runs-on: ubuntu-latest  
+    #steps:
+    #- name: Deploy to Azure
+    #  uses: azure/webapps-deploy@v3
+     # with:
+      #  app-name: ${{ env.APP_NAME }}
+       # publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        #package: "${{ env.FILE_PATH }}"
 
 
 # Documentation / Inspiration
