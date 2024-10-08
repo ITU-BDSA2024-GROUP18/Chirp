@@ -16,7 +16,7 @@ namespace Razor.App.Tests
             string actualDateTime = DbFacade.UnixTimeStampToDateTimeString(unixTime);
 
             // Assert
-            Assert.Equal("08/10/24 12:29:56", actualDateTime);
+            Assert.Equal("08/10/24 10:29:56", actualDateTime);
         }
     }
 

@@ -143,9 +143,9 @@ public class DbFacade
 
         dateTime = dateTime.AddSeconds(unixTimeStamp);
 
-        var local = dateTime.ToLocalTime();
+        //var local = dateTime.ToLocalTime();
 
-        return local.ToString("dd/MM/yy H:mm:ss");
+        return dateTime.ToString("dd/MM/yy H:mm:ss");
     }
 
 }
