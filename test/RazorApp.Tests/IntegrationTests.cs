@@ -43,4 +43,17 @@ public class ChirpApiTests : IClassFixture<WebApplicationFactory<Program>> {
         var cheep = await response.Content.ReadAsStringAsync();
         Assert.Contains("Hej, velkommen til kurset.", cheep);
     }
+
+    [Fact]
+    public async void GetRequest_CorrectContentType()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/");
+
+        response.EnsureSuccessStatusCode(); // Status Code 200-299
+
+        Assert.Equal("text/html; charset=utf-8", 
+            response.Content.Headers.ContentType.ToString());
+    }
 }
