@@ -43,7 +43,7 @@ jobs:
         working-directory: src/${{ env.FILE_NAME }}
         run: dotnet restore
 
-      - name: Build Chirp.CLI
+      - name: Build {{ env.FILE_NAME }}
         working-directory: src/${{ env.FILE_NAME }}
         run: dotnet build
   
@@ -112,17 +112,46 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  #deploy:
-    #name: Deploy to Azure  
-    #needs: release          
-    #runs-on: ubuntu-latest  
-    #steps:
-    #- name: Deploy to Azure
-    #  uses: azure/webapps-deploy@v3
-     # with:
-      #  app-name: ${{ env.APP_NAME }}
-       # publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        #package: "${{ env.FILE_PATH }}"
+  deploy:
+    name: Deploy to Azure
+    needs: [release]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Clear NuGet Cache
+      run: dotnet nuget locals all --clear
+
+    - name: Install dependencies for ${{ env.FILE_NAME }}
+      working-directory: src/${{ env.FILE_NAME }}
+      run: dotnet restore
+
+    - name: Build {{ env.FILE_NAME }}
+      working-directory: src/${{ env.FILE_NAME }}
+      run: dotnet build
+
+#copied from release, to be edited
+    - name: Publish {{ env.FILE_NAME }}
+      shell: bash
+      run: |
+        tag=$(git describe --tags --abbrev=0)
+        release_name="${{ env.FILE_NAME }}-$tag-${{ matrix.target }}"
+        # Build everything
+        dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
+
+    - name: Deploy!!
+      uses: azure/webapps-deploy@v3
+      with:
+       app-name: ${{ env.APP_NAME }}
+       publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+       package: "${{ env.FILE_PATH }}"
 
 
 # Documentation / Inspiration
