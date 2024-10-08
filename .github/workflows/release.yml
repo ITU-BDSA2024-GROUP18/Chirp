@@ -74,6 +74,10 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
+      - name: Install dependencies for ${{ env.FILE_NAME }}
+        working-directory: src/${{ env.FILE_NAME }}
+        run: dotnet restore
+
       - name: Build
         shell: bash
         run: |
