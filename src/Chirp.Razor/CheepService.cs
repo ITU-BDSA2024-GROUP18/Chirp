@@ -8,8 +8,8 @@ public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps();
-    public List<CheepViewModel> GetCheepsFromAuthor(string author);
+    public List<CheepViewModel> GetCheeps(int pageNum);
+    public List<CheepViewModel> GetCheepsFromAuthor(int pageNum, string author);
 
 
 }
@@ -18,19 +18,26 @@ public class CheepService : ICheepService
 {
 
 
-    
+    private int pageLimit = 32;
 
     private DbFacade db = new DbFacade();
 
-    public List<CheepViewModel> GetCheeps()
+    public List<CheepViewModel> GetCheeps(int pageNum)
     {
 
         // Establish connection
         var connection = db.DBConnectionManager();
 
         // Build query without author param
-        var query_string = db.QueryBuilder(null);
+        var query_string = @$"SELECT u.username, m.text, m.pub_date 
+                              FROM message m 
+                              JOIN user u ON m.author_id = u.user_id
+                              ORDER BY m.pub_date DESC 
+                              LIMIT {pageLimit} OFFSET {(pageNum - 1) * pageLimit}";
 
+
+        //If you wanna test pagination with different pageLimit values,
+        //author Jacqualine Gilcoine has a total of 359 Cheeps on her timeline
 
         var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
 
@@ -38,13 +45,18 @@ public class CheepService : ICheepService
 
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string authorQuery)
+    public List<CheepViewModel> GetCheepsFromAuthor(int pageNum, string authorQuery)
     {
         // Establish connection
         var connection = db.DBConnectionManager();
 
         // Build query with author paramater
-        var query_string = db.QueryBuilder(authorQuery);
+        var query_string = @$"SELECT u.username, m.text, m.pub_date 
+                              FROM message m 
+                              JOIN user u ON m.author_id = u.user_id
+                              WHERE u.username = '{authorQuery}'
+                              ORDER BY m.pub_date DESC
+                              LIMIT {pageLimit} OFFSET {(pageNum - 1) * pageLimit}";
 
         // Retreive all cheeps from a single user database
         var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
@@ -61,5 +73,7 @@ public class CheepService : ICheepService
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
+
+    
 
 }
