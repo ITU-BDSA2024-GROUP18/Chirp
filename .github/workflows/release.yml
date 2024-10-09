@@ -91,7 +91,7 @@ jobs:
           release_name="${{ env.FILE_NAME }}-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o ./publish
+          dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
 
           # Pack files
 
