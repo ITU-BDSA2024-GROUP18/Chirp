@@ -8,7 +8,7 @@ builder.Services.AddSingleton<ICheepService, CheepService>();
 
 var app = builder.Build();
 
-//Specify the port to listen to as 8080
+//Specify the port to listen to as 8080 (thanks CHATgpt)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
 
