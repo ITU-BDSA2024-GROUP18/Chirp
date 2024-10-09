@@ -147,7 +147,7 @@ jobs:
         dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
 
     - name: Deploy!!
-      uses: azure/webapps-deploy@v3
+      uses: azure/webapps-deploy@v2
       with:
        app-name: ${{ env.APP_NAME }}
        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
