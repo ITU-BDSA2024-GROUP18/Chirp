@@ -8,10 +8,6 @@ builder.Services.AddSingleton<ICheepService, CheepService>();
 
 var app = builder.Build();
 
-//Specify the port to listen to as 8181 (thanks CHATgpt)
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8181";
-app.Urls.Add($"http://*:{port}");
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
