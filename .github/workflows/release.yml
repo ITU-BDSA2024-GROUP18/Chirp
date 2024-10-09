@@ -11,7 +11,7 @@ env:
 
   #Path to folder in which dotnet stores config files upon 
   #running dotnet publish, which are then deployed to Azure
-  FILE_PATH: "./src/Chirp.Razor/bin/Release/net8.0/"
+  FILE_PATH: "./src/Chirp.Razor/bin/Release/net8.0/linux-x64"
 
 #Do this workflow when any version tag is pushed
 on:
