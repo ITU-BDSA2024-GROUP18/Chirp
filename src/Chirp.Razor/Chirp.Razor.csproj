@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.8" />
-      <Content Include="wwwroot\**\*.*" CopyToOutputDirectory="PreserveNewest" />
     <EmbeddedResource Include="data/**/*"/>
   </ItemGroup>
 
