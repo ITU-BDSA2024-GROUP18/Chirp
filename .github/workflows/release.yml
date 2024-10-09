@@ -144,7 +144,7 @@ jobs:
         tag=$(git describe --tags --abbrev=0)
         release_name="${{ env.FILE_NAME }}-$tag-${{ matrix.target }}"
         # Build everything
-        dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "linux-x64" --self-contained false -c Release -o "Chirp.Razor-Release"
+        dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "linux-x64" --self-contained false -c Release -o "src/Chirp.Razor/Chirp.Razor-Release"
 
     - name: Deploy!!
       uses: azure/webapps-deploy@v3
