@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name:
+        run: echo "DOTNET ROOT is set to ${{ env.DOTNET_ROOT }}" 
+      
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
