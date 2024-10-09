@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name:
+      - name: Test_root
         run: echo "DOTNET ROOT is set to ${{ env.DOTNET_ROOT }}" 
       
 
@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: src/Chirp.Razor/Release_Chirp
 
   deploy:
     runs-on: ubuntu-latest
