@@ -11,7 +11,7 @@ env:
 
   #Path to folder in which dotnet stores config files upon 
   #running dotnet publish, which are then deployed to Azure
-  FILE_PATH: "./src/Chirp.Razor/bin/Release/net7.0/"
+  FILE_PATH: "./src/Chirp.Razor/bin/Release/net8.0/"
 
 #Do this workflow when any version tag is pushed
 on:
@@ -32,9 +32,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
 
       - name: Clear NuGet Cache
         run: dotnet nuget locals all --clear
@@ -73,9 +73,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
 
       - name: Clear NuGet Cache
         run: dotnet nuget locals all --clear
@@ -91,7 +91,7 @@ jobs:
           release_name="${{ env.FILE_NAME }}-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
+          dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
 
           # Pack files
 
@@ -122,9 +122,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
 
     - name: Clear NuGet Cache
       run: dotnet nuget locals all --clear
@@ -144,15 +144,14 @@ jobs:
         tag=$(git describe --tags --abbrev=0)
         release_name="${{ env.FILE_NAME }}-$tag-${{ matrix.target }}"
         # Build everything
-        dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
+        dotnet publish src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}.csproj --framework net8.0 --runtime "linux-x64" --self-contained false -c Release -o "$release_name"
 
     - name: Deploy!!
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
        app-name: ${{ env.APP_NAME }}
        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
        package: "${{ env.FILE_PATH }}"
-       runtime: "DOTNETCORE|7.0"
 
 
 # Documentation / Inspiration
