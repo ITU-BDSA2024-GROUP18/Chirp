@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./release_artifact
+          path: src/Chirp.Razor/Release_Chirp
 
   deploy:
     runs-on: ubuntu-latest
