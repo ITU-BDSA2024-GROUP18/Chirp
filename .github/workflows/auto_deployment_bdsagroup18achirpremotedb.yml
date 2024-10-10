@@ -24,13 +24,13 @@ jobs:
         run: dotnet build src/Chirp.Razor/ --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish src/Chirp.Razor/Chirp.Razor.csproj -c Release -o src/Chirp.Razor/Release_Chirp
+        run: dotnet publish src/Chirp.Razor/Chirp.Razor.csproj -c Release -o ./publish_output
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: src/Chirp.Razor/Release_Chirp
+          path: ./publish_output
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,6 +55,9 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_65F75FBED47F4BB1B0CE7AFC5551C7C0 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EAFF450827D14A31B6A96402E80080C1 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C4EB7DA5676B4FECA403135D54997686 }}
+
+      - name: List contents of published folder
+        run: ls -la ./release_artifact
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
