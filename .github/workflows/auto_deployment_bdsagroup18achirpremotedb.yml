@@ -15,11 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Test_root
-        run: echo "DOTNET ROOT is set to ${{ env.DOTNET_ROOT }}" 
-      
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
@@ -35,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: src/Chirp.Razor/Release_Chirp
+          path: ./release_artifact
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,5 +60,5 @@ jobs:
         with:
           app-name: 'bdsagroup18achirpremotedb'
           slot-name: 'Production'
-          package: .src/Chirp.Razor/Release_Chirp
+          package: ./release_artifact
           
