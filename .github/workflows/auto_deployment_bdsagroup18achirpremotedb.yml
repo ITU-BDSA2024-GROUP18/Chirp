@@ -24,13 +24,13 @@ jobs:
         run: dotnet build src/Chirp.Razor/ --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish src/Chirp.Razor/Chirp.Razor.csproj -c Release -o ./publish_output
+        run: dotnet publish src/Chirp.Razor/Chirp.Razor.csproj -c Release -o ./Publish_output
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./publish_output
+          path: ./Publish_output
 
   deploy:
     runs-on: ubuntu-latest
