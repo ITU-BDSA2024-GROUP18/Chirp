@@ -1,4 +1,4 @@
-name: Build and Release Chirp
+name: Deploy and Release Chirp
 
 env:
 
@@ -43,7 +43,7 @@ jobs:
         working-directory: src/${{ env.FILE_NAME }}
         run: dotnet restore
 
-      - name: Build {{ env.FILE_NAME }}
+      - name: Build ${{ env.FILE_NAME }}
         working-directory: src/${{ env.FILE_NAME }}
         run: dotnet build
   
@@ -133,12 +133,12 @@ jobs:
       working-directory: src/${{ env.FILE_NAME }}
       run: dotnet restore
 
-    - name: Build {{ env.FILE_NAME }}
+    - name: Build ${{ env.FILE_NAME }}
       working-directory: src/${{ env.FILE_NAME }}
       run: dotnet build
 
 #copied from release, to be edited
-    - name: Publish {{ env.FILE_NAME }}
+    - name: Publish ${{ env.FILE_NAME }}
       shell: bash
       run: |
         tag=$(git describe --tags --abbrev=0)
