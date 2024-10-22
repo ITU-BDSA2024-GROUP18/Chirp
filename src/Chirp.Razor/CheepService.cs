@@ -4,12 +4,13 @@ using Microsoft.Data.Sqlite;
 //always define namespace everywhere except for Program.cs
 namespace Chirp.Razor;
 
+//ViewModel obsolete - only used in db.facade which our tests still uses.
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps(int pageNum);
-    public List<CheepViewModel> GetCheepsFromAuthor(int pageNum, string author);
+    public Task<List<CheepDTO>> GetCheeps(int pageNum);
+    public Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author);
 
 
 }
@@ -17,51 +18,35 @@ public interface ICheepService
 public class CheepService : ICheepService
 {
 
+    private readonly ICheepRepository _CheepRepository;
 
-    private int pageLimit = 32;
+    // private int pageLimit = 32;
 
-    private DbFacade db = new DbFacade();
+    // private DbFacade db = new DbFacade();
 
-    public List<CheepViewModel> GetCheeps(int pageNum)
+    public CheepService(ICheepRepository CheepRepository)
     {
 
-        // Establish connection
-        var connection = db.DBConnectionManager();
-
-        // Build query without author param
-        var query_string = @$"SELECT u.username, m.text, m.pub_date 
-                              FROM message m 
-                              JOIN user u ON m.author_id = u.user_id
-                              ORDER BY m.pub_date DESC 
-                              LIMIT {pageLimit} OFFSET {(pageNum - 1) * pageLimit}";
-
-
-        //If you wanna test pagination with different pageLimit values,
-        //author Jacqualine Gilcoine has a total of 359 Cheeps on her timeline
-
-        var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
-
-        return Cheep_list;
+        _CheepRepository = CheepRepository;
 
     }
 
-    public List<CheepViewModel> GetCheepsFromAuthor(int pageNum, string authorQuery)
+    public async Task<List<CheepDTO>> GetCheeps(int pageNum)
     {
-        // Establish connection
-        var connection = db.DBConnectionManager();
 
-        // Build query with author paramater
-        var query_string = @$"SELECT u.username, m.text, m.pub_date 
-                              FROM message m 
-                              JOIN user u ON m.author_id = u.user_id
-                              WHERE u.username = '{authorQuery}'
-                              ORDER BY m.pub_date DESC
-                              LIMIT {pageLimit} OFFSET {(pageNum - 1) * pageLimit}";
+        var cheep_list = await _CheepRepository.ReadPublicTimeline(pageNum);
 
-        // Retreive all cheeps from a single user database
-        var Cheep_list = db.ReadCheepsFromQuery(connection, query_string);
+        return cheep_list;
 
-        return Cheep_list;
+
+    }
+
+    public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author)
+    {
+
+        var cheep_list = await _CheepRepository.ReadFromAuthor(pageNum, author);
+
+        return cheep_list;
 
     }
 

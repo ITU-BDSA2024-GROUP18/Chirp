@@ -70,28 +70,7 @@ public class DbFacade
 
     }
 
-    /*
-    public string QueryBuilder(string? authorQuery)
-    {
 
-
-        //Base query for username, text, pub_date
-        string SQLiteQuery = @$"SELECT u.username, m.text, m.pub_date 
-                             FROM message m 
-                             JOIN user u ON m.author_id = u.user_id";
-
-
-        //If an author name (authorQuery) has been provided, append a WHERE clause to the query
-        if (authorQuery != null) SQLiteQuery += $" WHERE u.username = '{authorQuery}'";
-
-        //Order by date/time in a descending order
-        SQLiteQuery += " ORDER BY m.pub_date DESC";
-
-        return SQLiteQuery;
-
-
-    }
-    */
 
     public SqliteConnection DBConnectionManager()
     {
