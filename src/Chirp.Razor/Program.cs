@@ -5,12 +5,16 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load database connection via configuration
+// Add services to the container.
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
 
-// Add services to the container.
+
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<ICheepService, CheepService>();
+// Register the service
+builder.Services.AddScoped<ICheepService, CheepService>();
+// Register the Repository
+builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
 
 var app = builder.Build();
