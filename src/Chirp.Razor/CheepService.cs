@@ -18,8 +18,6 @@ public class CheepService : ICheepService
 {
 	private ICheepRepository _CheepRepository;
 
-    private int pageLimit = 32;
-
     private DbFacade db = new DbFacade();
 
 	public CheepService(ICheepRepository repository)
