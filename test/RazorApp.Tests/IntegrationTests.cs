@@ -1,59 +1,65 @@
 using Chirp.Razor;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 
-namespace Razor.App.Tests;
-
-//Used: https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
-//      https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpcontent.readasstringasync?view=net-7.0
-//      https://github.com/dotnet/AspNetCore.Docs.Samples/blob/main/test/integration-tests/7.x/IntegrationTestsSample/tests/RazorPagesProject.Tests/RazorPagesProject.Tests.csproj
-
-public class ChirpApiTests : IClassFixture<WebApplicationFactory<Program>> {
-
-    private readonly WebApplicationFactory<Program> _factory;
-
-    //private const string BaseUrl = "https://bdsagroup18achirpremotedb.azurewebsites.net/";
-
-    public ChirpApiTests(WebApplicationFactory<Program> factory)
+namespace RazorApp.Tests
+{
+    public class ChirpApiTests : IClassFixture<WebApplicationFactory<Program>>
     {
-        _factory = factory;
-    }
+        private readonly WebApplicationFactory<Program> _factory;
 
-    [Fact]
-    public async void GetRequest_GetCheepFromAuthor()
-    {
-        var client = _factory.CreateClient();
+        public ChirpApiTests(WebApplicationFactory<Program> factory)
+        {
+            _factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    services.AddDbContext<ChirpDBContext>(options =>
+                    {
+                        options.UseSqlite("DataSource=:memory:"); 
+                    });
 
-        var response = await client.GetAsync("/Helge");
+                    var serviceProvider = services.BuildServiceProvider();
 
-        response.EnsureSuccessStatusCode(); // Status Code 200-299
+                    using var scope = serviceProvider.CreateScope();
+                    var dbContext = scope.ServiceProvider.GetRequiredService<ChirpDBContext>();
+                    dbContext.Database.OpenConnection(); 
+                    dbContext.Database.EnsureCreated(); 
+                });
+            });
+        }
 
-        var cheep = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Hello, BDSA students!", cheep);
-    }
+        [Fact]
+        public async Task GetRequest_GetCheepFromAuthor()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync("/Helge");
 
-    [Fact]
-    public async void GetRequest_GetCheepFromAuthor2()
-    {
-        var client = _factory.CreateClient();
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            var cheep = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Hello, BDSA students!", cheep);
+        }
 
-        var response = await client.GetAsync("/Adrian");
+        [Fact]
+        public async Task GetRequest_GetCheepFromAuthor2()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync("/Adrian");
 
-        response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            var cheep = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Hej, velkommen til kurset.", cheep);
+        }
 
-        var cheep = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Hej, velkommen til kurset.", cheep);
-    }
+        [Fact]
+        public async Task GetRequest_CorrectContentType()
+        {
+            var client = _factory.CreateClient();
+            var response = await client.GetAsync("/");
 
-    [Fact]
-    public async void GetRequest_CorrectContentType()
-    {
-        var client = _factory.CreateClient();
-
-        var response = await client.GetAsync("/");
-
-        response.EnsureSuccessStatusCode(); // Status Code 200-299
-
-        Assert.Equal("text/html; charset=utf-8", 
-            response.Content.Headers.ContentType.ToString());
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal("text/html; charset=utf-8", 
+                response.Content.Headers.ContentType.ToString());
+        }
     }
 }
