@@ -12,6 +12,10 @@ public interface ICheepService
     public Task<List<CheepDTO>> GetCheeps(int pageNum);
     public Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author);
 
+    public Task<Author> CreateAuthor(string name, string email);
+
+    public Task AddAuthor(Author author);
+
 
 }
 
@@ -47,6 +51,23 @@ public class CheepService : ICheepService
         var cheep_list = await _CheepRepository.ReadFromAuthor(pageNum, author);
 
         return cheep_list;
+
+    }
+
+    public async Task<Author> CreateAuthor(string name, string email)
+    {
+
+        var author = new Author() { AuthorId = await _CheepRepository.GetLatestId() + 1, Name = name, Email = email, Cheeps = new List<Cheep>() };
+
+        return author;
+
+
+    }
+
+    public async Task AddAuthor(Author author)
+    {
+
+        await _CheepRepository.AddAuthor(author);
 
     }
 
