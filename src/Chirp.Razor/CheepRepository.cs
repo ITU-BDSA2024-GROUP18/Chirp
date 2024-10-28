@@ -71,6 +71,19 @@ public class CheepRepository : ICheepRepository
 
     }
 
+    public async Task<Author> GetAuthor(string name)
+    {
+        var query =
+            from author in _dbContext.Authors
+            where author.Name == name
+            select author;
+
+        // the ?? handles if the result is null, and throws the exeption.
+        var result = await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        return result;
+
+    }
+
     public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
         // Unix timestamp is seconds past epoch
