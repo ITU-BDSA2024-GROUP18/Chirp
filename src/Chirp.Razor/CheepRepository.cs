@@ -71,7 +71,7 @@ public class CheepRepository : ICheepRepository
 
     }
 
-    public async Task<Author> GetAuthor(string name)
+    public async Task<Author> GetAuthorByName(string name)
     {
         var query =
             from author in _dbContext.Authors
@@ -83,6 +83,44 @@ public class CheepRepository : ICheepRepository
         return result;
 
     }
+
+    public async Task<Author> GetAuthorByEmail(string email)
+    {
+
+        var query =
+        from author in _dbContext.Authors
+        where author.Email == email
+        select author;
+
+        var result = await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        return result;
+    }
+
+    public async Task AddAuthor(Author author)
+    {
+        await _dbContext.Authors.AddAsync(author);
+
+        await _dbContext.SaveChangesAsync();
+
+
+    }
+
+    public async Task<int> GetLatestId()
+    {
+
+        //Retrieve maximum id from authors table and returnit 
+        var query_maxid = from a in _dbContext.Authors
+                          orderby a.AuthorId descending
+                          select a.AuthorId;
+
+        var LatestId = await query_maxid.FirstOrDefaultAsync();
+
+        return LatestId;
+
+
+    }
+
+
 
     public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     {
