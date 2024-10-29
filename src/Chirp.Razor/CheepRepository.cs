@@ -111,7 +111,7 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<int> GetLatestId()
+    public async Task<int> GetLatestIdAuthor()
     {
 
         //Retrieve maximum id from authors table and returnit 
@@ -122,6 +122,36 @@ public class CheepRepository : ICheepRepository
         var LatestId = await query_maxid.FirstOrDefaultAsync();
 
         return LatestId;
+
+
+    }
+
+
+    public async Task<int> GetLatestIdCheep()
+    {
+
+        //Retrieve maximum id from authors table and returnit 
+        var query_maxid = from c in _dbContext.Cheeps
+                          orderby c.CheepId descending
+                          select c.CheepId;
+
+        var LatestId = await query_maxid.FirstOrDefaultAsync();
+
+        return LatestId;
+
+
+    }
+
+    public async Task<Author> CheckAuthorExists(int AuthorId)
+    {
+
+        var query_authorId = from a in _dbContext.Authors
+                             where a.AuthorId == AuthorId
+                             select a;
+
+        var result = await query_authorId.FirstOrDefaultAsync() ?? throw new InvalidOperationException($"Author with ID {AuthorId} does not exist.");
+
+        return result;
 
 
     }
