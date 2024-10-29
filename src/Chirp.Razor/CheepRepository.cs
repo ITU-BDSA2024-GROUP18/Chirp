@@ -105,6 +105,12 @@ public class CheepRepository : ICheepRepository
 
     }
 
+    public async Task AddCheep(Cheep cheep)
+    {
+        await _dbContext.Cheeps.AddAsync(cheep);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task<int> GetLatestId()
     {
 

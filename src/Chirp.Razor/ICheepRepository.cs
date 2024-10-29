@@ -10,6 +10,8 @@ public interface ICheepRepository
     public Task<Author> GetAuthorByEmail(string email);
 
     public Task AddAuthor(Author author);
+
+    public Task AddCheep(Cheep cheep);
     public Task<int> GetLatestId();
 
 
