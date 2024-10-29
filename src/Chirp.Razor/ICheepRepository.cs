@@ -12,7 +12,11 @@ public interface ICheepRepository
     public Task AddAuthor(Author author);
 
     public Task AddCheep(Cheep cheep);
-    public Task<int> GetLatestId();
+    public Task<int> GetLatestIdAuthor();
+
+    public Task<int> GetLatestIdCheep();
+
+    public Task<Author> CheckAuthorExists(int AuthorId);
 
 
 }

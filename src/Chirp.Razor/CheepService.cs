@@ -16,6 +16,12 @@ public interface ICheepService
 
     public Task AddAuthor(Author author);
 
+    public Task AddCheep(Cheep cheep);
+
+    public Task<Cheep> CreateCheep(int authorid, string message, string? authorname = null, string? email = null);
+
+
+
 
 }
 
@@ -57,18 +63,69 @@ public class CheepService : ICheepService
     public async Task<Author> CreateAuthor(string name, string email)
     {
 
-        var author = new Author() { AuthorId = await _CheepRepository.GetLatestId() + 1, Name = name, Email = email, Cheeps = new List<Cheep>() };
+        var author = new Author()
+        {
+            AuthorId = await _CheepRepository.GetLatestIdAuthor() + 1,
+            Name = name,
+            Email = email,
+            Cheeps = new List<Cheep>()
+        };
 
         return author;
-
-
     }
 
+
+    public async Task<Cheep> CreateCheep(int authorid, string message, string? authorname = null, string? email = null)
+    {
+        //Checks if author exists in db based on an id, 
+        //if the author does exists a new cheep is created for that author, if not a new author is created, before creating the cheep.
+
+        var CheckAuthor = await _CheepRepository.CheckAuthorExists(authorid);
+
+        if (CheckAuthor != null)
+        {
+            var cheep = new Cheep()
+            {
+                CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
+                Author = CheckAuthor,
+                AuthorId = CheckAuthor.AuthorId,
+                Text = message,
+                TimeStamp = DateTime.Now
+            };
+
+            return cheep;
+
+        }
+        else
+        {
+            //creating new author
+            var newAuthor = await CreateAuthor(authorname, email);
+
+            var cheep = new Cheep()
+            {
+                CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
+                Author = newAuthor,
+                AuthorId = newAuthor.AuthorId,
+                Text = message,
+                TimeStamp = DateTime.Now
+            };
+
+            return cheep;
+
+        }
+
+    }
     public async Task AddAuthor(Author author)
     {
 
         await _CheepRepository.AddAuthor(author);
 
+    }
+
+    public async Task AddCheep(Cheep cheep)
+    {
+
+        await _CheepRepository.AddCheep(cheep);
     }
 
 }
