@@ -1,4 +1,4 @@
-namespace Chirp.Razor
+namespace Chirp.Core.Entities
 {
 
     public class Cheep

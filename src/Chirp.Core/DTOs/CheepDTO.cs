@@ -1,5 +1,4 @@
-namespace Chirp.Razor;
-
+namespace Chirp.Core.DTOs;
 
 public class CheepDTO
 {

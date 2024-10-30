@@ -1,4 +1,4 @@
-using Chirp.Razor;
+using Chirp.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 
