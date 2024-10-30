@@ -1,6 +1,10 @@
+using Chirp.Core.DTOs;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.Razor;
+namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
