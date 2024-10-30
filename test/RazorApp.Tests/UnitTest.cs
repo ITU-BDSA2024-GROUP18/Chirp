@@ -40,7 +40,7 @@ namespace RazorApp.Tests
             var connection = new SqliteConnection("Filename=:memory:");
             await connection.OpenAsync();
             var builder = new DbContextOptionsBuilder<ChirpDBContext>().UseSqlite(connection);
-            builder.EnableSensitiveDataLogging();
+            //builder.EnableSensitiveDataLogging();
 
             _context = new ChirpDBContext(builder.Options);
             await _context.Database.EnsureCreatedAsync(); // Applies the schema to the database
