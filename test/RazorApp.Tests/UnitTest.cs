@@ -1,11 +1,76 @@
 using Chirp.Razor;
 using Xunit;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
-namespace Razor.App.Tests
+
+namespace RazorApp.Tests
 {
 
     public class UnitTest1
     {
+
+        private ChirpDBContext _context = null!;
+        private ICheepRepository _repo = null!;
+
+        public void InitMockDB()
+        {
+            var a1 = new Author() { AuthorId = 20, Name = "Tester Testerington", Email = "tt1@itu.dk", Cheeps = new List<Cheep>() };
+            var a2 = new Author() { AuthorId = 21, Name = "Testine Testsson", Email = "tt2@itu.dk", Cheeps = new List<Cheep>() };
+            var a3 = new Author() { AuthorId = 22, Name = "Testy Testitez", Email = "tt3@itu.dk", Cheeps = new List<Cheep>() };
+
+            var authors = new List<Author>() { a1, a2, a3 };
+
+            var c1 = new Cheep() { CheepId = 900, AuthorId = a1.AuthorId, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
+            var c2 = new Cheep() { CheepId = 901, AuthorId = a2.AuthorId, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
+            var c3 = new Cheep() { CheepId = 902, AuthorId = a3.AuthorId, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
+
+            var cheeps = new List<Cheep>() { c1, c2, c3 };
+            a1.Cheeps = new List<Cheep>() { c1 };
+            a2.Cheeps = new List<Cheep>() { c2 };
+            a3.Cheeps = new List<Cheep>() { c3 };
+
+            _context.Authors.AddRange(authors);
+            _context.Cheeps.AddRange(cheeps);
+            _context.SaveChanges();
+        }
+
+        public async Task StartMockDB()
+        {
+            using var connection = new SqliteConnection("Filename=:memory:");
+            await connection.OpenAsync();
+            var builder = new DbContextOptionsBuilder<ChirpDBContext>().UseSqlite(connection);
+            builder.EnableSensitiveDataLogging();
+
+            _context = new ChirpDBContext(builder.Options);
+            await _context.Database.EnsureCreatedAsync(); // Applies the schema to the database
+
+            _repo = new CheepRepository(_context);
+        }
+
+        [Fact]
+        public async Task AddCheepToDB()
+        {
+            StartMockDB();
+            InitMockDB();
+
+            //Arrange
+            var ta1 = new Author() { AuthorId = 4, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            var tc1 = new Cheep() { CheepId = 4, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+
+            //Act
+            await _repo.AddCheep(tc1);
+
+            //Assert
+            var actualCheep = await _context.Cheeps.Include(cheep => cheep.Author).FirstOrDefaultAsync();
+            Assert.Equal(4, actualCheep.Author.AuthorId);
+            Assert.Equal("My Name Test", actualCheep.Author.Name);
+            Assert.Equal("test@itu.dk", actualCheep.Author.Email);
+            Assert.Equal("This is my first cheep", actualCheep.Text);
+        }
+
+
         [Fact]
         public void FromUnixTimeToDateTime_ConvertsCorrectly()
         {
