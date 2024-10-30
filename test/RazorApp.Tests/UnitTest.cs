@@ -37,7 +37,7 @@ namespace RazorApp.Tests
 
         public async Task StartMockDB()
         {
-            using var connection = new SqliteConnection("Filename=:memory:");
+            var connection = new SqliteConnection("Filename=:memory:");
             await connection.OpenAsync();
             var builder = new DbContextOptionsBuilder<ChirpDBContext>().UseSqlite(connection);
             builder.EnableSensitiveDataLogging();
@@ -51,20 +51,19 @@ namespace RazorApp.Tests
         [Fact]
         public async Task AddCheepToDB()
         {
-            StartMockDB();
-            InitMockDB();
+            await StartMockDB();
 
             //Arrange
-            var ta1 = new Author() { AuthorId = 4, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
-            var tc1 = new Cheep() { CheepId = 4, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
 
             //Act
             await _repo.AddCheep(tc1);
 
             //Assert
-            var actualCheep = await _context.Cheeps.Include(cheep => cheep.Author).FirstOrDefaultAsync();
-            Assert.Equal(4, actualCheep.Author.AuthorId);
+            var actualCheep = await _context.Cheeps.Where(cheep => cheep.AuthorId == tc1.AuthorId).FirstOrDefaultAsync();
+            Assert.Equal(100, actualCheep.Author.AuthorId);
             Assert.Equal("My Name Test", actualCheep.Author.Name);
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
             Assert.Equal("This is my first cheep", actualCheep.Text);
