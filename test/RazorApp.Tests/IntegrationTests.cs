@@ -1,7 +1,6 @@
 using Chirp.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace RazorApp.Tests
 {
