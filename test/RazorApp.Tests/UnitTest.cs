@@ -79,6 +79,9 @@ namespace RazorApp.Tests
             _repo = new CheepRepository(_context);
         }
 
+        //Latest AuthorId: 12
+        //Latest CheepId: 657
+
         [Fact]
         public async Task AddedCheep_IsSavedToDB()
         {
