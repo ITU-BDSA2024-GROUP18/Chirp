@@ -4,6 +4,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Http.Extensions;
 using Chirp.Infrastructure.Services;
+using System.Globalization;
 
 
 namespace Chirp.Infrastructure.Data;
@@ -124,7 +125,7 @@ public class DbFacade
 
         //var local = dateTime.ToLocalTime();
 
-        return dateTime.ToString("dd/MM/yy H:mm:ss");
+        return dateTime.ToString("dd/MM/yy H:mm:ss", CultureInfo.InvariantCulture);
     }
 
 }

@@ -6,9 +6,9 @@ namespace Chirp.Infrastructure.Data
     public class ChirpDBContext : DbContext
     {
 
-        public required DbSet<Author> Authors { get; set; }
+        public DbSet<Author> Authors { get; set; }
 
-        public required DbSet<Cheep> Cheeps { get; set; }
+        public DbSet<Cheep> Cheeps { get; set; }
 
 
         public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
