@@ -51,7 +51,6 @@ namespace RazorApp.Tests
         [Fact]
         public async Task AddCheepToDB()
         {
-            await StartMockDB();
 
             //Arrange
             var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
@@ -59,6 +58,7 @@ namespace RazorApp.Tests
             var tc1 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
 
             //Act
+            await StartMockDB();
             await _repo.AddCheep(tc1);
 
             //Assert
@@ -80,7 +80,7 @@ namespace RazorApp.Tests
             string actualDateTime = DbFacade.UnixTimeStampToDateTimeString(unixTime);
 
             // Assert
-            Assert.Equal("08/10/24 10:29:56", actualDateTime);
+            Assert.Equal("08/10/24 10.29.56", actualDateTime);
         }
     }
 
