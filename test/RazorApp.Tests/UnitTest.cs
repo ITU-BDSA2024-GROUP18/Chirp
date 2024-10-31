@@ -208,6 +208,20 @@ namespace RazorApp.Tests
             Assert.Empty(actualAuthorCheeps);
         }
 
+        //The test below will fail if we have a future db with many cheeps, so we should consider correctly mocking a clean empty version of the db.
+        [Fact]
+        public async Task ReadPublicTimeline_ReturnsEmptyList_NoCheepsOnPage()
+        {
+            //Arrange
+
+            //Act
+            await StartMockDB();
+            var actualPageCheeps = await _repo.ReadPublicTimeline(1000);
+
+            //Assert
+            Assert.Empty(actualPageCheeps);
+        }
+
         [Fact]
         public void FromUnixTimeToDateTime_ConvertsCorrectly()
         {
