@@ -1,8 +1,11 @@
 using System.Data;
+using Chirp.Core.DTOs;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
 using Microsoft.Data.Sqlite;
 
 //always define namespace everywhere except for Program.cs
-namespace Chirp.Razor;
+namespace Chirp.Infrastructure.Services;
 
 //ViewModel obsolete - only used in db.facade which our tests still uses.
 public record CheepViewModel(string Author, string Message, string Timestamp);
@@ -99,7 +102,7 @@ public class CheepService : ICheepService
         else
         {
             //creating new author
-            var newAuthor = await CreateAuthor(authorname, email);
+            var newAuthor = await CreateAuthor(authorname ?? "Default Author", email ?? "default@example.com");
 
             var cheep = new Cheep()
             {

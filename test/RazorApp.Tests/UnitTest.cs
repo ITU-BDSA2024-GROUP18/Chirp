@@ -1,4 +1,4 @@
-using Chirp.Razor;
+using Chirp.Infrastructure.Data;
 using Xunit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

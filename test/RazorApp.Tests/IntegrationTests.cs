@@ -1,4 +1,4 @@
-using Chirp.Razor;
+using Chirp.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +58,7 @@ namespace RazorApp.Tests
             var response = await client.GetAsync("/");
 
             response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.NotNull(response.Content.Headers.ContentType);
             Assert.Equal("text/html; charset=utf-8", 
                 response.Content.Headers.ContentType.ToString());
         }

@@ -3,10 +3,10 @@ using System.Reflection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Http.Extensions;
+using Chirp.Infrastructure.Services;
 
 
-namespace Chirp.Razor;
-
+namespace Chirp.Infrastructure.Data;
 
 public class DbFacade
 {
@@ -128,6 +128,3 @@ public class DbFacade
     }
 
 }
-
-
-

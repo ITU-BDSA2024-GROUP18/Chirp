@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Chirp.Razor.Migrations
+namespace Chirp.Web.Migrations
 {
     /// <inheritdoc />
     public partial class RenamedFromInitial : Migration
