@@ -196,6 +196,19 @@ namespace RazorApp.Tests
         }
 
         [Fact]
+        public async Task ReadFromAuthor_ReturnsEmptyList_NonExistantAuthor()
+        {
+            //Arrange
+
+            //Act
+            await StartMockDB();
+            var actualAuthorCheeps = await _repo.ReadFromAuthor(1, "Non Existant Author");
+
+            //Assert
+            Assert.Empty(actualAuthorCheeps);
+        }
+
+        [Fact]
         public void FromUnixTimeToDateTime_ConvertsCorrectly()
         {
             // Arrange
