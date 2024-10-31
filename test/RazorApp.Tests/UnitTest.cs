@@ -99,7 +99,6 @@ namespace RazorApp.Tests
             Assert.Equal("test@itu.dk", actualAuthor.Email);
         }
 
-
         [Fact]
         public async Task GetAuthorByName_ReturnsCorrectAuthorName()
         {
@@ -113,6 +112,20 @@ namespace RazorApp.Tests
             //Assert
             var actualAuthor = await _repo.GetAuthorByName("My Name Test");
             Assert.Equal("My Name Test", actualAuthor.Name);
+        }
+
+        [Fact]
+        public async Task CheckAuthorExists_ThrowsExceptionWhenNotFound()
+        {
+            //Arrange
+            var authorId = 99;
+
+            //Act
+            await StartMockDB();
+
+            //Assert
+            var actualException = await Assert.ThrowsAnyAsync<InvalidOperationException>(() => _repo.CheckAuthorExists(authorId));
+            Assert.Equal($"Author with ID {authorId} does not exist.", actualException.Message);
         }
 
 
