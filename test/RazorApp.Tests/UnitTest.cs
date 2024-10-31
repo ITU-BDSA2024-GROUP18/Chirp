@@ -1,4 +1,7 @@
 using Chirp.Infrastructure.Data;
+using Chirp.Infrastructure.Repositories;
+using Chirp.Core.Entities;
+using Chirp.Core.Repositories;
 using Xunit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -232,7 +235,7 @@ namespace RazorApp.Tests
             string actualDateTime = DbFacade.UnixTimeStampToDateTimeString(unixTime);
 
             // Assert
-            Assert.Equal("08/10/24 10:29:56", actualDateTime);
+            Assert.Equal("08/10/24 10.29.56", actualDateTime);
         }
     }
 
