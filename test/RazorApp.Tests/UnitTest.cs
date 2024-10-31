@@ -84,6 +84,20 @@ namespace RazorApp.Tests
             Assert.Equal("My Name Test", actualAuthor.Name);
         }
 
+        [Fact]
+        public async Task GetAuthorByName_ReturnsCorrectAuthorName()
+        {
+            //Arrange
+            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            //Act
+            await StartMockDB();
+            await _repo.AddAuthor(ta1);
+
+            //Assert
+            var actualAuthor = await _repo.GetAuthorByName("My Name Test");
+            Assert.Equal("My Name Test", actualAuthor.Name);
+        }
 
 
         [Fact]
