@@ -80,7 +80,7 @@ namespace RazorApp.Tests
             await _repo.AddAuthor(ta1);
 
             //Assert
-            var actualAuthor = await _context.Authors.FirstOrDefaultAsync();
+            var actualAuthor = await _context.Authors.Where(auth => auth.AuthorId == ta1.AuthorId).FirstOrDefaultAsync();
             Assert.Equal("My Name Test", actualAuthor.Name);
         }
 
