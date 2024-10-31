@@ -49,7 +49,7 @@ namespace RazorApp.Tests
         }
 
         [Fact]
-        public async Task AddCheepToDB()
+        public async Task AddedCheep_IsSavedToDB()
         {
 
             //Arrange
@@ -68,6 +68,22 @@ namespace RazorApp.Tests
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
             Assert.Equal("This is my first cheep", actualCheep.Text);
         }
+
+        [Fact]
+        public async Task AddedAuthor_IsSavedToDB()
+        {
+            //Arrange
+            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            //Act
+            await StartMockDB();
+            await _repo.AddAuthor(ta1);
+
+            //Assert
+            var actualAuthor = await _context.Authors.FirstOrDefaultAsync();
+            Assert.Equal("My Name Test", actualAuthor.Name);
+        }
+
 
 
         [Fact]
