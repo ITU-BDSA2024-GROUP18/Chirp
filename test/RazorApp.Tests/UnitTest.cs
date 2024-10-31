@@ -159,6 +159,20 @@ namespace RazorApp.Tests
             Assert.Equal(999, actualCheepId);
         }
 
+        [Fact]
+        public async Task GetLatestIdAuthor_ReturnsLastAddedAuthorId()
+        {
+            //Arrange
+            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            //Act
+            await StartMockDB();
+            await _repo.AddAuthor(ta1);
+
+            //Assert
+            var actualCheepId = await _repo.GetLatestIdAuthor();
+            Assert.Equal(100, actualCheepId);
+        }
 
         [Fact]
         public void FromUnixTimeToDateTime_ConvertsCorrectly()
