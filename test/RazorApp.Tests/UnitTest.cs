@@ -18,17 +18,24 @@ namespace RazorApp.Tests
             var a1 = new Author() { AuthorId = 20, Name = "Tester Testerington", Email = "tt1@itu.dk", Cheeps = new List<Cheep>() };
             var a2 = new Author() { AuthorId = 21, Name = "Testine Testsson", Email = "tt2@itu.dk", Cheeps = new List<Cheep>() };
             var a3 = new Author() { AuthorId = 22, Name = "Testy Testitez", Email = "tt3@itu.dk", Cheeps = new List<Cheep>() };
+            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
-            var authors = new List<Author>() { a1, a2, a3 };
+
+            var authors = new List<Author>() { a1, a2, a3, ta1 };
 
             var c1 = new Cheep() { CheepId = 900, AuthorId = a1.AuthorId, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
             var c2 = new Cheep() { CheepId = 901, AuthorId = a2.AuthorId, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
             var c3 = new Cheep() { CheepId = 902, AuthorId = a3.AuthorId, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
 
-            var cheeps = new List<Cheep>() { c1, c2, c3 };
+            var tc1 = new Cheep() { CheepId = 997, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc2 = new Cheep() { CheepId = 998, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my second cheep", TimeStamp = DateTime.Now };
+            var tc3 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my third cheep", TimeStamp = DateTime.Now };
+
+            var cheeps = new List<Cheep>() { c1, c2, c3, tc1, tc2, tc3 };
             a1.Cheeps = new List<Cheep>() { c1 };
             a2.Cheeps = new List<Cheep>() { c2 };
             a3.Cheeps = new List<Cheep>() { c3 };
+            ta1.Cheeps = new List<Cheep>() { tc1, tc2, tc3 };
 
             _context.Authors.AddRange(authors);
             _context.Cheeps.AddRange(cheeps);
@@ -170,8 +177,22 @@ namespace RazorApp.Tests
             await _repo.AddAuthor(ta1);
 
             //Assert
-            var actualCheepId = await _repo.GetLatestIdAuthor();
-            Assert.Equal(100, actualCheepId);
+            var actualAuthorId = await _repo.GetLatestIdAuthor();
+            Assert.Equal(100, actualAuthorId);
+        }
+
+        [Fact]
+        public async Task ReadFromAuthor_ReturnsAllCheepsByAuthor()
+        {
+            //Arrange
+
+            //Act
+            await StartMockDB();
+            InitMockDB();
+            var actualAuthorCheeps = await _repo.ReadFromAuthor(1, "My Name Test");
+
+            //Assert
+            Assert.All(actualAuthorCheeps, testcheeps => Assert.Equal("My Name Test", testcheeps.AuthorName));
         }
 
         [Fact]
