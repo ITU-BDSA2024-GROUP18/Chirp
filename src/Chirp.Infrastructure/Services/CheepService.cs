@@ -102,7 +102,7 @@ public class CheepService : ICheepService
         else
         {
             //creating new author
-            var newAuthor = await CreateAuthor(authorname, email);
+            var newAuthor = await CreateAuthor(authorname ?? "Default Author", email ?? "default@example.com");
 
             var cheep = new Cheep()
             {
