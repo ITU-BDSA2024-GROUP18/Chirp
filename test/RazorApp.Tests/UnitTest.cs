@@ -6,15 +6,17 @@ using Xunit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace RazorApp.Tests
+
 {
 
-    public class UnitTest1
+    public class UnitTest1 : IAsyncDisposable
     {
 
         private ChirpDBContext _context = null!;
         private ICheepRepository _repo = null!;
+
+        private SqliteConnection _connection = null!;
 
         public void InitMockDB()
         {
@@ -45,11 +47,27 @@ namespace RazorApp.Tests
             _context.SaveChanges();
         }
 
+        // Tear down method. Xunit will call this method everytime a test is complete due to the implementation of
+        // the interface 'IAsyncDisposable'. This ensures that everytime we complete a test, we tear down connection and context
+        // such that we can call startmock(); at the start of every method.
+        public async ValueTask DisposeAsync()
+        {
+            if (_context != null)
+            {
+                await _context.DisposeAsync();
+            }
+
+            if (_connection != null)
+            {
+                await _connection.DisposeAsync();
+            }
+        }
+
         public async Task StartMockDB()
         {
-            var connection = new SqliteConnection("Filename=:memory:");
-            await connection.OpenAsync();
-            var builder = new DbContextOptionsBuilder<ChirpDBContext>().UseSqlite(connection);
+            _connection = new SqliteConnection("Filename=:memory:");
+            await _connection.OpenAsync();
+            var builder = new DbContextOptionsBuilder<ChirpDBContext>().UseSqlite(_connection);
             //builder.EnableSensitiveDataLogging();
 
             _context = new ChirpDBContext(builder.Options);
