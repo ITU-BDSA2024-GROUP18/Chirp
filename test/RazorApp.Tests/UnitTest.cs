@@ -128,6 +128,20 @@ namespace RazorApp.Tests
             Assert.Equal($"Author with ID {authorId} does not exist.", actualException.Message);
         }
 
+        [Fact]
+        public async Task CheckAuthorExists_ReturnsAuthor()
+        {
+            //Arrange
+
+            //Act
+            await StartMockDB();
+            InitMockDB();
+
+            //Assert
+            var actualAuthor = await _repo.CheckAuthorExists(20);
+            Assert.Equal("Tester Testerington", actualAuthor.Name);
+        }
+
 
         [Fact]
         public void FromUnixTimeToDateTime_ConvertsCorrectly()
