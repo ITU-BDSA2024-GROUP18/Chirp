@@ -5,6 +5,7 @@ using Chirp.Core.Repositories;
 using Xunit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace RazorApp.Tests
 
@@ -18,7 +19,8 @@ namespace RazorApp.Tests
 
         private SqliteConnection _connection = null!;
 
-        public void InitMockDB()
+        //Method is private to remove warnings concerning visibility.
+        private void InitMockDB()
         {
             var a1 = new Author() { AuthorId = 20, Name = "Tester Testerington", Email = "tt1@itu.dk", Cheeps = new List<Cheep>() };
             var a2 = new Author() { AuthorId = 21, Name = "Testine Testsson", Email = "tt2@itu.dk", Cheeps = new List<Cheep>() };
@@ -63,7 +65,8 @@ namespace RazorApp.Tests
             }
         }
 
-        public async Task StartMockDB()
+        //Method is private to remove warnings concerning visibility.
+        private async Task StartMockDB()
         {
             _connection = new SqliteConnection("Filename=:memory:");
             await _connection.OpenAsync();
@@ -91,7 +94,7 @@ namespace RazorApp.Tests
 
             //Assert
             var actualCheep = await _context.Cheeps.Where(cheep => cheep.AuthorId == tc1.AuthorId).FirstOrDefaultAsync();
-            Assert.Equal(100, actualCheep.Author.AuthorId);
+            Assert.Equal(100, actualCheep!.Author.AuthorId);
             Assert.Equal("My Name Test", actualCheep.Author.Name);
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
             Assert.Equal("This is my first cheep", actualCheep.Text);
@@ -109,7 +112,7 @@ namespace RazorApp.Tests
 
             //Assert
             var actualAuthor = await _context.Authors.Where(auth => auth.AuthorId == ta1.AuthorId).FirstOrDefaultAsync();
-            Assert.Equal("My Name Test", actualAuthor.Name);
+            Assert.Equal("My Name Test", actualAuthor!.Name);
         }
 
         [Fact]
@@ -253,7 +256,7 @@ namespace RazorApp.Tests
             string actualDateTime = DbFacade.UnixTimeStampToDateTimeString(unixTime);
 
             // Assert
-            Assert.Equal("08/10/24 10.29.56", actualDateTime);
+            Assert.Equal("08/10/24 10:29:56", actualDateTime);
         }
     }
 
