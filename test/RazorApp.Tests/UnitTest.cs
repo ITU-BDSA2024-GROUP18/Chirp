@@ -249,18 +249,18 @@ namespace RazorApp.Tests
             Assert.Empty(actualPageCheeps);
         }
 
-        [Fact]
-        public void FromUnixTimeToDateTime_ConvertsCorrectly()
-        {
-            // Arrange
-            double unixTime = 1728383396; //Unixtimestamp for: 12:29:50 08-10-2024
+        // [Fact]
+        // public void FromUnixTimeToDateTime_ConvertsCorrectly()
+        // {
+        //     // Arrange
+        //     double unixTime = 1728383396; //Unixtimestamp for: 12:29:50 08-10-2024
 
-            //Act 
-            string actualDateTime = DbFacade.UnixTimeStampToDateTimeString(unixTime);
+        //     //Act 
+        //     string actualDateTime = _repo.UnixTimeStampToDateTimeString(unixTime);
 
-            // Assert
-            Assert.Equal("08/10/24 10:29:56", actualDateTime);
-        }
+        //     // Assert
+        //     Assert.Equal("08/10/24 10:29:56", actualDateTime);
+        // }
     }
 
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Chirp.Core.DTOs;
 using Chirp.Core.Entities;
 using Chirp.Core.Repositories;
@@ -20,16 +21,14 @@ public class CheepRepository : ICheepRepository
     // Queries
     public async Task<List<CheepDTO>> ReadPublicTimeline(int pagenum)
     {
-        var query = 
+        var query =
             from cheeps in _dbContext.Cheeps
             orderby cheeps.TimeStamp descending
             select new CheepDTO
             {
                 AuthorName = cheeps.Author.Name,
                 Message = cheeps.Text,
-                Timestamp = UnixTimeStampToDateTimeString(
-                    ((DateTimeOffset)cheeps.TimeStamp).ToUnixTimeSeconds()
-                )
+                Timestamp = cheeps.TimeStamp.ToString()
             };
 
         return await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
@@ -45,9 +44,7 @@ public class CheepRepository : ICheepRepository
             {
                 AuthorName = cheeps.Author.Name,
                 Message = cheeps.Text,
-                Timestamp = UnixTimeStampToDateTimeString(
-                    ((DateTimeOffset)cheeps.TimeStamp).ToUnixTimeSeconds()
-                )
+                Timestamp = cheeps.TimeStamp.ToString()
             };
 
         return await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
@@ -105,9 +102,18 @@ public class CheepRepository : ICheepRepository
     }
 
     // Helper method
-    public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
-    {
-        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp);
-        return dateTime.ToString("dd/MM/yy H:mm:ss");
-    }
+    // public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
+    // {
+    //     // Unix timestamp is seconds past epoch
+    //     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
+    //     dateTime = dateTime.AddSeconds(unixTimeStamp);
+
+    //     //var local = dateTime.ToLocalTime();
+
+    //     return dateTime.ToString("dd/MM/yy H:mm:ss", CultureInfo.InvariantCulture);
+    // }
+
+
 }
+
