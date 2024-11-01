@@ -89,7 +89,7 @@ jobs:
         working-directory: src
         env:
           ConnectionString: 'Data Source=chirp.db;' # Adjust path to your database file
-        run: dotnet ef database update --project ./Chirp.Web/Chirp.Web.csproj --context "./Chirp.Infrastructure/Data/ChirpDBContext.cs" --connection "$ConnectionString"
+        run: dotnet ef database update --project ./Chirp.Web/Chirp.Web.csproj --context "Chirp.Infrastructure.Data.ChirpDBContext" --connection "$ConnectionString"
 
       - name: Build
         shell: bash
