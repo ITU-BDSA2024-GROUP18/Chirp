@@ -85,6 +85,9 @@ jobs:
         working-directory: src/${{ env.FILE_NAME }}
         run: dotnet restore
 
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef
+
       - name: Verify dotnet ef command
         run: |
           dotnet tool list --global  # List all global tools to check if EF is installed
