@@ -93,6 +93,18 @@ jobs:
           dotnet tool list --global  # List all global tools to check if EF is installed
           dotnet ef --version          # Check if EF Core is available
 
+      - name: Check current directory
+        run: pwd
+
+      - name: List contents of the working directory
+        run: ls -la
+
+      - name: List contents of src directory
+        run: ls -la src
+
+      - name: List contents of Chirp.Web directory
+        run: ls -la src/Chirp.Web
+
       - name: Database Migration
         working-directory: src
         env:
