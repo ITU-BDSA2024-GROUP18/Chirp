@@ -94,7 +94,7 @@ jobs:
         working-directory: src
         env:
           ConnectionString: 'Data Source=./Chirp.Web/chirp.db;' # Adjust path to your database file
-        run: dotnet ef database update --project ./Chirp.Web/Chirp.Web.csproj --context ChirpDBContext --connection "$ConnectionString"
+        run: dotnet ef database update --project ./Chirp.Web/Chirp.Web.csproj --context ChirpDBContext --connection "$ConnectionString" --verbosity diagnostic
 
       - name: Build
         shell: bash
