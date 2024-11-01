@@ -3,7 +3,7 @@ name: Deploy and Release Chirp
 env:
 
   #Name of the csproj file, omit .csproj extension
-  FILE_NAME: Chirp.Razor
+  FILE_NAME: Chirp.Web
 
   #The unique name of the webapp on the Azure Portal
   #This means our webapp address will be https://bdsagroup18chirprazor.azurewebsites.net/
@@ -11,7 +11,7 @@ env:
 
   #Path to folder in which dotnet stores config files upon 
   #running dotnet publish, which are then deployed to Azure
-  FILE_PATH: "./src/Chirp.Razor/Chirp.Razor-Release"
+  FILE_PATH: "./src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}-Release"
 
 #Do this workflow when any version tag is pushed
 on:
