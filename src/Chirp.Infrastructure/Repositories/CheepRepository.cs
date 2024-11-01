@@ -82,10 +82,10 @@ public class CheepRepository : ICheepRepository
         return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<Author> CheckAuthorExists(int authorId)
+    public async Task<Author?> CheckAuthorExists(int authorId)
     {
         var query = _dbContext.Authors.Where(a => a.AuthorId == authorId);
-        return await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException($"Author with ID {authorId} does not exist.");
+        return await query.FirstOrDefaultAsync();
     }
 
     // Commands

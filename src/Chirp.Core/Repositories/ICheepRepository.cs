@@ -19,7 +19,7 @@ public interface ICheepRepository
 
     public Task<int> GetLatestIdCheep();
 
-    public Task<Author> CheckAuthorExists(int AuthorId);
+    public Task<Author?> CheckAuthorExists(int AuthorId);
 
 
 }
