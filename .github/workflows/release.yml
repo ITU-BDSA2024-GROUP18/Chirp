@@ -106,9 +106,9 @@ jobs:
         run: ls -la src/Chirp.Web
 
       - name: Database Migration
-        working-directory: src
+        working-directory: src/Chirp.Web
         env:
-          ConnectionString: 'Data Source=./Chirp.Web/chirp.db;' # Adjust path to your database file
+          ConnectionString: 'Data Source=chirp.db;' # Adjust path to your database file
         run: dotnet ef database update --project ./Chirp.Web/Chirp.Web.csproj --context ChirpDBContext --connection "$ConnectionString" 
 
       - name: Build
