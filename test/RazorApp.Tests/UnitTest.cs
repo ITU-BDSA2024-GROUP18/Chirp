@@ -171,7 +171,7 @@ namespace RazorApp.Tests
 
             //Assert
             var actualAuthor = await _repo.CheckAuthorExists(12);
-            Assert.Equal("Adrian", actualAuthor.Name);
+            Assert.Equal("Adrian", actualAuthor?.Name);
         }
 
         [Fact]
