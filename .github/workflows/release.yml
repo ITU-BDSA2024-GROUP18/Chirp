@@ -11,7 +11,7 @@ env:
 
   #Path to folder in which dotnet stores config files upon 
   #running dotnet publish, which are then deployed to Azure
-  FILE_PATH: "./src/${{ env.FILE_NAME }}/${{ env.FILE_NAME }}-Release"
+  FILE_PATH: "./src/Chirp.Web/Chirp.Web-Release"
 
 #Do this workflow when any version tag is pushed
 on:
