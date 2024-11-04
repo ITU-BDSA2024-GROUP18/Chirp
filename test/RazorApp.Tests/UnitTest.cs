@@ -2,10 +2,9 @@ using Chirp.Infrastructure.Data;
 using Chirp.Infrastructure.Repositories;
 using Chirp.Core.Entities;
 using Chirp.Core.Repositories;
-using Xunit;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Sdk;
+using Chirp.Infrastructure.Services;
 
 namespace RazorApp.Tests
 
@@ -22,21 +21,21 @@ namespace RazorApp.Tests
         //Method is private to remove warnings concerning visibility.
         private void InitMockDB()
         {
-            var a1 = new Author() { AuthorId = 20, Name = "Tester Testerington", Email = "tt1@itu.dk", Cheeps = new List<Cheep>() };
-            var a2 = new Author() { AuthorId = 21, Name = "Testine Testsson", Email = "tt2@itu.dk", Cheeps = new List<Cheep>() };
-            var a3 = new Author() { AuthorId = 22, Name = "Testy Testitez", Email = "tt3@itu.dk", Cheeps = new List<Cheep>() };
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+            var a1 = new Author() { AuthorId = 13, Name = "Tester Testerington", Email = "tt1@itu.dk", Cheeps = new List<Cheep>() };
+            var a2 = new Author() { AuthorId = 14, Name = "Testine Testsson", Email = "tt2@itu.dk", Cheeps = new List<Cheep>() };
+            var a3 = new Author() { AuthorId = 15, Name = "Testy Testitez", Email = "tt3@itu.dk", Cheeps = new List<Cheep>() };
+            var ta1 = new Author() { AuthorId = 16, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
 
             var authors = new List<Author>() { a1, a2, a3, ta1 };
 
-            var c1 = new Cheep() { CheepId = 900, AuthorId = a1.AuthorId, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
-            var c2 = new Cheep() { CheepId = 901, AuthorId = a2.AuthorId, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
-            var c3 = new Cheep() { CheepId = 902, AuthorId = a3.AuthorId, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
+            var c1 = new Cheep() { CheepId = 658, AuthorId = a1.AuthorId, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
+            var c2 = new Cheep() { CheepId = 659, AuthorId = a2.AuthorId, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
+            var c3 = new Cheep() { CheepId = 660, AuthorId = a3.AuthorId, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
 
-            var tc1 = new Cheep() { CheepId = 997, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
-            var tc2 = new Cheep() { CheepId = 998, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my second cheep", TimeStamp = DateTime.Now };
-            var tc3 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my third cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 661, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc2 = new Cheep() { CheepId = 662, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my second cheep", TimeStamp = DateTime.Now };
+            var tc3 = new Cheep() { CheepId = 663, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my third cheep", TimeStamp = DateTime.Now };
 
             var cheeps = new List<Cheep>() { c1, c2, c3, tc1, tc2, tc3 };
             a1.Cheeps = new List<Cheep>() { c1 };
@@ -87,9 +86,9 @@ namespace RazorApp.Tests
         {
 
             //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+            var ta1 = new Author() { AuthorId = 13, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
-            var tc1 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
 
             //Act
             await StartMockDB();
@@ -97,7 +96,7 @@ namespace RazorApp.Tests
 
             //Assert
             var actualCheep = await _context.Cheeps.Where(cheep => cheep.AuthorId == tc1.AuthorId).FirstOrDefaultAsync();
-            Assert.Equal(100, actualCheep!.Author.AuthorId);
+            Assert.Equal(13, actualCheep!.Author.AuthorId);
             Assert.Equal("My Name Test", actualCheep.Author.Name);
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
             Assert.Equal("This is my first cheep", actualCheep.Text);
@@ -107,7 +106,7 @@ namespace RazorApp.Tests
         public async Task AddedAuthor_IsSavedToDB()
         {
             //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+            var ta1 = new Author() { AuthorId = 13, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
             //Act
             await StartMockDB();
@@ -118,100 +117,94 @@ namespace RazorApp.Tests
             Assert.Equal("My Name Test", actualAuthor!.Name);
         }
 
-        [Fact]
-        public async Task GetAuthorByEmail_ReturnsCorrectAuthor()
+        [Theory]
+        [InlineData("ropf@itu.dk", "ropf@itu.dk", "Helge")]
+        [InlineData("adho@itu.dk", "adho@itu.dk", "Adrian")]
+        public async Task GetAuthorByEmail_ReturnsCorrectAuthor(string Email, string expectedEmail, string expectedName)
         {
             //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
-
-            //Act
-            await StartMockDB();
-            await _repo.AddAuthor(ta1);
-
-            //Assert
-            var actualAuthor = await _repo.GetAuthorByEmail("test@itu.dk");
-            Assert.Equal("test@itu.dk", actualAuthor.Email);
-        }
-
-        [Fact]
-        public async Task GetAuthorByName_ReturnsCorrectAuthorName()
-        {
-            //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
-
-            //Act
-            await StartMockDB();
-            await _repo.AddAuthor(ta1);
-
-            //Assert
-            var actualAuthor = await _repo.GetAuthorByName("My Name Test");
-            Assert.Equal("My Name Test", actualAuthor.Name);
-        }
-
-        [Fact]
-        public async Task CheckAuthorExists_ThrowsExceptionWhenNotFound()
-        {
-            //Arrange
-            var authorId = 99;
 
             //Act
             await StartMockDB();
 
             //Assert
-            var actualException = await Assert.ThrowsAnyAsync<InvalidOperationException>(() => _repo.CheckAuthorExists(authorId));
-            Assert.Equal($"Author with ID {authorId} does not exist.", actualException.Message);
+            var actualAuthor = await _repo.GetAuthorByEmail(Email);
+            Assert.Equal(expectedEmail, actualAuthor.Email);
+            Assert.Equal(expectedName, actualAuthor.Name);
         }
+
+        [Theory]
+        [InlineData("Jacqualine Gilcoine", "Jacqualine Gilcoine", 10)]
+        [InlineData("Octavio Wagganer", "Octavio Wagganer", 8)]
+        public async Task GetAuthorByName_ReturnsCorrectAuthorName(string Name, string expectedName, int id)
+        {
+
+            //Act
+            await StartMockDB();
+
+            //Assert
+            var actualAuthor = await _repo.GetAuthorByName(Name);
+            Assert.Equal(expectedName, actualAuthor.Name);
+            Assert.Equal(id, actualAuthor.AuthorId);
+        }
+
+        // [Fact]
+        // public async Task CheckAuthorExists_ThrowsExceptionWhenNotFound()
+        // {
+        //     //Arrange
+        //     var authorId = 13;
+
+        //     //Act
+        //     await StartMockDB();
+
+        //     //Assert
+        //     var actualException = await Assert.ThrowsAnyAsync<InvalidOperationException>(() => _repo.CheckAuthorExists(authorId));
+        //     Assert.Equal($"Author with ID {authorId} does not exist.", actualException.Message);
+        // }
 
         [Fact]
         public async Task CheckAuthorExists_ReturnsAuthor()
         {
-            //Arrange
 
             //Act
             await StartMockDB();
-            InitMockDB();
 
             //Assert
-            var actualAuthor = await _repo.CheckAuthorExists(20);
-            Assert.Equal("Tester Testerington", actualAuthor.Name);
+            var actualAuthor = await _repo.CheckAuthorExists(12);
+            Assert.Equal("Adrian", actualAuthor?.Name);
         }
 
         [Fact]
         public async Task GetLatestIdCheep_ReturnsLastAddedCheepId()
         {
-            //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
-
-            var tc1 = new Cheep() { CheepId = 999, AuthorId = ta1.AuthorId, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
 
             //Act
             await StartMockDB();
-            await _repo.AddCheep(tc1);
+            //InitMock adds multiple authors and cheeps - highest cheepId after initmock() is 663
+            InitMockDB();
 
             //Assert
             var actualCheepId = await _repo.GetLatestIdCheep();
-            Assert.Equal(999, actualCheepId);
+            Assert.Equal(663, actualCheepId);
         }
 
         [Fact]
         public async Task GetLatestIdAuthor_ReturnsLastAddedAuthorId()
         {
-            //Arrange
-            var ta1 = new Author() { AuthorId = 100, Name = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
             //Act
             await StartMockDB();
-            await _repo.AddAuthor(ta1);
+            //InitMock adds multiple authors and cheeps - highest authorId after initmock() is 16
+            InitMockDB();
 
             //Assert
             var actualAuthorId = await _repo.GetLatestIdAuthor();
-            Assert.Equal(100, actualAuthorId);
+            Assert.Equal(16, actualAuthorId);
         }
 
         [Fact]
         public async Task ReadFromAuthor_ReturnsAllCheepsByAuthor()
         {
-            //Arrange
 
             //Act
             await StartMockDB();
@@ -225,7 +218,6 @@ namespace RazorApp.Tests
         [Fact]
         public async Task ReadFromAuthor_ReturnsEmptyList_NonExistantAuthor()
         {
-            //Arrange
 
             //Act
             await StartMockDB();
@@ -239,7 +231,6 @@ namespace RazorApp.Tests
         [Fact]
         public async Task ReadPublicTimeline_ReturnsEmptyList_NoCheepsOnPage()
         {
-            //Arrange
 
             //Act
             await StartMockDB();
@@ -248,6 +239,109 @@ namespace RazorApp.Tests
             //Assert
             Assert.Empty(actualPageCheeps);
         }
+
+        [Theory]
+
+        [InlineData(5, 32)]
+        [InlineData(21, 17)]
+        public async Task EnsureCorrectCheepsPerpage(int pagenum, int expectedNumOfCheeps)
+        {
+            //pagenumber should contain 32 cheeps, and pagenum 21 should contain 17 cheeps currently
+
+            //act
+            await StartMockDB();
+            var actualPageCheeps = await _repo.ReadPublicTimeline(pagenum);
+
+            Assert.Equal(expectedNumOfCheeps, actualPageCheeps.Count);
+        }
+
+
+        [Theory]
+        [InlineData("Donald", "testing@itu.dk", 13)]
+
+        public async Task CreateAuthor(string Name, string Email, int expectedAuhtorId)
+        {
+
+            //Arrange 
+            await StartMockDB();
+
+            CheepService cheepservice = new CheepService(_repo);
+            //Act
+            //CreateAuthor should get the latestAuthorID present in the database, and increment it by 1
+            var newAuhtor = await cheepservice.CreateAuthor(Name, Email);
+
+            //Assert
+            Assert.Equal(expectedAuhtorId, newAuhtor.AuthorId);
+            Assert.Equal(Name, newAuhtor.Name);
+            Assert.Equal(Email, newAuhtor.Email);
+
+
+        }
+
+        [Theory]
+        [InlineData(12, "Creating Cheep to Adrian", 658)]
+
+        public async Task CreateCheep_WhereAuthorExists(int authorId, string message, int expectedCheepId)
+        {
+            //Arrange 
+            await StartMockDB();
+
+            CheepService cheepservice = new CheepService(_repo);
+
+            //Act
+            var newCheepForAdrian = await cheepservice.CreateCheep(authorId, message);
+
+            //Assert 
+            Assert.Equal(authorId, newCheepForAdrian.AuthorId);
+            Assert.Equal(message, newCheepForAdrian.Text);
+            Assert.Equal(expectedCheepId, newCheepForAdrian.CheepId);
+        }
+
+        [Theory]
+        [InlineData(13, "I am a new author", 658, "Kamala", "Testing@itu.dk")]
+
+        public async Task CreateCheep_WhereAuthorDoesNotExists(int authorId, string message, int expectedCheepId, string name, string email)
+        {
+            //Arrange 
+            await StartMockDB();
+
+            CheepService cheepservice = new CheepService(_repo);
+
+            //Act
+            var FirstCheepForKamala = await cheepservice.CreateCheep(authorId, message, name, email);
+
+            //Assert 
+            Assert.Equal(authorId, FirstCheepForKamala.AuthorId);
+            Assert.Equal(message, FirstCheepForKamala.Text);
+            Assert.Equal(expectedCheepId, FirstCheepForKamala.CheepId);
+            Assert.Equal(name, FirstCheepForKamala.Author.Name);
+            Assert.Equal(email, FirstCheepForKamala.Author.Email);
+        }
+
+        [Theory]
+        [InlineData(13, "I am a new author", 658)]
+
+        public async Task CreateCheep_WhereAuthorDoesNotExists_DefaultNameAndEmail(int authorId, string message, int expectedCheepId)
+        {
+            //Arrange 
+            await StartMockDB();
+
+            CheepService cheepservice = new CheepService(_repo);
+
+            //Act
+            var FirstCheepForKamala = await cheepservice.CreateCheep(authorId, message);
+
+            //Assert 
+            Assert.Equal(authorId, FirstCheepForKamala.AuthorId);
+            Assert.Equal(message, FirstCheepForKamala.Text);
+            Assert.Equal(expectedCheepId, FirstCheepForKamala.CheepId);
+
+            //When the method is called with specific name and email, the method will set them to default values
+            Assert.Equal("Default Author", FirstCheepForKamala.Author.Name);
+            Assert.Equal("default@example.com", FirstCheepForKamala.Author.Email);
+        }
+
+
 
         // [Fact]
         // public void FromUnixTimeToDateTime_ConvertsCorrectly()
