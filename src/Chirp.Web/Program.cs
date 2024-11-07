@@ -5,8 +5,6 @@ using Chirp.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Entities;
 using Microsoft.AspNetCore.Identity;
-using Chirp.Web.Areas.Identity.Data;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
