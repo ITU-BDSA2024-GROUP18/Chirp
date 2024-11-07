@@ -3,32 +3,21 @@
 @inject SignInManager<Author> SignInManager;
 @inject UserManager<Author> UserManager;
 
-<ul class="navbar-nav">
+<div class="navigation">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a  class="nav-link text-dark" asp-area="Identity"
-                asp-page="/Account/Manage/Index" title="Manage">
-                Hello @User.Identity.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-page="/Account/Logout"
-                  asp-route-returnUrl="@Url.Page("/", new { area = "" })"
-                  asp-area="Identity" method="post" >
-                <button  class="nav-link btn btn-link text-dark"
-                         type="submit">Logout</button>
-            </form>
-        </li>
+        <div>
+            <a href="/@(User.Identity.Name)">my timeline</a> |
+            <a href="/">public timeline</a> |
+            <a ...>logout [@(User.Identity.Name)]</a>
+        </div>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity"
-               asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity"
-               asp-page="/Account/Login">Login</a>
-        </li>
+        <div>
+            <a href="/">public timeline</a> |
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">register</a> |
+            <a ...>login</a>
+        </div>
     }
-</ul>
+</div>
