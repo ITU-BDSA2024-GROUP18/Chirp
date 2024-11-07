@@ -5,6 +5,7 @@ using Chirp.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Chirp.Web.Areas.Identity.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ChirpDBContext>();
 
 builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
     options.SignIn.RequireConfirmedAccount = true)
