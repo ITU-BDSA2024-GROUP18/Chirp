@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Load database connection via configuration
 // Add services to the container.
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
 builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
     options.SignIn.RequireConfirmedAccount = true)

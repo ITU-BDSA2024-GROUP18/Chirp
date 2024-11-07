@@ -18,7 +18,20 @@ namespace Chirp.Infrastructure.Data
 
 
         }
+        
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
 
+            // Create a shadow property
+            builder.Entity<Author>()
+                .Property<string>("Name") // This is a shadow property
+                .HasColumnName("UserName");  // Map it to the "UserName" column in the database
+            
+            builder.Entity<Author>()
+                .Property<int>("AuthorId")
+                .HasColumnName("Id");
+        }
     }
 
 }
