@@ -18,7 +18,7 @@ public interface ICheepService
 
     public Task AddCheep(Cheep cheep);
 
-    public Task<Cheep> CreateCheep(int authorid, string message, string? authorname = null, string? email = null);
+    public Task<Cheep> CreateCheep(string authorid, string message, string? authorname = null, string? email = null);
 
 
 
@@ -62,8 +62,8 @@ public class CheepService : ICheepService
 
         var author = new Author()
         {
-            AuthorId = await _CheepRepository.GetLatestIdAuthor() + 1,
-            Name = name,
+            Id = await _CheepRepository.GetLatestIdAuthor() + 1,
+            UserName = name,
             Email = email,
             Cheeps = new List<Cheep>()
         };
@@ -72,7 +72,7 @@ public class CheepService : ICheepService
     }
 
 
-    public async Task<Cheep> CreateCheep(int authorid, string message, string? authorname = null, string? email = null)
+    public async Task<Cheep> CreateCheep(string authorid, string message, string? authorname = null, string? email = null)
     {
         //Checks if author exists in db based on an id, 
         //if the author does exists a new cheep is created for that author, if not a new author is created, before creating the cheep.
@@ -85,7 +85,7 @@ public class CheepService : ICheepService
             {
                 CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
                 Author = CheckAuthor,
-                AuthorId = CheckAuthor.AuthorId,
+                Id = CheckAuthor.Id,
                 Text = message,
                 TimeStamp = DateTime.Now
             };
@@ -102,7 +102,7 @@ public class CheepService : ICheepService
             {
                 CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
                 Author = newAuthor,
-                AuthorId = newAuthor.AuthorId,
+                Id = newAuthor.Id,
                 Text = message,
                 TimeStamp = DateTime.Now
             };

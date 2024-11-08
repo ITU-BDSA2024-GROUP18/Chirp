@@ -13,11 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
-builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
+builder.Services.AddDefaultIdentity<Author>(options =>
     options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ChirpDBContext>()
-    .AddDefaultUI()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ChirpDBContext>();
 
 
 builder.Services.AddRazorPages();
