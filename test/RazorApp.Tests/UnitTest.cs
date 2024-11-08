@@ -29,13 +29,13 @@ namespace RazorApp.Tests
 
             var authors = new List<Author>() { a1, a2, a3, ta1 };
 
-            var c1 = new Cheep() { CheepId = 658, Id = a1.Id, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
-            var c2 = new Cheep() { CheepId = 659, Id = a2.Id, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
-            var c3 = new Cheep() { CheepId = 660, Id = a3.Id, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
+            var c1 = new Cheep() { CheepId = 658, AuthorId = a1.Id, Author = a1, Text = "My name is Tester Testerington", TimeStamp = DateTime.Now };
+            var c2 = new Cheep() { CheepId = 659, AuthorId = a2.Id, Author = a2, Text = "My name is Testine Testsson", TimeStamp = DateTime.Now };
+            var c3 = new Cheep() { CheepId = 660, AuthorId = a3.Id, Author = a3, Text = "My name is Testy Testitez", TimeStamp = DateTime.Now };
 
-            var tc1 = new Cheep() { CheepId = 661, Id = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
-            var tc2 = new Cheep() { CheepId = 662, Id = ta1.Id, Author = ta1, Text = "This is my second cheep", TimeStamp = DateTime.Now };
-            var tc3 = new Cheep() { CheepId = 663, Id = ta1.Id, Author = ta1, Text = "This is my third cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 661, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc2 = new Cheep() { CheepId = 662, AuthorId = ta1.Id, Author = ta1, Text = "This is my second cheep", TimeStamp = DateTime.Now };
+            var tc3 = new Cheep() { CheepId = 663, AuthorId = ta1.Id, Author = ta1, Text = "This is my third cheep", TimeStamp = DateTime.Now };
 
             var cheeps = new List<Cheep>() { c1, c2, c3, tc1, tc2, tc3 };
             a1.Cheeps = new List<Cheep>() { c1 };
@@ -88,14 +88,14 @@ namespace RazorApp.Tests
             //Arrange
             var ta1 = new Author() { Id = "13", UserName = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
-            var tc1 = new Cheep() { CheepId = 658, Id = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
 
             //Act
             await StartMockDB();
             await _repo.AddCheep(tc1);
 
             //Assert
-            var actualCheep = await _context.Cheeps.Where(cheep => cheep.Id == tc1.Id).FirstOrDefaultAsync();
+            var actualCheep = await _context.Cheeps.Where(cheep => cheep.AuthorId == tc1.AuthorId).FirstOrDefaultAsync();
             Assert.Equal("13", actualCheep!.Author.Id);
             Assert.Equal("My Name Test", actualCheep.Author.UserName);
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
@@ -292,7 +292,7 @@ namespace RazorApp.Tests
             var newCheepForAdrian = await cheepservice.CreateCheep(Id, message);
 
             //Assert 
-            Assert.Equal(Id, newCheepForAdrian.Id);
+            Assert.Equal(Id, newCheepForAdrian.AuthorId);
             Assert.Equal(message, newCheepForAdrian.Text);
             Assert.Equal(expectedCheepId, newCheepForAdrian.CheepId);
         }
@@ -311,7 +311,7 @@ namespace RazorApp.Tests
             var FirstCheepForKamala = await cheepservice.CreateCheep(Id, message, name, email);
 
             //Assert 
-            Assert.Equal(Id, FirstCheepForKamala.Id);
+            Assert.Equal(Id, FirstCheepForKamala.AuthorId);
             Assert.Equal(message, FirstCheepForKamala.Text);
             Assert.Equal(expectedCheepId, FirstCheepForKamala.CheepId);
             Assert.Equal(name, FirstCheepForKamala.Author.UserName);
@@ -332,7 +332,7 @@ namespace RazorApp.Tests
             var FirstCheepForKamala = await cheepservice.CreateCheep(Id, message);
 
             //Assert 
-            Assert.Equal(Id, FirstCheepForKamala.Id);
+            Assert.Equal(Id, FirstCheepForKamala.AuthorId);
             Assert.Equal(message, FirstCheepForKamala.Text);
             Assert.Equal(expectedCheepId, FirstCheepForKamala.CheepId);
 

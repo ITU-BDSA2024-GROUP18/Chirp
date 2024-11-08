@@ -85,7 +85,7 @@ public class CheepService : ICheepService
             {
                 CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
                 Author = CheckAuthor,
-                Id = CheckAuthor.Id,
+                AuthorId = CheckAuthor.Id,
                 Text = message,
                 TimeStamp = DateTime.Now
             };
@@ -102,7 +102,7 @@ public class CheepService : ICheepService
             {
                 CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
                 Author = newAuthor,
-                Id = newAuthor.Id,
+                AuthorId = newAuthor.Id,
                 Text = message,
                 TimeStamp = DateTime.Now
             };

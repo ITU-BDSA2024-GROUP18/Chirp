@@ -6,24 +6,51 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chirp.Web.Migrations
 {
     /// <inheritdoc />
-    public partial class RemapNameAndId : Migration
+    public partial class KeepItSimpleStupid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Cheeps_Authors_AuthorId",
+                name: "FK_Cheeps_Authors_AuthorID",
                 table: "Cheeps");
 
             migrationBuilder.DropTable(
                 name: "Authors");
 
+            migrationBuilder.RenameColumn(
+                name: "Timestamp",
+                table: "Cheeps",
+                newName: "TimeStamp");
+
+            migrationBuilder.RenameColumn(
+                name: "AuthorID",
+                table: "Cheeps",
+                newName: "AuthorId");
+
+            migrationBuilder.RenameColumn(
+                name: "CheepID",
+                table: "Cheeps",
+                newName: "CheepId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Cheeps_AuthorID",
+                table: "Cheeps",
+                newName: "IX_Cheeps_AuthorId");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "AuthorId",
+                table: "Cheeps",
+                type: "TEXT",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "INTEGER");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -37,13 +64,8 @@ namespace Chirp.Web.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id1 = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", nullable: false),
-                    DisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    DisplayEmail = table.Column<string>(type: "TEXT", nullable: true),
-                    UserName1 = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -60,7 +82,7 @@ namespace Chirp.Web.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id1);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,7 +91,7 @@ namespace Chirp.Web.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -90,7 +112,7 @@ namespace Chirp.Web.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
                     ClaimType = table.Column<string>(type: "TEXT", nullable: true),
                     ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -101,7 +123,7 @@ namespace Chirp.Web.Migrations
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id1",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -109,10 +131,10 @@ namespace Chirp.Web.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,7 +143,7 @@ namespace Chirp.Web.Migrations
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id1",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -129,8 +151,8 @@ namespace Chirp.Web.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +167,7 @@ namespace Chirp.Web.Migrations
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id1",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -153,9 +175,9 @@ namespace Chirp.Web.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -165,7 +187,7 @@ namespace Chirp.Web.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id1",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -211,7 +233,7 @@ namespace Chirp.Web.Migrations
                 table: "Cheeps",
                 column: "AuthorId",
                 principalTable: "AspNetUsers",
-                principalColumn: "Id1",
+                principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
 
@@ -243,26 +265,54 @@ namespace Chirp.Web.Migrations
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
+            migrationBuilder.RenameColumn(
+                name: "TimeStamp",
+                table: "Cheeps",
+                newName: "Timestamp");
+
+            migrationBuilder.RenameColumn(
+                name: "AuthorId",
+                table: "Cheeps",
+                newName: "AuthorID");
+
+            migrationBuilder.RenameColumn(
+                name: "CheepId",
+                table: "Cheeps",
+                newName: "CheepID");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Cheeps_AuthorId",
+                table: "Cheeps",
+                newName: "IX_Cheeps_AuthorID");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "AuthorID",
+                table: "Cheeps",
+                type: "INTEGER",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "TEXT");
+
             migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
                 {
-                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    AuthorID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Authors", x => x.AuthorId);
+                    table.PrimaryKey("PK_Authors", x => x.AuthorID);
                 });
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Cheeps_Authors_AuthorId",
+                name: "FK_Cheeps_Authors_AuthorID",
                 table: "Cheeps",
-                column: "AuthorId",
+                column: "AuthorID",
                 principalTable: "Authors",
-                principalColumn: "AuthorId",
+                principalColumn: "AuthorID",
                 onDelete: ReferentialAction.Cascade);
         }
     }
