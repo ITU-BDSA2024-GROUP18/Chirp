@@ -15,7 +15,8 @@ public class UserTimelineModel : PageModel
         _CheepRepository = cheepRepository;
     }
 
-    public async Task<ActionResult> OnGet([FromQuery] int page, string author)
+    public async Task<ActionResult> OnGet([FromQuery] int page, string author) //author is passed by the cshtml because in it we have @page "/{author}".
+                                                                               //How you name the parameter here matters, at it has to match the {paramater_name} in @page
     {
         //Ensure first page is returned on invalid query for page
         if (page <= 0) page = 1;
