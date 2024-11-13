@@ -5,20 +5,22 @@
 @inject SignInManager<Author> SignInManager;
 @inject UserManager<Author> UserManager;
 
+@* @model Chirp.Web.Pages.PublicModel *@
+
 <div class="navigation">
 
 
     <!-- Ensures that cheepbox only shows up on public and private timeline, of a current logged in user
      But not on other users private timeline. In the future we can explore implementation
      of sending cheeps on other users timelines -->
-    @if (SignInManager.IsSignedIn(User) && Context.Request.Path.Equals($"/{@User.Identity.Name}") ||
-    Context.Request.Path.Equals("/"))
+    @if (SignInManager.IsSignedIn(User) && (Context.Request.Path.Equals($"/{@User.Identity?.Name}") ||
+    Context.Request.Path.Equals("/")))
     {
 
         <div class="cheepbox">
-            <h3>What's on your mind @(User.Identity.Name)?</h3>
+            <h3>What's on your mind @(User.Identity?.Name)</h3>
             <form method="post">
-                <input style="float: left" type="text" Name="CheepMessage" asp-page-handler="share" value="">
+                <input type="text" Name="CheepText" maxlength="160">
                 <input type="submit" value="Share">
             </form>
         </div>

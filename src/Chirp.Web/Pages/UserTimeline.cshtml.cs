@@ -1,5 +1,6 @@
 ﻿using Chirp.Core.DTOs;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -15,12 +16,18 @@ public class UserTimelineModel : PageModel
     //author is passed by the cshtml because in it we have @page "/{author}".
     //How you name the parameter here matters, at it has to match the {paramater_name} in @page
     public string author { get; set; }
+
+    [BindProperty]
+    public required string CheepText { get; set; }
     private readonly ICheepRepository _CheepRepository;
+
+    private readonly ICheepService _CheepService;
     public required List<CheepDTO> Cheeps { get; set; }
 
-    public UserTimelineModel(ICheepRepository cheepRepository)
+    public UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService)
     {
         _CheepRepository = cheepRepository;
+        _CheepService = cheepService;
     }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".
@@ -30,5 +37,21 @@ public class UserTimelineModel : PageModel
         if (page <= 0) page = 1;
         Cheeps = await _CheepRepository.ReadFromAuthor(page, author);
         return Page();
+    }
+
+    public async Task<ActionResult> OnPost()
+    {
+        var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
+
+        var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, CheepText);
+
+        if (!string.IsNullOrEmpty(CheepText))
+        {
+
+            await _CheepRepository.AddCheep(CheepToCreate);
+        }
+
+        return RedirectToPage();
+
     }
 }
