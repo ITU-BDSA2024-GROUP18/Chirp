@@ -173,6 +173,16 @@ jobs:
        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
        package: "${{ env.FILE_PATH }}"
 
+       # Deploy step with GitHub and Azure secrets
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ env.APP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: "${{ env.FILE_PATH }}"
+      env:
+        GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
+        GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
 
 # Documentation / Inspiration
 # 
