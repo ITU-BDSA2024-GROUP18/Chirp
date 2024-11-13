@@ -1,0 +1,25 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Microsoft.AspNetCore.Identity;
+@using Chirp.Core.Entities;
+@inject SignInManager<Author> SignInManager;
+@inject UserManager<Author> UserManager;
+
+<div class="navigation">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div>
+            <a href="/@(User.Identity.Name)">my timeline</a> |
+            <a href="/">public timeline</a> |
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">logout [@(User.Identity.Name)]</a>
+        </div>
+    }
+    else
+    {
+        <div>
+            <a href="/">public timeline</a> |
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">register</a> |
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">login</a>
+        </div>
+    }
+</div>

@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+//Allows annotations like NotMapped
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Chirp.Core.Entities
 {
 
-    public class Author
+    public class Author : IdentityUser
     {
-        public required int AuthorId { get; set; }
-        public required string Name { get; set; }
-        public required string Email { get; set; }
+		
+		
+        
         public required ICollection<Cheep> Cheeps { get; set; }
     }
 

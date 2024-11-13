@@ -26,7 +26,7 @@ public class CheepRepository : ICheepRepository
             orderby cheeps.TimeStamp descending
             select new CheepDTO
             {
-                AuthorName = cheeps.Author.Name,
+                AuthorName = cheeps.Author.UserName,
                 Message = cheeps.Text,
                 Timestamp = cheeps.TimeStamp.ToString()
             };
@@ -38,11 +38,11 @@ public class CheepRepository : ICheepRepository
     {
         var query =
             from cheeps in _dbContext.Cheeps
-            where cheeps.Author.Name == author
+            where cheeps.Author.UserName == author
             orderby cheeps.TimeStamp descending
             select new CheepDTO
             {
-                AuthorName = cheeps.Author.Name,
+                AuthorName = cheeps.Author.UserName,
                 Message = cheeps.Text,
                 Timestamp = cheeps.TimeStamp.ToString()
             };
@@ -54,7 +54,7 @@ public class CheepRepository : ICheepRepository
     {
         var query =
             from author in _dbContext.Authors
-            where author.Name == name
+            where author.UserName == name
             select author;
 
         return await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
@@ -70,9 +70,9 @@ public class CheepRepository : ICheepRepository
         return await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
     }
 
-    public async Task<int> GetLatestIdAuthor()
+    public async Task<string> GetLatestIdAuthor()
     {
-        var query = _dbContext.Authors.OrderByDescending(a => a.AuthorId).Select(a => a.AuthorId);
+        var query = _dbContext.Authors.OrderByDescending(a => a.Id).Select(a => a.Id);
         return await query.FirstOrDefaultAsync();
     }
 
@@ -82,9 +82,9 @@ public class CheepRepository : ICheepRepository
         return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<Author?> CheckAuthorExists(int authorId)
+    public async Task<Author?> CheckAuthorExists(string authorId)
     {
-        var query = _dbContext.Authors.Where(a => a.AuthorId == authorId);
+        var query = _dbContext.Authors.Where(a => a.Id == authorId);
         return await query.FirstOrDefaultAsync();
     }
 
