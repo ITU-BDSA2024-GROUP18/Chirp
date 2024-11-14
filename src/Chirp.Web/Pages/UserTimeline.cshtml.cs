@@ -3,6 +3,7 @@ using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Chirp.Web.Pages.Shared;
 
 namespace Chirp.Web.Pages;
 
@@ -18,7 +19,7 @@ public class UserTimelineModel : PageModel
     public string author { get; set; }
 
     [BindProperty]
-    public required string CheepText { get; set; }
+    public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
     private readonly ICheepRepository _CheepRepository;
 
     private readonly ICheepService _CheepService;
@@ -43,9 +44,9 @@ public class UserTimelineModel : PageModel
     {
         var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
 
-        var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, CheepText);
+        var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);
 
-        if (!string.IsNullOrEmpty(CheepText))
+        if (!string.IsNullOrEmpty(cheepBox.CheepText))
         {
 
             await _CheepRepository.AddCheep(CheepToCreate);

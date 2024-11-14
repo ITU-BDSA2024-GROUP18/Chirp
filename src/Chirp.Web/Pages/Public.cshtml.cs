@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Chirp.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
+using Chirp.Web.Pages.Shared;
 
 
 namespace Chirp.Web.Pages;
@@ -21,7 +22,7 @@ public class PublicModel : PageModel
     public required List<CheepDTO> Cheeps { get; set; }
 
     [BindProperty]
-    public required string CheepText { get; set; }
+    public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
 
 
     public PublicModel(ICheepRepository cheepRepository, ICheepService cheepService)
@@ -49,7 +50,7 @@ public class PublicModel : PageModel
         {
             var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
 
-            var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, CheepText);
+            var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);
 
             if (!string.IsNullOrEmpty(CheepToCreate.Text))
             {

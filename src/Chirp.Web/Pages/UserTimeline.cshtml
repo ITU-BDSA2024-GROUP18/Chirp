@@ -6,8 +6,10 @@
     var routeName = HttpContext.GetRouteValue("author");
 }
 
-<div>  
+<div>
     <h2> @routeName's Timeline </h2>
+    @* Render Partial view and pass that view the proper Model *@
+    @await Html.PartialAsync("_CheepboxPartial", Model.cheepBox)
 
     @if (Model.Cheeps.Any())
     {
@@ -19,8 +21,10 @@
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                         </strong>
-                        @cheep.Message
-                        <small>&mdash; @cheep.Timestamp</small>
+                    <div style="word-wrap: break-word;">
+                            @cheep.Message
+                    </div>
+                    <small>&mdash; @cheep.Timestamp</small>
                     </p>
                 </li>
             }
