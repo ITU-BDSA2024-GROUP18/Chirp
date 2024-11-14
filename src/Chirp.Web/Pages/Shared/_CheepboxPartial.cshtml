@@ -1,5 +1,5 @@
+@model Chirp.Web.Pages.Shared.CheepBoxModel;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
 @using Microsoft.AspNetCore.Identity;
 @using Chirp.Core.Entities;
 @inject SignInManager<Author> SignInManager;
@@ -7,23 +7,47 @@
 
 @* @model Chirp.Web.Pages.PublicModel *@
 
-<div class="navigation">
-
-
-    <!-- Ensures that cheepbox only shows up on public and private timeline, of a current logged in user
+<!-- Ensures that cheepbox only shows up on public and private timeline, of a current logged in user
      But not on other users private timeline. In the future we can explore implementation
      of sending cheeps on other users timelines -->
-    @if (SignInManager.IsSignedIn(User) && (Context.Request.Path.Equals($"/{@User.Identity?.Name}") ||
-    Context.Request.Path.Equals("/")))
-    {
 
-        <div class="cheepbox">
-            <h3>What's on your mind @(User.Identity?.Name)</h3>
-            <form method="post">
-                <input type="text" Name="CheepText" maxlength="160">
-                <input type="submit" value="Share">
-            </form>
-        </div>
-    }
+@if (SignInManager.IsSignedIn(User) && (Context.Request.Path.Equals($"/{@User.Identity?.Name}") ||
+Context.Request.Path.Equals("/")))
+{
 
+    <div class="cheepbox">
+    <h3>What's on your mind @(User.Identity?.Name)</h3>
+    <form method="post">
+        <input type="text" asp-for="CheepText" id="cheepTextInput">
+        <span asp-validation-for="CheepText" class="text-danger"></span>
+        <p id="charCount" class="text-muted">160 characters remaining</p>
+        <input type="submit" value="Share">
+
+
+    </form>
 </div>
+
+}
+
+@* Some jscript magic. Finds the element for our input, throughs its id, and keeps a count of characters to showcase for user *@
+
+<script>
+    const cheepInput = document.getElementById("cheepTextInput");
+    const charCount = document.getElementById("charCount");
+
+    cheepInput.addEventListener("input", () => {
+        const remaining = 160 - cheepInput.value.length;
+        charCount.textContent = `${remaining} characters remaining`;
+    });
+</script>
+
+
+
+@* <div class="cheepbox">
+    using Chirp.Web.Pages;
+    <h3>What's on your mind @(User.Identity?.Name)</h3>
+    <form method="post">
+        <input type="text" Name="CheepText" maxlength="160">
+        <input type="submit" value="Share">
+    </form>
+</div> *@
