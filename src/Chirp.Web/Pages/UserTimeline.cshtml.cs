@@ -42,6 +42,12 @@ public class UserTimelineModel : PageModel
 
     public async Task<ActionResult> OnPost()
     {
+        if (!ModelState.IsValid)
+        {
+            ModelState.AddModelError("CheepText", "You have exeeded max length for cheeps");
+            return Page();
+        }
+
         var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
 
         var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);

@@ -46,23 +46,18 @@ public class PublicModel : PageModel
             ModelState.AddModelError("CheepText", "You have exeeded max length for cheeps");
             return Page();
         }
-        else
+
+        var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
+
+        var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);
+
+        if (!string.IsNullOrEmpty(CheepToCreate.Text))
         {
-            var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
 
-            var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);
-
-            if (!string.IsNullOrEmpty(CheepToCreate.Text))
-            {
-
-                await _CheepRepository.AddCheep(CheepToCreate);
-            }
-
-            return RedirectToPage();
-
+            await _CheepRepository.AddCheep(CheepToCreate);
         }
 
-
+        return RedirectToPage();
 
     }
 
