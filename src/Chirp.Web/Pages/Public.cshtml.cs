@@ -8,6 +8,7 @@ using Chirp.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
 using Chirp.Web.Pages.Shared;
+using System.Security.Claims;
 
 
 namespace Chirp.Web.Pages;
@@ -47,9 +48,9 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        var UserName = await _CheepRepository.GetAuthorByName(User.Identity.Name);
+        var UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var CheepToCreate = await _CheepService.CreateCheep(UserName.Id, cheepBox.CheepText);
+        var CheepToCreate = await _CheepService.CreateCheep(UserName, cheepBox.CheepText);
 
         if (!string.IsNullOrEmpty(CheepToCreate.Text))
         {
