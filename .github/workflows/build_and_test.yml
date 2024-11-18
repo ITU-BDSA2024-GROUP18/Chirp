@@ -7,41 +7,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - uses: actions/checkout@v3
 
-      # Set up .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
 
-      # Install dependencies (restore)
       - name: Restore Dependencies
         run: dotnet restore
 
-      # Build the solution
       - name: Build
         run: dotnet build
-      
+
       - name: Debug Environment Variables
         run: |
+          echo "Environment: $ASPNETCORE_ENVIRONMENT"
           echo "GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}"
           echo "GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}"
         env:
+          ASPNETCORE_ENVIRONMENT: Production
           GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
           GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
-      
-      # Run tests with verbosity level normal
+
       - name: Test
         env:
-          #GitHub Client ID and Secret as environment variables
+          ASPNETCORE_ENVIRONMENT: Production
           GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
           GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
         run: dotnet test --no-build --verbosity normal
-
-      - name: Test
-        run: |
-          export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
-          export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
-          dotnet test --no-build --verbosity normal
