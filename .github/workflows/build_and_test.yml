@@ -20,16 +20,6 @@ jobs:
       - name: Build
         run: dotnet build
 
-      - name: Debug Environment Variables
-        run: |
-          echo "Environment: $ASPNETCORE_ENVIRONMENT"
-          echo "GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}"
-          echo "GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}"
-        env:
-          ASPNETCORE_ENVIRONMENT: Production
-          GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
-          GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
-
       - name: Test
         env:
           ASPNETCORE_ENVIRONMENT: Production
