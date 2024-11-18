@@ -48,7 +48,13 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        var UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(UserName))
+        {
+            throw new ArgumentNullException(nameof(UserName), "User must be authenticated.");
+        }
+        var CheepText = cheepBox.CheepText
+            ?? throw new ArgumentNullException(nameof(cheepBox.CheepText), "CheepText cannot be null.");
 
         var CheepToCreate = await _CheepService.CreateCheep(UserName, cheepBox.CheepText);
 

@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Chirp.Web.Pages;
 
-public class UserTimelineModel : PageModel
+public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService) : PageModel
 {
 
     //SupportsGet = true is needed since BindProperty is for POST requests by default, this
@@ -17,27 +17,21 @@ public class UserTimelineModel : PageModel
 
     //author is passed by the cshtml because in it we have @page "/{author}".
     //How you name the parameter here matters, at it has to match the {paramater_name} in @page
-    public string author { get; set; }
+    public required string Author { get; set; }
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
-    private readonly ICheepRepository _CheepRepository;
+    private readonly ICheepRepository _CheepRepository = cheepRepository;
 
-    private readonly ICheepService _CheepService;
+    private readonly ICheepService _CheepService = cheepService;
     public required List<CheepDTO> Cheeps { get; set; }
-
-    public UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService)
-    {
-        _CheepRepository = cheepRepository;
-        _CheepService = cheepService;
-    }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".
                                                                 //How you name the parameter here matters, at it has to match the {paramater_name} in @page
     {
         //Ensure first page is returned on invalid query for page
         if (page <= 0) page = 1;
-        Cheeps = await _CheepRepository.ReadFromAuthor(page, author);
+        Cheeps = await _CheepRepository.ReadFromAuthor(page, Author);
         return Page();
     }
 
@@ -45,21 +39,26 @@ public class UserTimelineModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("CheepText", "You have exeeded max length for cheeps");
+            ModelState.AddModelError("CheepText", "You have exceeded the max length for cheeps");
             return Page();
         }
 
-        var UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        var CheepToCreate = await _CheepService.CreateCheep(UserName, cheepBox.CheepText);
-
-        if (!string.IsNullOrEmpty(cheepBox.CheepText))
+        string? UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(UserName))
         {
+            throw new ArgumentNullException(nameof(UserName), "User must be authenticated.");
+        }
+        var CheepText = cheepBox.CheepText
+            ?? throw new ArgumentNullException(nameof(cheepBox.CheepText), "CheepText cannot be null.");
 
+        var CheepToCreate = await _CheepService.CreateCheep(UserName, CheepText);
+
+        if (!string.IsNullOrEmpty(CheepText))
+        {
             await _CheepRepository.AddCheep(CheepToCreate);
         }
 
         return RedirectToPage();
-
     }
+
 }
