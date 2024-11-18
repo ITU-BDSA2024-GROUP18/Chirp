@@ -59,15 +59,19 @@ public class CheepService : ICheepService
 
     public async Task<Author> CreateAuthor(string name, string email)
     {
+        // Fetch the latest ID as a string
+        var latestIdString = await _CheepRepository.GetLatestIdAuthor();
+
+        // Parse the ID to an integer 
+        var newId = (int.Parse(latestIdString) + 1).ToString();
 
         var author = new Author()
         {
-            Id = await _CheepRepository.GetLatestIdAuthor() + 1,
+            Id = newId, // Assign the new incremented ID as a string
             UserName = name,
             Email = email,
             Cheeps = new List<Cheep>()
         };
-
         return author;
     }
 
