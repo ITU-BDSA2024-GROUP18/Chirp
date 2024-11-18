@@ -23,7 +23,15 @@ jobs:
       # Build the solution
       - name: Build
         run: dotnet build
-
+      
+      - name: Debug Environment Variables
+        run: |
+          echo "GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}"
+          echo "GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}"
+        env:
+          GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
+          GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
+      
       # Run tests with verbosity level normal
       - name: Test
         env:
