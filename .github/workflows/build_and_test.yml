@@ -33,12 +33,12 @@ jobs:
           GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
       
       # Run tests with verbosity level normal
-      ##- name: Test
-        ##env:
-          # GitHub Client ID and Secret as environment variables
-          ##GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
-          ##GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
-        ##run: dotnet test --no-build --verbosity normal
+      - name: Test
+        env:
+          #GitHub Client ID and Secret as environment variables
+          GitHub__ClientId: ${{ secrets.GITHUBCLIENTID }}
+          GitHub__ClientSecret: ${{ secrets.GITHUBCLIENTSECRET }}
+        run: dotnet test --no-build --verbosity normal
 
       - name: Test
         run: |
