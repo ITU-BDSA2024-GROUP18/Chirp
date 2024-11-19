@@ -20,10 +20,11 @@ jobs:
       - name: Build
         run: dotnet build
 
-      - name: Install Playwright browsers
-        run: | 
-          pwsh --version
-          pwsh bin/Debug/netX/playwright.ps1 install
+      - name: Debug build directory (confirm `playwright.ps1` exists)
+        run: ls -R ./bin/Debug/net8.0
+
+      - name: Ensure browsers are installed
+        run: pwsh ./bin/Debug/net8.0/playwright.ps1 install --with-deps
 
           
       - name: Test
