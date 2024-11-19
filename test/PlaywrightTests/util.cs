@@ -19,7 +19,7 @@ namespace PlaywrightTests
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --no-build",
+                    Arguments = "run --no-build --environment Production",
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
