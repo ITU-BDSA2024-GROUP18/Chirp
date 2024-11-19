@@ -7,24 +7,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
 
       - name: Restore Dependencies
         run: dotnet restore
 
-      - name: Install Playwright browsers (via.Net cli)
-        run: |
-          dotnet tool restore  
-          dotnet playwright install
-
       - name: Build
         run: dotnet build
-
+      - name: Install Playwright browsers
+        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+          
       - name: Test
         env:
           ASPNETCORE_ENVIRONMENT: Production
