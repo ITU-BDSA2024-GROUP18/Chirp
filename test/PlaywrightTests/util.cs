@@ -18,7 +18,7 @@ namespace PlaywrightTests
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --no-build",
+                    Arguments = "run --project Chirp.Web.csproj",
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
