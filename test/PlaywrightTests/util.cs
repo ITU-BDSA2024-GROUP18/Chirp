@@ -36,11 +36,16 @@ namespace PlaywrightTests
 
             process.OutputDataReceived += (sender, args) =>
             {
-                if (args.Data.Contains("Now listening on") || args.Data.Contains("Application started"))
+                if (!string.IsNullOrEmpty(args.Data))
                 {
-                    // when we receive information indicating that server is ready we set the Taskcompletion to true
-                    serverReady.TrySetResult(true);
-                }
+                    Console.WriteLine(args.Data);
+
+                    if (args.Data.Contains("Now listening on") || args.Data.Contains("Application started"))
+                    {
+                        // when we receive information indicating that server is ready we set the Taskcompletion to true
+                        serverReady.TrySetResult(true);
+                    }
+                };
 
 
             };
