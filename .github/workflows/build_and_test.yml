@@ -22,8 +22,8 @@ jobs:
 
       - name: Install Playwright browsers
         run: | 
-        pwsh --version
-        pwsh bin/Debug/netX/playwright.ps1 install
+          pwsh --version
+          pwsh bin/Debug/netX/playwright.ps1 install
 
           
       - name: Test
