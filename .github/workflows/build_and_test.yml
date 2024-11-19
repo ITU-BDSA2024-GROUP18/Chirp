@@ -26,7 +26,9 @@ jobs:
       - name: Ensure browsers are installed
         run: pwsh ./test/PlaywrightTests/bin/Debug/net8.0/playwright.ps1 install --with-deps
 
-          
+      -name: Test only playwright
+        run: dotnet test ./test/PlaywrightTests/PlaywrightTests.csproj --no-build --verbosity normal
+
       - name: Test
         env:
           ASPNETCORE_ENVIRONMENT: Production

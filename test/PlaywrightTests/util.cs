@@ -11,10 +11,6 @@ namespace PlaywrightTests
         public static async Task<Process> StartServer()
         {
 
-            Environment.SetEnvironmentVariable("CHIRP_DB_CONNECTION_STRING", "Data Source=chirp.db", EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable("CHIRP_IDENTITY_CONNECTION_STRING", "Data Source=Chirp.Web.db", EnvironmentVariableTarget.Process);
-
-
             // Get path needed for dotnet run
             var projectpath = @"../../../../../src/Chirp.Web";
             // start the process and run our project
@@ -28,10 +24,6 @@ namespace PlaywrightTests
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    EnvironmentVariables =
-            {
-                { "ASPNETCORE_ENVIRONMENT", "Production" }
-            }
                 }
             };
 
