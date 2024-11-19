@@ -11,14 +11,14 @@ namespace PlaywrightTests
         public static async Task<Process> StartServer()
         {
             // Get path needed for dotnet run
-            var projectpath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", "..", "src", "Chirp.web");
+            var projectpath = @"../../../../../src/Chirp.Web";
             // start the process and run our project
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --project Chirp.Web.csproj",
+                    Arguments = "run --no-build",
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
