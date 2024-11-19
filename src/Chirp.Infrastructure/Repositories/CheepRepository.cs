@@ -72,8 +72,15 @@ public class CheepRepository : ICheepRepository
 
     public async Task<string> GetLatestIdAuthor()
     {
-        var query = _dbContext.Authors.OrderByDescending(a => a.Id).Select(a => a.Id);
-        return await query.FirstOrDefaultAsync();
+        var authors = await _dbContext.Authors
+            .ToListAsync(); // Get all authors 
+
+        var latestId = authors
+            .OrderByDescending(a => int.Parse(a.Id)) 
+            .Select(a => a.Id)
+            .FirstOrDefault(); 
+
+        return latestId;
     }
 
     public async Task<int> GetLatestIdCheep()
