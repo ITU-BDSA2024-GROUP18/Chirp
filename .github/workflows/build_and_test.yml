@@ -17,14 +17,10 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browsers (via.Net cli)
         run: |
-          pwd 
-          ls 
-          cd test/PlaywrightTests
-          pwd
-          ls
-          pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+          dotnet tool restore  
+          dotnet playwright install
 
       - name: Build
         run: dotnet build
