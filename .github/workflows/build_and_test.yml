@@ -28,7 +28,7 @@ jobs:
 
       -name: Test only playwright
         run: dotnet test ./test/PlaywrightTests/PlaywrightTests.csproj --no-build --verbosity normal
-
+        
       - name: Test
         env:
           ASPNETCORE_ENVIRONMENT: Production
