@@ -7,7 +7,7 @@ namespace Chirp.Core.Entities
     public class Author : IdentityUser
     {
         public required ICollection<Cheep> Cheeps { get; set; }
-        public required ICollection<Author> UsersFollowed { get; set; }
+        //public ICollection<Author>? UsersFollowed { get; set; }
     }
 
 

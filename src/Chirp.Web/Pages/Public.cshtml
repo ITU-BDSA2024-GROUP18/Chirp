@@ -4,6 +4,11 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
 }
+@using Microsoft.AspNetCore.Identity;
+@using Chirp.Core.Entities;
+@inject SignInManager<Author> SignInManager;
+@inject UserManager<Author> UserManager;
+    
 
 <div>
     <h2> Public Timeline </h2>
@@ -18,9 +23,11 @@
                     <p>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                            @if (SignInManager.IsSignedIn(User)) {
                                 <button class = "button" name = "followbutton">
                                     <span>Follow</span>
                                 </button>
+                                }
                         </strong>
                     <div style="word-wrap: break-word;">
                             @cheep.Message
