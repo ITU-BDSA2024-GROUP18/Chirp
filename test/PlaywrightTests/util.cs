@@ -23,6 +23,10 @@ namespace PlaywrightTests
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    EnvironmentVariables =
+            {
+                { "ASPNETCORE_ENVIRONMENT", "Production" }
+            }
                 }
             };
 
