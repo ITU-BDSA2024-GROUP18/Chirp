@@ -24,31 +24,46 @@ public class CheepRepository : ICheepRepository
         var query =
             from cheeps in _dbContext.Cheeps
             orderby cheeps.TimeStamp descending
-            select new CheepDTO
+            select new
             {
-                AuthorName = cheeps.Author.UserName,
-                Message = cheeps.Text,
-                Timestamp = cheeps.TimeStamp.ToString()
+                cheeps.Author,
+                cheeps.Text,
+                cheeps.TimeStamp
             };
 
-        return await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
+        var result = await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
+
+        return result.Select(cheep => new CheepDTO
+        {
+            AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
+            Message = cheep.Text,
+            Timestamp = cheep.TimeStamp.ToString()
+        }).ToList();
     }
 
     public async Task<List<CheepDTO>> ReadFromAuthor(int pagenum, string author)
     {
         var query =
             from cheeps in _dbContext.Cheeps
-            where cheeps.Author.UserName == author
+            where cheeps.Author != null && cheeps.Author.UserName == author
             orderby cheeps.TimeStamp descending
-            select new CheepDTO
+            select new
             {
-                AuthorName = cheeps.Author.UserName,
-                Message = cheeps.Text,
-                Timestamp = cheeps.TimeStamp.ToString()
+                Author = cheeps.Author,
+                Text = cheeps.Text,
+                TimeStamp = cheeps.TimeStamp
             };
 
-        return await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
+        var result = await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
+
+        return result.Select(cheep => new CheepDTO
+        {
+            AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
+            Message = cheep.Text,
+            Timestamp = cheep.TimeStamp.ToString()
+        }).ToList();
     }
+
 
     public async Task<Author> GetAuthorByName(string name)
     {
@@ -76,11 +91,11 @@ public class CheepRepository : ICheepRepository
             .ToListAsync(); // Get all authors 
 
         var latestId = authors
-            .OrderByDescending(a => int.Parse(a.Id)) 
+            .OrderByDescending(a => int.Parse(a.Id))
             .Select(a => a.Id)
-            .FirstOrDefault(); 
+            .FirstOrDefault();
 
-        return latestId;
+        return latestId ?? throw new InvalidOperationException("No authors found in the database.");
     }
 
     public async Task<int> GetLatestIdCheep()
@@ -123,4 +138,3 @@ public class CheepRepository : ICheepRepository
 
 
 }
-

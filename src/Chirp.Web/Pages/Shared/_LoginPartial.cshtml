@@ -8,12 +8,12 @@
 <div class="navigation">
     @if (SignInManager.IsSignedIn(User))
     {
+        var userName = User.Identity?.Name ?? "Unknown User";
         <div>
-            <a href="/@(User.Identity.Name)">my timeline</a> |
+            <a href="/@(userName)">my timeline</a> |
             <a href="/">public timeline</a> |
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">logout [@(User.Identity.Name)]</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">logout [@(userName)]</a>
         </div>
-
     }
     else
     {
