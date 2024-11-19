@@ -23,17 +23,27 @@ builder.Services.AddScoped<ICheepService, CheepService>();
 // Register the Repository
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
-builder.Services.AddAuthentication(options =>
-    {
-        /*options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = "GitHub";*/
-    })
-    //.AddCookie()
+builder.Services.AddAuthentication(options => { })
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Configuration["authentication:github:clientId"];
-        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+        // Use different secrets based on the environment
+        if (builder.Environment.IsDevelopment())
+        {
+            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ?? 
+                         throw new ArgumentException("GitHub ClientId for local dev not provided.");
+            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ?? 
+                             throw new ArgumentException("GitHub ClientSecret for local dev not provided.");
+        }
+        else
+        {
+            o.ClientId = builder.Configuration["authentication:github:clientId"] ??
+                         Environment.GetEnvironmentVariable("GitHub__ClientId") ??
+                         throw new ArgumentException("GitHub ClientId for CI not provided.");
+            o.ClientSecret = builder.Configuration["authentication:github:clientSecret"] ??
+                             Environment.GetEnvironmentVariable("GitHub__ClientSecret") ??
+                             throw new ArgumentException("GitHub ClientSecret for CI not provided.");
+        }
+
         o.CallbackPath = "/signin-github";
     });
 
