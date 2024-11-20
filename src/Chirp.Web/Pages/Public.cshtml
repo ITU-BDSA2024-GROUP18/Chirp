@@ -40,6 +40,8 @@
                                     <button class = "button" name = "unfollowbutton" asp-page-handler="Unfollow">
                                         <span>Unfollow</span>
                                     </button>
+                                    <input name="user" value="@User.Identity?.Name" type="hidden">
+                                    <input name="toUnfollow" value="@cheep.AuthorName" type="hidden">
                                     </form>
                                 }
                                 }

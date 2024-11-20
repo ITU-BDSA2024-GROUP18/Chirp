@@ -150,14 +150,24 @@ public class CheepRepository : ICheepRepository
 
         if (author.Follows == null)
         {
-            author.Follows = new List<Author>();
-            _dbContext.Authors.Update(author);
+            author.Follows = [];
         }
 
         author.Follows.Add(authorToFollow);
 
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task Unfollow(string user, string toUnfollow)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorToUnfollow = await GetAuthorByName(toUnfollow);
+
+        author.Follows?.Remove(authorToUnfollow);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
 
 
     // Helper method

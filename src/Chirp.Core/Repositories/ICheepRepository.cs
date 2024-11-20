@@ -25,4 +25,6 @@ public interface ICheepRepository
 
     public Task Follow(string user, string toFollow);
 
+    public Task Unfollow(string user, string toUnfollow);
+
 }
