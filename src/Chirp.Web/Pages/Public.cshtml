@@ -23,7 +23,7 @@
                     <p>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                            @if (SignInManager.IsSignedIn(User)) {
+                            @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName) {
                                 <button class = "button" name = "followbutton">
                                     <span>Follow</span>
                                 </button>
