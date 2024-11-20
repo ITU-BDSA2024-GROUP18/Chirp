@@ -24,7 +24,7 @@
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName) {
-                                @if (!await Model._CheepRepository.Follows(User.Identity.Name, cheep.AuthorName))
+                                @if (User.Identity?.Name != null && !await Model._CheepRepository.Follows(User.Identity.Name, cheep.AuthorName))
                                 {
                                     <form method="post">
                                     <button class = "button" name = "followbutton" asp-page-handler="Follow">
