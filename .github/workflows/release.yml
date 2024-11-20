@@ -88,11 +88,6 @@ jobs:
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef
 
-      - name: Database Migration
-        working-directory: src/Chirp.Web
-        env:
-          ConnectionString: 'Data Source=chirp.db;' # Adjust path to your database file
-        run: dotnet ef database update --context ChirpDBContext --connection "$ConnectionString" 
 
       - name: Build
         shell: bash
@@ -150,7 +145,7 @@ jobs:
       working-directory: src/Chirp.Web
       env:
         ConnectionString: 'Data Source=chirp.db;' # Adjust path to your database file
-      run: dotnet ef database update --context ChirpDBContext --connection "$ConnectionString" 
+      run: dotnet-ef database update --context ChirpDBContext --connection "$ConnectionString" 
 
 
     - name: Build ${{ env.FILE_NAME }}
