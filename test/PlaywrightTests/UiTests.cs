@@ -83,5 +83,24 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Share" })).ToBeVisibleAsync();
     }
 
+    [Test]
+    public async Task UsersCannotEnterCheepsLongerThan160Characters()
+    {
+        var CheepLongerthan160 = "Planning an amazing event takes effort, but teamwork and creativity make it unforgettable. Lets aim for success and celebrate together. Join us soon—excited! Also you should cut me off soon";
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await Page.GetByPlaceholder("name@example.com").ClickAsync();
+        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await Page.GetByPlaceholder("password").ClickAsync();
+        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Page.Locator("#cheepTextInput").ClickAsync();
+        await Page.Locator("#cheepTextInput").FillAsync(CheepLongerthan160);
+        string actual = await Page.Locator("#cheepTextInput").InputValueAsync();
+
+        //Assert.AreEqual(160,actual.Length);
+        Assert.That(actual.Length, Is.EqualTo(160));
+    }
+
 
 }

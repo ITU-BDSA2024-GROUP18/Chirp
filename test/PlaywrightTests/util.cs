@@ -12,14 +12,14 @@ namespace PlaywrightTests
         {
 
             // Get path needed for dotnet run
-            var projectpath = @"../../../../../src/Chirp.Web";
+            var projectpath = @"../../../../../src/Chirp.Web";   //Ensure this matches your path locally
             // start the process and run our project
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --no-build --environment Production",
+                    Arguments = "run --no-build --environment Production", //Remove flag: --environment Production, when testing locally
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -27,7 +27,7 @@ namespace PlaywrightTests
                 }
             };
 
-            // Since our project takes a while to complete building, we want to ensure 
+            // Since our project takes a while to run, we want to ensure 
             // that test suite does not begin before the server(localhost) is ready.
 
             var serverReady = new TaskCompletionSource<bool>();
@@ -57,7 +57,7 @@ namespace PlaywrightTests
 
             var timeout = Task.Delay(30000); // 30 seconds timeout
 
-            // this will wither complete when 30 seconds has gone by, or when server.ready has been set to true
+            // this will either complete when 30 seconds has gone by, or when server.ready has been set to true
             // effectively ensuring that our server is ready before it is passed on to tests.
             var completedTask = await Task.WhenAny(serverReady.Task, timeout);
 
