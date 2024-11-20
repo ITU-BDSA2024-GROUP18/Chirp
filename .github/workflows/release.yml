@@ -95,6 +95,10 @@ jobs:
         run: |
           icacls "chirp.db" /grant "Everyone:F"
 
+      - name: Check for Migration History Table
+        run: |
+          sqlite3 chirp.db "SELECT name FROM sqlite_master WHERE type='table' AND name='__EFMigrationsHistory';"
+
       - name: Database Migration
         working-directory: src/Chirp.Web
         env:
