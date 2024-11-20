@@ -21,5 +21,8 @@ public interface ICheepRepository
 
     public Task<Author?> CheckAuthorExists(string AuthorId);
 
+    public Task<bool> Follows(string user, string following);
+
+    public Task Follow(string user, string toFollow);
 
 }

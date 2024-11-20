@@ -24,9 +24,24 @@
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName) {
-                                <button class = "button" name = "followbutton">
-                                    <span>Follow</span>
-                                </button>
+                                @if (!await Model._CheepRepository.Follows(User.Identity.Name, cheep.AuthorName))
+                                {
+                                    <form method="post">
+                                    <button class = "button" name = "followbutton" asp-page-handler="Follow">
+                                        <span>Follow</span>
+                                    </button>
+                                    <input name="user" value="@User.Identity.Name" type="hidden">
+                                    <input name="toFollow" value="@cheep.AuthorName" type="hidden">
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post">
+                                    <button class = "button" name = "unfollowbutton" asp-page-handler="Unfollow">
+                                        <span>Unfollow</span>
+                                    </button>
+                                    </form>
+                                }
                                 }
                         </strong>
                     <div style="word-wrap: break-word;">

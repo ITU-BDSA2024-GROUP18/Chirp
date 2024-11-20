@@ -21,9 +21,9 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
-    private readonly ICheepRepository _CheepRepository = cheepRepository;
+    public ICheepRepository _CheepRepository = cheepRepository;
 
-    private readonly ICheepService _CheepService = cheepService;
+    public ICheepService _CheepService = cheepService;
     public required List<CheepDTO> Cheeps { get; set; }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".

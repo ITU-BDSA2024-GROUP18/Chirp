@@ -123,6 +123,43 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task<bool> Follows(string user, string following)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorFollowed = await GetAuthorByName(following);
+
+        if (author.Follows == null)
+        {
+            author.Follows = [];
+        }
+
+        if (author.Follows.Contains(authorFollowed))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public async Task Follow(string user, string toFollow)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorToFollow = await GetAuthorByName(toFollow);
+
+        if (author.Follows == null)
+        {
+            author.Follows = new List<Author>();
+            _dbContext.Authors.Update(author);
+        }
+
+        author.Follows.Add(authorToFollow);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+
     // Helper method
     // public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
     // {

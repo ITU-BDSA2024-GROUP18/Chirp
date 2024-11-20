@@ -18,8 +18,8 @@ public class PublicModel : PageModel
 
     // private readonly UserManager<ApplicationUser> _userManager;
 
-    private readonly ICheepService _CheepService;
-    private readonly ICheepRepository _CheepRepository;
+    public ICheepService _CheepService;
+    public ICheepRepository _CheepRepository;
     public required List<CheepDTO> Cheeps { get; set; }
 
     [BindProperty]
@@ -67,5 +67,12 @@ public class PublicModel : PageModel
         return RedirectToPage();
 
     }
+
+    public async Task<ActionResult> OnPostFollow(string user, string toFollow)
+    {
+        await _CheepRepository.Follow(user, toFollow);
+        return RedirectToPage();
+    }
+
 
 }
