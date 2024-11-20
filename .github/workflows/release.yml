@@ -89,6 +89,7 @@ jobs:
         run: dotnet tool install --global dotnet-ef
 
       - name: Clean Database on Windows
+        working-directory: src/${{ env.FILE_NAME }}
         if: runner.os == 'Windows'
         run: |
           if (Test-Path "chirp.db") {
@@ -99,6 +100,7 @@ jobs:
           }
       
       - name: Grant Full Permissions to Database File on Windows
+        working-directory: src/${{ env.FILE_NAME }}
         if: runner.os == 'Windows'
         run: |
           icacls "chirp.db" /grant "Everyone:F"
