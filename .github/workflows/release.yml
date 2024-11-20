@@ -88,16 +88,6 @@ jobs:
       - name: Install EF Core Tools
         run: dotnet tool install --global dotnet-ef
 
-      - name: Clean Database on Windows
-        working-directory: src/${{ env.FILE_NAME }}
-        if: runner.os == 'Windows'
-        run: |
-          if (Test-Path "chirp.db") {
-            Remove-Item "chirp.db"
-            Write-Host "Deleted existing database."
-          } else {
-            Write-Host "No existing database found."
-          }
       
       - name: Grant Full Permissions to Database File on Windows
         working-directory: src/${{ env.FILE_NAME }}
