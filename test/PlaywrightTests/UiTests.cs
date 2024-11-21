@@ -7,10 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using PlaywrightTests;
-using Chirp.Infrastructure.Repositories;
-using Chirp.Core.Repositories;
-using Chirp.Infrastructure.Data;
-using Chirp.Core.Entities;
+
 
 
 
