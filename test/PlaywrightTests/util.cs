@@ -19,7 +19,7 @@ namespace PlaywrightTests
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --no-build", //Remove flag: --environment Production, when testing locally
+                    Arguments = "run --no-build --environment Production", //Remove flag: --environment Production, when testing locally
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
