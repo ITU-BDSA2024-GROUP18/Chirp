@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using PlaywrightTests;
+using Chirp.Infrastructure.Repositories;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Data;
+using Chirp.Core.Entities;
+
+
 
 namespace PlaywrightTests;
 
@@ -23,6 +29,7 @@ public class EndToEndTests : PageTest
     {
         // initilazies our web application on localhost:5273
         _serverProcess = await MyEndToEndUtil.StartServer();
+
 
         //Opens a chromiun browser for testing - each test runs an isolated browser
         _browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
@@ -98,8 +105,34 @@ public class EndToEndTests : PageTest
         await Page.Locator("#cheepTextInput").FillAsync(CheepLongerthan160);
         string actual = await Page.Locator("#cheepTextInput").InputValueAsync();
 
-        //Assert.AreEqual(160,actual.Length);
         Assert.That(actual.Length, Is.EqualTo(160));
+
+    }
+
+    [Test]
+    public async Task WhenUsersSendCheepsItsAddedToDb()
+    {
+
+        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await Page.GetByPlaceholder("name@example.com").ClickAsync();
+        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await Page.GetByPlaceholder("password").ClickAsync();
+        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await Page.Locator("#cheepTextInput").ClickAsync();
+        await Page.Locator("#cheepTextInput").FillAsync("Hello i am test");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(Page.GetByText("Hello i am test")).ToBeVisibleAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Hello i am test")).ToBeVisibleAsync();
+
     }
 
 
