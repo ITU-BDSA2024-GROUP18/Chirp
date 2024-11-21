@@ -133,6 +133,11 @@ public class CheepRepository : ICheepRepository
             author.Follows = [];
         }
 
+
+        /// In this method we would maybe use LINQ instead
+
+
+
         if (author.Follows.Contains(authorFollowed))
         {
             return true;
@@ -153,6 +158,8 @@ public class CheepRepository : ICheepRepository
             author.Follows = [];
         }
 
+    //Linq here also?
+
         author.Follows.Add(authorToFollow);
 
         await _dbContext.SaveChangesAsync();
@@ -162,6 +169,8 @@ public class CheepRepository : ICheepRepository
     {
         Author author = await GetAuthorByName(user);
         Author authorToUnfollow = await GetAuthorByName(toUnfollow);
+
+        //And perhaps here?
 
         author.Follows?.Remove(authorToUnfollow);
 
