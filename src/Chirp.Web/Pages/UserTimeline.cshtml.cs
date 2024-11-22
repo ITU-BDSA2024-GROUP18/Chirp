@@ -31,7 +31,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
     {
         //Ensure first page is returned on invalid query for page
         if (page <= 0) page = 1;
-        Cheeps = await _CheepRepository.ReadFromAuthor(page, Author);
+        Cheeps = await _CheepRepository.ReadFromFollows(page, Author);
         return Page();
     }
 
