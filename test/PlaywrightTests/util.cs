@@ -11,6 +11,8 @@ namespace PlaywrightTests
         public static async Task<Process> StartServer()
         {
 
+            //var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+
             // Get path needed for dotnet run
             var projectpath = @"../../../../../src/Chirp.Web";   //Ensure this matches your path locally
             // start the process and run our project
@@ -19,11 +21,15 @@ namespace PlaywrightTests
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = "run --no-build --environment Production", //Remove flag: --environment Production, when testing locally
+                    Arguments = "run --no-build", //Remove flag: --environment Production, when testing locally
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    Environment =
+                                {
+                                    ["ASPNETCORE_ENVIRONMENT"] = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"
+                                }
                 }
             };
 

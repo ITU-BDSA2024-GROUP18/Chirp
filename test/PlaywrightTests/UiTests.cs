@@ -1,14 +1,8 @@
 //pwsh bin/Debug/net8.0/playwright.ps1 codegen http://localhost:5273/
 
 using System.Diagnostics;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
-using PlaywrightTests;
-
-
 
 
 namespace PlaywrightTests;
@@ -38,11 +32,13 @@ public class EndToEndTests : PageTest
     {
 
         // Kill the processes(our localhost server and the browser for testing)
+
         _serverProcess?.Kill(true);
         _serverProcess?.Dispose();
         await _browser.DisposeAsync();
 
-
+        // _context.Cheeps.RemoveRange(_context.Cheeps.Where(c => c.Text.Contains("Hello i am test")));
+        // await _context.SaveChangesAsync();
 
     }
 
@@ -121,14 +117,14 @@ public class EndToEndTests : PageTest
         await Page.Locator("#cheepTextInput").ClickAsync();
         await Page.Locator("#cheepTextInput").FillAsync("Hello i am test");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Expect(Page.GetByText("Hello i am test")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
 
         await Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
         await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
         await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("Hello i am test")).ToBeVisibleAsync();
+        await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
 
     }
 
