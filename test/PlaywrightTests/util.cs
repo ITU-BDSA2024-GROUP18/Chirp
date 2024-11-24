@@ -21,7 +21,7 @@ namespace PlaywrightTests
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "dotnet",
-                    Arguments = $"run --no-build -- environment {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}", //Remove flag: --environment Production, when testing locally
+                    Arguments = $"run --no-build --environment {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}", //Remove flag: --environment Production, when testing locally
                     WorkingDirectory = projectpath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
