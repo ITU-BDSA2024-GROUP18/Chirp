@@ -35,7 +35,7 @@ public class EndToEndTests : PageTest
 
         _serverProcess?.Kill(true);
         _serverProcess?.Dispose();
-        await _browser.DisposeAsync();
+        await _browser!.DisposeAsync();
 
         // _context.Cheeps.RemoveRange(_context.Cheeps.Where(c => c.Text.Contains("Hello i am test")));
         // await _context.SaveChangesAsync();
