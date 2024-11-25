@@ -1,0 +1,44 @@
+@page
+@model Chirp.Web.Areas.Identity.Pages.Account.AboutMeModel
+@{
+    ViewData["Title"] = "About Me";
+}
+
+<h2>About Me</h2>
+<p><strong>Username:</strong> @Model.UserName</p>
+<p><strong>Email:</strong> @Model.Email</p>
+
+<h3>My Cheeps</h3>
+@if (Model.UserCheeps.Any())
+{
+    <ul>
+        @foreach (var cheep in Model.UserCheeps)
+        {
+            <li>
+                @cheep.Text
+                <small>(Posted on @cheep.TimeStamp)</small>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No cheeps posted yet.</p>
+}
+
+<!-- TODO:-- Update this to reflect actual following functionality>-->
+
+<h3>Following</h3>
+@if (Model.Following.Any())
+{
+    <ul>
+        @foreach (var followee in Model.Following)
+        {
+            <li>@followee</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You are not following anyone yet.</p>
+}
