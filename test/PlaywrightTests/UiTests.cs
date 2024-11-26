@@ -47,7 +47,7 @@ public class EndToEndTests : PageTest
     public async Task HomepageDoesNotHaveChirpboxWhenLoggedOut()
     {
         // go to homepage
-        await Page.GotoAsync("https://localhost:5001");
+        await Page.GotoAsync("http://localhost:5000/");
         // see if share button is visible
         await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Share" })).Not.ToBeVisibleAsync();
     }
@@ -56,7 +56,7 @@ public class EndToEndTests : PageTest
     public async Task UserCanLogInThroughUI()
     {
         // go to homepage and login using a testuser
-        await Page.GotoAsync("https://localhost:5001");
+        await Page.GotoAsync("http://localhost:5000/");
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
         await Page.GetByPlaceholder("name@example.com").ClickAsync();
         await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
@@ -71,7 +71,7 @@ public class EndToEndTests : PageTest
     public async Task HomepageDoesHaveChirpboxWhenLoggedIn()
     {
         // Log in using a test user
-        await Page.GotoAsync("https://localhost:5001");
+        await Page.GotoAsync("http://localhost:5000/");
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
         await Page.GetByPlaceholder("name@example.com").ClickAsync();
         await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
@@ -87,7 +87,7 @@ public class EndToEndTests : PageTest
     public async Task UsersCannotEnterCheepsLongerThan160Characters()
     {
         var CheepLongerthan160 = "Planning an amazing event takes effort, but teamwork and creativity make it unforgettable. Lets aim for success and celebrate together. Join us soon—excited! Also you should cut me off soon";
-        await Page.GotoAsync("https://localhost:5001");
+        await Page.GotoAsync("http://localhost:5000/");
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
         await Page.GetByPlaceholder("name@example.com").ClickAsync();
         await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
@@ -106,7 +106,7 @@ public class EndToEndTests : PageTest
     public async Task WhenUsersSendCheepsItsAddedToDb()
     {
 
-        await Page.GotoAsync("https://localhost:5001");
+        await Page.GotoAsync("http://localhost:5000/");
         await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
         await Page.GetByPlaceholder("name@example.com").ClickAsync();
         await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
