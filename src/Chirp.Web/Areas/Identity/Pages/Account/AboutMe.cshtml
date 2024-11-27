@@ -26,15 +26,17 @@ else
     <p>No cheeps posted yet.</p>
 }
 
-<!-- TODO:-- Update this to reflect actual following functionality>-->
-
 <h3>Following</h3>
 @if (Model.Following.Any())
 {
     <ul>
         @foreach (var followee in Model.Following)
         {
-            <li>@followee</li>
+            <li>
+                <a href="/@(@followee)">
+                    @followee
+                </a>
+            </li>
         }
     </ul>
 }

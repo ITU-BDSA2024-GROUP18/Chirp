@@ -5,6 +5,8 @@ using System.Security.Claims;
 using Chirp.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using Chirp.Infrastructure.Repositories;
+using Chirp.Core.Repositories;
 
 namespace Chirp.Web.Areas.Identity.Pages.Account
 {
@@ -12,10 +14,12 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
     public class AboutMeModel : PageModel
     {
         private readonly ChirpDBContext _dbContext;
+        private readonly ICheepRepository _cheepRepository;
 
-        public AboutMeModel(ChirpDBContext dbContext)
+        public AboutMeModel(ChirpDBContext dbContext, ICheepRepository cheepRepository)
         {
             _dbContext = dbContext;
+            _cheepRepository = cheepRepository;
         }
 
         public string? UserName { get; set; }
@@ -39,7 +43,8 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             // Get cheeps posted by user
             UserCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
 
-            // TODO: Get following list 
+            // Get following list 
+            Following = await _cheepRepository.GetFollowedUsers(userId);
         }
 
         public async Task<IActionResult> OnPostForgetMeAsync()
