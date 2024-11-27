@@ -131,15 +131,37 @@ public class EndToEndTests : PageTest
         await _page!.Locator("#cheepTextInput").ClickAsync();
         await _page!.Locator("#cheepTextInput").FillAsync("Hello i am test");
         await _page!.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Expect(_page!.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("Hello i am test");
 
         await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
         await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
         await _page!.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
         await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
         await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
-        await Expect(_page!.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("Hello i am test");
 
+    }
+
+    [Test]
+
+    public async Task LogInAndTestVulnerabilityToXss()
+    {
+        await _page!.GotoAsync("https://localhost:5001/");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Expect(_page!.GetByRole(AriaRole.Heading, new() { Name = "What's on your mind test@mail" })).ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).ToBeVisibleAsync();
+        await _page!.Locator("#cheepTextInput").ClickAsync();
+        await _page!.Locator("#cheepTextInput").FillAsync("Hello, I am feeling good!<script>alert('If you see this in a popup, you are in trouble!');</script>");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("test@mail.dk Hello, I am feeling good!<script>alert('If you see this in a popup, you are in trouble!');</script> —");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
     }
 
 
