@@ -12,14 +12,13 @@ namespace Chirp.Infrastructure.Data
 
         public DbSet<Cheep> Cheeps { get; set; }
 
-
         public ChirpDBContext(DbContextOptions<ChirpDBContext> options) : base(options)
         {
 
 
         }
-        
-        
+
+
     }
 
 }

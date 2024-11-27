@@ -4,6 +4,11 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
 }
+@using Microsoft.AspNetCore.Identity;
+@using Chirp.Core.Entities;
+@inject SignInManager<Author> SignInManager;
+@inject UserManager<Author> UserManager;
+    
 
 <div>
     <h2> Public Timeline </h2>
@@ -18,6 +23,28 @@
                     <p>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                            @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName) {
+                                @if (User.Identity?.Name != null && !await Model._CheepRepository.Follows(User.Identity.Name, cheep.AuthorName))
+                                {
+                                    <form method="post">
+                                    <button class = "button" name = "followbutton" asp-page-handler="Follow">
+                                        <span>Follow</span>
+                                    </button>
+                                    <input name="user" value="@User.Identity.Name" type="hidden">
+                                    <input name="toFollow" value="@cheep.AuthorName" type="hidden">
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post">
+                                    <button class = "button" name = "unfollowbutton" asp-page-handler="Unfollow">
+                                        <span>Unfollow</span>
+                                    </button>
+                                    <input name="user" value="@User.Identity?.Name" type="hidden">
+                                    <input name="toUnfollow" value="@cheep.AuthorName" type="hidden">
+                                    </form>
+                                }
+                                }
                         </strong>
                     <div style="word-wrap: break-word;">
                             @cheep.Message

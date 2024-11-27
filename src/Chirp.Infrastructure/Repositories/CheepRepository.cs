@@ -64,6 +64,43 @@ public class CheepRepository : ICheepRepository
         }).ToList();
     }
 
+    public async Task<List<CheepDTO>> ReadFromFollows(int pagenum, string author)
+    {
+
+        var query = 
+            
+            from cheeps in _dbContext.Cheeps
+            //Include cheeps of the logged in author
+            where cheeps.Author.UserName == author || (
+
+            //Get the IDs of who the current author follows
+            //and use that to include their cheeps
+                from authors in _dbContext.Authors
+                where authors.UserName == author 
+                from follow in authors.Follows
+                select follow).Contains(cheeps.Author)
+            orderby cheeps.TimeStamp descending
+            select new {
+
+                Author = cheeps.Author,
+                Text = cheeps.Text,
+                TimeStamp = cheeps.TimeStamp
+
+            };
+
+        var result = await query.Skip((pagenum - 1) * 32).Take(32).ToListAsync();
+
+        return result.Select(cheep => new CheepDTO
+        {
+            AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
+            Message = cheep.Text,
+            Timestamp = cheep.TimeStamp.ToString()
+        }).ToList();
+            
+
+
+    }
+
 
     public async Task<Author> GetAuthorByName(string name)
     {
@@ -122,6 +159,62 @@ public class CheepRepository : ICheepRepository
         await _dbContext.Cheeps.AddAsync(cheep);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> Follows(string user, string following)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorFollowed = await GetAuthorByName(following);
+
+        if (author.Follows == null)
+        {
+            author.Follows = [];
+        }
+
+
+        /// In this method we would maybe use LINQ instead
+
+
+
+        if (author.Follows.Contains(authorFollowed))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public async Task Follow(string user, string toFollow)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorToFollow = await GetAuthorByName(toFollow);
+
+        if (author.Follows == null)
+        {
+            author.Follows = [];
+        }
+
+    //Linq here also?
+
+        author.Follows.Add(authorToFollow);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task Unfollow(string user, string toUnfollow)
+    {
+        Author author = await GetAuthorByName(user);
+        Author authorToUnfollow = await GetAuthorByName(toUnfollow);
+
+        //And perhaps here?
+
+        author.Follows?.Remove(authorToUnfollow);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+
 
     // Helper method
     // public static string UnixTimeStampToDateTimeString(double unixTimeStamp)
