@@ -61,4 +61,15 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
         return RedirectToPage();
     }
 
+    public async Task<IActionResult> OnPostDeleteCheep(string timestamp, string message)
+    {
+
+        var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await _CheepRepository.DeleteCheeps(userid, timestamp, message);
+
+        return RedirectToPage();
+
+    }
+
 }

@@ -23,6 +23,14 @@
                         </strong>
                     <div style="word-wrap: break-word;">
                             @cheep.Message
+                            @if (User.Identity?.Name == cheep.AuthorName)
+                            {
+                            <form method="post" asp-page-handler="DeleteCheep">
+                                <input type="hidden" name="timestamp" value="@cheep.Timestamp" />
+                                <input type="hidden" name="message" value="@cheep.Message" />
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            }
                     </div>
                     <small>&mdash; @cheep.Timestamp</small>
                     </p>
