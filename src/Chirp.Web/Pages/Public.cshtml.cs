@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
 using Chirp.Web.Pages.Shared;
 using System.Security.Claims;
+using Chirp.Infrastructure.Repositories;
 
 
 namespace Chirp.Web.Pages;
@@ -31,6 +32,7 @@ public class PublicModel : PageModel
         _CheepRepository = cheepRepository;
         _CheepService = cheepService;
     }
+
 
     public async Task<ActionResult> OnGet([FromQuery] int page)
     {
@@ -79,6 +81,18 @@ public class PublicModel : PageModel
         await _CheepRepository.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
+
+    public async Task<IActionResult> OnPostDeleteCheep(string timestamp, string message)
+    {
+
+        var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await _CheepRepository.DeleteCheeps(userid, timestamp, message);
+
+        return RedirectToPage();
+
+    }
+
 
 
 }

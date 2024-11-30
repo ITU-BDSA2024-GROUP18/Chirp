@@ -67,20 +67,21 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> ReadFromFollows(int pagenum, string author)
     {
 
-        var query = 
-            
+        var query =
+
             from cheeps in _dbContext.Cheeps
-            //Include cheeps of the logged in author
+                //Include cheeps of the logged in author
             where cheeps.Author.UserName == author || (
 
             //Get the IDs of who the current author follows
             //and use that to include their cheeps
                 from authors in _dbContext.Authors
-                where authors.UserName == author 
+                where authors.UserName == author
                 from follow in authors.Follows
                 select follow).Contains(cheeps.Author)
             orderby cheeps.TimeStamp descending
-            select new {
+            select new
+            {
 
                 Author = cheeps.Author,
                 Text = cheeps.Text,
@@ -96,7 +97,7 @@ public class CheepRepository : ICheepRepository
             Message = cheep.Text,
             Timestamp = cheep.TimeStamp.ToString()
         }).ToList();
-            
+
 
 
     }
@@ -195,7 +196,7 @@ public class CheepRepository : ICheepRepository
             author.Follows = [];
         }
 
-    //Linq here also?
+        //Linq here also?
 
         author.Follows.Add(authorToFollow);
 
@@ -212,6 +213,28 @@ public class CheepRepository : ICheepRepository
         author.Follows?.Remove(authorToUnfollow);
 
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteCheeps(string? authorid, string timestamp, string message)
+    {
+
+        //Fetch all cheeps from an author that has a match between DTO message and cheep text
+        var cheeps = _dbContext.Cheeps
+            .Where(c => c.AuthorId == authorid && c.Text == message)
+            .ToList();
+
+        //Of the matches find the one that matches on DTO timestamp, and cheep timestamp converted to DTO format 
+        var cheepToDelete = cheeps.SingleOrDefault(c => c.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss") == timestamp);
+
+
+        if (cheepToDelete != null)
+        {
+
+            _dbContext.Cheeps.Remove(cheepToDelete);
+            await _dbContext.SaveChangesAsync();
+
+        }
+
     }
 
 
