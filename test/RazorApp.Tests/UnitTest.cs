@@ -109,7 +109,7 @@ namespace RazorApp.Tests
             //Arrange
             var ta1 = new Author() { Id = "13", UserName = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
 
-            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.UtcNow };
 
             //Act
             await StartMockDB();
