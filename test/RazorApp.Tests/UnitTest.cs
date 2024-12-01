@@ -103,6 +103,27 @@ namespace RazorApp.Tests
         }
 
         [Fact]
+        public async Task Cheep_IsDeletedFromDB()
+        {
+
+            //Arrange
+            var ta1 = new Author() { Id = "13", UserName = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+
+            //Act
+            await StartMockDB();
+            await _repo.AddCheep(tc1);
+
+            await _repo.DeleteCheeps(tc1.AuthorId, tc1.TimeStamp.ToString(), tc1.Text);
+
+            //Assert
+            //if no record is found FirstOrDefaultAsync will return default value, which is NULL for our cheeps
+            var actualCheep = await _context.Cheeps.Where(cheep => cheep.CheepId == 658).FirstOrDefaultAsync();
+            Assert.Null(actualCheep);
+        }
+
+        [Fact]
         public async Task AddedAuthor_IsSavedToDB()
         {
             //Arrange
