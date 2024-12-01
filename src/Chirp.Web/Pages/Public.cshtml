@@ -54,7 +54,8 @@
                             @cheep.Message
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name == cheep.AuthorName)
                             {
-                            <form method="post" asp-page-handler="DeleteCheep">
+                            <form method="post" asp-page-handler="DeleteCheep"
+                                onclick="return confirm('Are you sure you want to delete this cheep?')">
                                 <input type="hidden" name="timestamp" value="@cheep.Timestamp" />
                                 <input type="hidden" name="message" value="@cheep.Message" />
                                 <button type="submit" class="btn btn-danger">Delete</button>
