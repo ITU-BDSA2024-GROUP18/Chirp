@@ -13,7 +13,7 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
 builder.Services.AddDefaultIdentity<Author>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
+    options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ChirpDBContext>();
 
 
@@ -29,9 +29,9 @@ builder.Services.AddAuthentication(options => { })
         // Use different secrets based on the environment
         if (builder.Environment.IsDevelopment())
         {
-            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ?? 
+            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ??
                          throw new ArgumentException("GitHub ClientId for local dev not provided.");
-            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ?? 
+            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ??
                              throw new ArgumentException("GitHub ClientSecret for local dev not provided.");
         }
         else
