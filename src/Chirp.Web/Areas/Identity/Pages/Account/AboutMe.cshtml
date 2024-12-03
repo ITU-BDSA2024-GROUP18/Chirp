@@ -11,11 +11,11 @@
 <h3>My Cheeps</h3>
 @if (Model.UserCheeps.Any())
 {
-    <ul>
+    <ul id="messagelist" class="cheeps">
         @foreach (var cheep in Model.UserCheeps)
         {
             <li>
-                @cheep.Text
+                <div style="word-wrap: break-word;">@cheep.Text</div>
                 <small>(Posted on @cheep.TimeStamp)</small>
             </li>
         }
