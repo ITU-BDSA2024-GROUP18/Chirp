@@ -120,8 +120,8 @@ public class EndToEndTests : PageTest
         await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
 
         await Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        //await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
+        //await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
         await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
