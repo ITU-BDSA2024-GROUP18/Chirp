@@ -134,7 +134,6 @@ public class EndToEndTests : PageTest
         await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("Hello i am test");
 
         await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
-        await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
         await _page!.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
         await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
         await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
@@ -161,7 +160,6 @@ public class EndToEndTests : PageTest
         await _page!.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
         await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("test@mail.dk Hello, I am feeling good!<script>alert('If you see this in a popup, you are in trouble!');</script> —");
         await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
-        await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
     }
 
 

@@ -67,20 +67,21 @@ public class CheepRepository : ICheepRepository
     public async Task<List<CheepDTO>> ReadFromFollows(int pagenum, string author)
     {
 
-        var query = 
-            
+        var query =
+
             from cheeps in _dbContext.Cheeps
-            //Include cheeps of the logged in author
+                //Include cheeps of the logged in author
             where cheeps.Author.UserName == author || (
 
             //Get the IDs of who the current author follows
             //and use that to include their cheeps
                 from authors in _dbContext.Authors
-                where authors.UserName == author 
+                where authors.UserName == author
                 from follow in authors.Follows
                 select follow).Contains(cheeps.Author)
             orderby cheeps.TimeStamp descending
-            select new {
+            select new
+            {
 
                 Author = cheeps.Author,
                 Text = cheeps.Text,
@@ -96,7 +97,7 @@ public class CheepRepository : ICheepRepository
             Message = cheep.Text,
             Timestamp = cheep.TimeStamp.ToString()
         }).ToList();
-            
+
 
 
     }
@@ -195,7 +196,7 @@ public class CheepRepository : ICheepRepository
             author.Follows = [];
         }
 
-    //Linq here also?
+        //Linq here also?
 
         author.Follows.Add(authorToFollow);
 
@@ -214,6 +215,11 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task<List<string>> GetFollowedUsers(string userId)
+    {
+        var author = await _dbContext.Authors.Include(a => a.Follows).FirstOrDefaultAsync(a => a.Id == userId);
+        return author?.Follows?.Select(f => f.UserName).ToList() ?? [];
+    }
 
 
     // Helper method
