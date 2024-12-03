@@ -1,4 +1,4 @@
-//pwsh bin/Debug/net8.0/playwright.ps1 codegen http://localhost:5273/
+//pwsh bin/Debug/net8.0/playwright.ps1 codegen https://localhost:5001
 
 using System.Diagnostics;
 using Microsoft.Playwright;
@@ -15,15 +15,28 @@ public class EndToEndTests : PageTest
 
     private IBrowser? _browser;
 
+    private IBrowserContext? _context;
+
+    private IPage? _page;
+
     [SetUp]
     public async Task Init()
     {
-        // initilazies our web application on localhost:5273
+        // initilazies our web application on https://localhost:5001
         _serverProcess = await MyEndToEndUtil.StartServer();
 
 
         //Opens a chromiun browser for testing - each test runs an isolated browser
         _browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
+
+        _context = await _browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true
+
+        });
+
+        _page = await _context.NewPageAsync();
+
     }
 
 
@@ -33,6 +46,7 @@ public class EndToEndTests : PageTest
 
         // Kill the processes(our localhost server and the browser for testing)
 
+        await _context!.DisposeAsync();
         _serverProcess?.Kill(true);
         _serverProcess?.Dispose();
         await _browser!.DisposeAsync();
@@ -47,56 +61,56 @@ public class EndToEndTests : PageTest
     public async Task HomepageDoesNotHaveChirpboxWhenLoggedOut()
     {
         // go to homepage
-        await Page.GotoAsync("http://localhost:5273/");
+        await _page!.GotoAsync("https://localhost:5001");
         // see if share button is visible
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Share" })).Not.ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Button, new() { Name = "Share" })).Not.ToBeVisibleAsync();
     }
 
     [Test]
     public async Task UserCanLogInThroughUI()
     {
         // go to homepage and login using a testuser
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
-        await Page.GetByPlaceholder("password").ClickAsync();
-        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await _page!.GotoAsync("https://localhost:5001");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
         // see if 'whats on your mind' heading now appears after login
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "What's on your mind test@mail" })).ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Heading, new() { Name = "What's on your mind test@mail" })).ToBeVisibleAsync();
 
     }
     [Test]
     public async Task HomepageDoesHaveChirpboxWhenLoggedIn()
     {
         // Log in using a test user
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
-        await Page.GetByPlaceholder("password").ClickAsync();
-        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Page.GotoAsync("http://localhost:5273/");
+        await _page!.GotoAsync("https://localhost:5001");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await _page!.GotoAsync("https://localhost:5001");
         // see if share button is now visible after login
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Share" })).ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Button, new() { Name = "Share" })).ToBeVisibleAsync();
     }
 
     [Test]
     public async Task UsersCannotEnterCheepsLongerThan160Characters()
     {
         var CheepLongerthan160 = "Planning an amazing event takes effort, but teamwork and creativity make it unforgettable. Lets aim for success and celebrate together. Join us soon—excited! Also you should cut me off soon";
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
-        await Page.GetByPlaceholder("password").ClickAsync();
-        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Page.Locator("#cheepTextInput").ClickAsync();
-        await Page.Locator("#cheepTextInput").FillAsync(CheepLongerthan160);
-        string actual = await Page.Locator("#cheepTextInput").InputValueAsync();
+        await _page!.GotoAsync("https://localhost:5001");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await _page!.Locator("#cheepTextInput").ClickAsync();
+        await _page!.Locator("#cheepTextInput").FillAsync(CheepLongerthan160);
+        string actual = await _page!.Locator("#cheepTextInput").InputValueAsync();
 
         Assert.That(actual.Length, Is.EqualTo(160));
 
@@ -106,26 +120,48 @@ public class EndToEndTests : PageTest
     public async Task WhenUsersSendCheepsItsAddedToDb()
     {
 
-        await Page.GotoAsync("http://localhost:5273/");
-        await Page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").ClickAsync();
-        await Page.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
-        await Page.GetByPlaceholder("password").ClickAsync();
-        await Page.GetByPlaceholder("password").FillAsync("Hello_1");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
-        await Page.Locator("#cheepTextInput").ClickAsync();
-        await Page.Locator("#cheepTextInput").FillAsync("Hello i am test");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
+        await _page!.GotoAsync("https://localhost:5001");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "my timeline" }).ClickAsync();
+        await _page!.Locator("#cheepTextInput").ClickAsync();
+        await _page!.Locator("#cheepTextInput").FillAsync("Hello i am test");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("Hello i am test");
 
-        await Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
-        //await Page.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
-        //await Page.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("Hello i am test", new() { Exact = true }).Nth(0)).ToBeVisibleAsync();
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "public timeline" }).ClickAsync();
+        await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).Not.ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("Hello i am test");
 
+    }
+
+    [Test]
+
+    public async Task LogInAndTestVulnerabilityToXss()
+    {
+        await _page!.GotoAsync("https://localhost:5001/");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").ClickAsync();
+        await _page!.GetByPlaceholder("name@example.com").FillAsync("test@mail.dk");
+        await _page!.GetByPlaceholder("password").ClickAsync();
+        await _page!.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Expect(_page!.GetByRole(AriaRole.Heading, new() { Name = "What's on your mind test@mail" })).ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" })).ToBeVisibleAsync();
+        await _page!.Locator("#cheepTextInput").ClickAsync();
+        await _page!.Locator("#cheepTextInput").FillAsync("Hello, I am feeling good!<script>alert('If you see this in a popup, you are in trouble!');</script>");
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Expect(_page!.Locator("#messagelist")).ToContainTextAsync("test@mail.dk Hello, I am feeling good!<script>alert('If you see this in a popup, you are in trouble!');</script> —");
+        await _page!.GetByRole(AriaRole.Link, new() { Name = "logout [test@mail.dk]" }).ClickAsync();
+        await _page!.GetByRole(AriaRole.Button, new() { Name = "Click here to Logout" }).ClickAsync();
     }
 
 
