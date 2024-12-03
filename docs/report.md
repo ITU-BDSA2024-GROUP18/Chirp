@@ -39,5 +39,6 @@ Here comes a description of our domain model.
 # Ethics
 
 ## License
+We decided to go with the MIT License because it's simple and developer friendly. It gives others the freedom to use, modify, and share our code. At the same time, it requires people to give credit to us as the original creators. The license also keeps things straightforward by not holding us responsible for how others use the app. More importantly the license also has low amount of constrictions on our code. 
 
 ## LLMs, ChatGPT, CoPilot, and others
