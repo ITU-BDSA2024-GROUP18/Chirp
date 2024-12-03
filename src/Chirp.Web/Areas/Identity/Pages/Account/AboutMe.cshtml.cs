@@ -90,7 +90,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync();
 
             // Redirect to Public Timeline
-            return RedirectToPage("/Account/Logout", new { area = "Identity", returnUrl = "/Public" });
+            return RedirectToPage("/Account/Logout", new { area = "Identity", returnUrl = "/" });
         }
     }
 }
