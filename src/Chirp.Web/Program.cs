@@ -47,13 +47,14 @@ builder.Services.AddAuthentication(options => { })
         o.CallbackPath = "/signin-github";
     });
 
+if(builder.Environment.IsDevelopment()){
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenLocalhost(5001, listenOptions =>
     {
         listenOptions.UseHttps(); // Enable HTTPS on port 5001
     });
-});
+});}
 
 
 var app = builder.Build();
