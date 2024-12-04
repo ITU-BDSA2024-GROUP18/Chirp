@@ -29,4 +29,7 @@ public interface ICheepRepository
 
     public Task Unfollow(string user, string toUnfollow);
 
+    public Task DeleteCheeps(string? authorid, string timestamp, string message);
+
+    Task<List<string>> GetFollowedUsers(string userId);
 }

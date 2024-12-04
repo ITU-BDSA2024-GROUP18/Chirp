@@ -2,9 +2,16 @@ using Chirp.Infrastructure.Data;
 using Chirp.Infrastructure.Repositories;
 using Chirp.Core.Entities;
 using Chirp.Core.Repositories;
+using Chirp.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Services;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Humanizer;
+using Chirp.Core.DTOs;
+using System.Globalization;
+using NuGet.Packaging.Signing;
+using System.Net.Http.Headers;
 
 namespace RazorApp.Tests
 
@@ -100,6 +107,40 @@ namespace RazorApp.Tests
             Assert.Equal("My Name Test", actualCheep.Author.UserName);
             Assert.Equal("test@itu.dk", actualCheep.Author.Email);
             Assert.Equal("This is my first cheep", actualCheep.Text);
+        }
+
+        [Fact]
+        public async Task Cheep_IsDeletedFromDB()
+        {
+
+            //Arrange
+            var ta1 = new Author() { Id = "13", UserName = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
+
+            var tc1 = new Cheep() { CheepId = 658, AuthorId = ta1.Id, Author = ta1, Text = "This is my first cheep", TimeStamp = DateTime.Now };
+
+            //Act
+            await StartMockDB();
+            await _repo.AddCheep(tc1);
+
+
+            var CheepDTO = new CheepDTO
+            {
+
+                AuthorName = tc1.AuthorId,
+                Message = tc1.Text,
+                Timestamp = tc1.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+
+            };
+
+            await _repo.DeleteCheeps(CheepDTO.AuthorName, CheepDTO.Timestamp, CheepDTO.Message);
+
+            //actualCheep = await _context.Cheeps.Where(cheep => cheep.CheepId == 658).FirstOrDefaultAsync();
+
+            //Assert
+            //if no record is found FirstOrDefaultAsync will return default value, which is NULL for our cheeps
+            var actualCheep = await _context.Cheeps.Where(cheep => cheep.CheepId == 658).FirstOrDefaultAsync();
+
+            Assert.Null(actualCheep);
         }
 
         [Fact]

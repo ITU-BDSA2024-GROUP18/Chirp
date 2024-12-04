@@ -1,0 +1,23 @@
+﻿@page
+@model Chirp.Web.Areas.Identity.Pages.Account.RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+<p>
+    <div>Alright @Model.Email, welcome to Chirp! </div>
+    <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your email</a>
+</p>
+    }
+    else
+    {
+<p>
+        Please check your email to confirm your account.
+</p>
+    }
+}
+
