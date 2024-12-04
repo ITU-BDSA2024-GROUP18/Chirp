@@ -1,0 +1,18 @@
+@page
+@model Chirp.Web.Areas.Identity.Pages.Account.ExternalLoginModel;
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
+<hr />
+
+<p id="external-login-description" class="text-info">
+    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+    Your username is <strong>@User.Identity?.Name</strong>.
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
