@@ -37,7 +37,7 @@ public class CheepRepository : ICheepRepository
         {
             AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
             Message = cheep.Text,
-            Timestamp = cheep.TimeStamp.ToString()
+            Timestamp = cheep.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
         }).ToList();
     }
 
@@ -60,7 +60,7 @@ public class CheepRepository : ICheepRepository
         {
             AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
             Message = cheep.Text,
-            Timestamp = cheep.TimeStamp.ToString()
+            Timestamp = cheep.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
         }).ToList();
     }
 
@@ -95,7 +95,7 @@ public class CheepRepository : ICheepRepository
         {
             AuthorName = cheep.Author?.UserName ?? "Unknown Author", // Handle null here
             Message = cheep.Text,
-            Timestamp = cheep.TimeStamp.ToString()
+            Timestamp = cheep.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
         }).ToList();
 
 
@@ -214,6 +214,29 @@ public class CheepRepository : ICheepRepository
 
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task DeleteCheeps(string? authorid, string timestamp, string message)
+    {
+
+        //Fetch all cheeps from an author that has a match between DTO message and cheep text
+        var cheeps = _dbContext.Cheeps
+            .Where(c => c.AuthorId == authorid && c.Text == message)
+            .ToList();
+
+
+        var cheepToDelete = cheeps.SingleOrDefault(c => c.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) == timestamp);
+
+        Console.WriteLine($"Database: {cheepToDelete?.TimeStamp}");
+        Console.WriteLine($"Input: {timestamp}");
+        if (cheepToDelete != null)
+        {
+
+            _dbContext.Cheeps.Remove(cheepToDelete);
+            await _dbContext.SaveChangesAsync();
+
+        }
+    }
+
 
     public async Task<List<string>> GetFollowedUsers(string userId)
     {

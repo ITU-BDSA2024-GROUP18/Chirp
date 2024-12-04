@@ -29,9 +29,9 @@ builder.Services.AddAuthentication(options => { })
         // Use different secrets based on the environment
         if (builder.Environment.IsDevelopment())
         {
-            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ?? 
+            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ??
                          throw new ArgumentException("GitHub ClientId for local dev not provided.");
-            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ?? 
+            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ??
                              throw new ArgumentException("GitHub ClientSecret for local dev not provided.");
         }
         else
@@ -47,13 +47,16 @@ builder.Services.AddAuthentication(options => { })
         o.CallbackPath = "/signin-github";
     });
 
-builder.WebHost.ConfigureKestrel(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.ListenLocalhost(5001, listenOptions =>
+    builder.WebHost.ConfigureKestrel(options =>
     {
-        listenOptions.UseHttps(); // Enable HTTPS on port 5001
+        options.ListenLocalhost(5001, listenOptions =>
+        {
+            listenOptions.UseHttps(); // Enable HTTPS on port 5001
+        });
     });
-});
+}
 
 
 var app = builder.Build();

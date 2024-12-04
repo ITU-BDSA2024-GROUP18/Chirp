@@ -5,10 +5,11 @@
     Layout = "Shared/_Layout";
 }
 @using Microsoft.AspNetCore.Identity;
+@using Chirp.Web.Pages.Shared;
 @using Chirp.Core.Entities;
 @inject SignInManager<Author> SignInManager;
 @inject UserManager<Author> UserManager;
-    
+
 
 <div>
     <h2> Public Timeline </h2>
@@ -19,35 +20,47 @@
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
+
                 <li>
                     <p>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                            @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName) {
-                                @if (User.Identity?.Name != null && !await Model._CheepRepository.Follows(User.Identity.Name, cheep.AuthorName))
+                            @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
+                            {
+                                @if (User.Identity?.Name != null && !await Model._CheepRepository.Follows(User.Identity.Name,
+                               cheep.AuthorName))
                                 {
                                     <form method="post">
-                                    <button class = "button" name = "followbutton" asp-page-handler="Follow">
-                                        <span>Follow</span>
-                                    </button>
-                                    <input name="user" value="@User.Identity.Name" type="hidden">
-                                    <input name="toFollow" value="@cheep.AuthorName" type="hidden">
+                                        <button class="button" name="followbutton" asp-page-handler="Follow">
+                                            <span>Follow</span>
+                                        </button>
+                                        <input name="user" value="@User.Identity.Name" type="hidden">
+                                        <input name="toFollow" value="@cheep.AuthorName" type="hidden">
                                     </form>
                                 }
                                 else
                                 {
                                     <form method="post">
-                                    <button class = "button" name = "unfollowbutton" asp-page-handler="Unfollow">
-                                        <span>Unfollow</span>
-                                    </button>
-                                    <input name="user" value="@User.Identity?.Name" type="hidden">
-                                    <input name="toUnfollow" value="@cheep.AuthorName" type="hidden">
+                                        <button class="button" name="unfollowbutton" asp-page-handler="Unfollow">
+                                            <span>Unfollow</span>
+                                        </button>
+                                        <input name="user" value="@User.Identity?.Name" type="hidden">
+                                        <input name="toUnfollow" value="@cheep.AuthorName" type="hidden">
                                     </form>
                                 }
-                                }
+                            }
                         </strong>
                     <div style="word-wrap: break-word;">
                             @cheep.Message
+                            @if (SignInManager.IsSignedIn(User) && User.Identity?.Name == cheep.AuthorName)
+                            {
+                            <form method="post" asp-page-handler="DeleteCheep"
+                                onclick="return confirm('Are you sure you want to delete this cheep?')">
+                                <input type="hidden" name="timestamp" value="@cheep.Timestamp" />
+                                <input type="hidden" name="message" value="@cheep.Message" />
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            }
                     </div>
                     <small>&mdash; @cheep.Timestamp</small>
                     </p>
