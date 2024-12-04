@@ -4,6 +4,8 @@
 // Documentation:
 // https://github.com/dotnet/aspnetcore/blob/c70204ae3c91d2b48fa6d9b92b62265f368421b4/src/Identity/UI/src/Areas/Identity/Pages/V5/Account/ExternalLogin.cshtml.cs
 // This file is an edited version of the above link made to work with our Chirp application.
+// Further documentation:
+// https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/additional-claims?view=aspnetcore-9.0
 
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -129,12 +131,13 @@ public class ExternalLoginModel : PageModel
         {
             var user = CreateUser();
 
-            var username = info.Principal.Identity?.Name;
+            var username = info.Principal.FindFirstValue(ClaimTypes.Name)!;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email)!;
 
             user.UserCreatedUserName = username;
 
             await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
 
             var resultCreation = await _userManager.CreateAsync(user);
             if (resultCreation.Succeeded)
@@ -156,12 +159,12 @@ public class ExternalLoginModel : PageModel
                         values: new { area = "Identity", userId = userId, code = code },
                         protocol: Request.Scheme)!;
 
-                    await _emailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+                    await _emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
 
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                        return RedirectToPage("./RegisterConfirmation", new { Email = email });
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
@@ -195,12 +198,13 @@ public class ExternalLoginModel : PageModel
         {
             var user = CreateUser();
 
-            var username = info.Principal.Identity?.Name;
+            var username = info.Principal.FindFirstValue(ClaimTypes.Name)!;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email)!;
 
             user.UserCreatedUserName = username;
 
             await _userStore.SetUserNameAsync(user, username, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
 
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
@@ -222,12 +226,12 @@ public class ExternalLoginModel : PageModel
                         values: new { area = "Identity", userId = userId, code = code },
                         protocol: Request.Scheme)!;
 
-                    await _emailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+                    await _emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
 
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                        return RedirectToPage("./RegisterConfirmation", new { Email = email });
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
