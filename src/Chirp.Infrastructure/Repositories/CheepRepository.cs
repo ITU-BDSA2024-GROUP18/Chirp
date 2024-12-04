@@ -238,6 +238,11 @@ public class CheepRepository : ICheepRepository
     }
 
 
+    public async Task<List<string>> GetFollowedUsers(string userId)
+    {
+        var author = await _dbContext.Authors.Include(a => a.Follows).FirstOrDefaultAsync(a => a.Id == userId);
+        return author?.Follows?.Select(f => f.UserName).ToList() ?? [];
+    }
 
 
     // Helper method
