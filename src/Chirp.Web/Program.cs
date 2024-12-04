@@ -45,6 +45,9 @@ builder.Services.AddAuthentication(options => { })
         }
 
         o.CallbackPath = "/signin-github";
+
+        o.Scope.Add("user:email");
+        o.Scope.Add("read:user");
     });
 
 if (builder.Environment.IsDevelopment())
