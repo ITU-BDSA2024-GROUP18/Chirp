@@ -10,6 +10,11 @@
 @inject SignInManager<Author> SignInManager;
 @inject UserManager<Author> UserManager;
 
+<style>
+    .followbutton {
+    padding: 4px;
+    }
+</style>
 
 <div>
     <h2> Public Timeline </h2>
@@ -31,7 +36,7 @@
                                cheep.AuthorName))
                                 {
                                     <form method="post">
-                                        <button class="button" name="followbutton" asp-page-handler="Follow">
+                                        <button class="button followbutton" name="followbutton" asp-page-handler="Follow">
                                             <span>Follow</span>
                                         </button>
                                         <input name="user" value="@User.Identity.Name" type="hidden">
@@ -41,7 +46,7 @@
                                 else
                                 {
                                     <form method="post">
-                                        <button class="button" name="unfollowbutton" asp-page-handler="Unfollow">
+                                        <button class="button followbutton" name="unfollowbutton" asp-page-handler="Unfollow">
                                             <span>Unfollow</span>
                                         </button>
                                         <input name="user" value="@User.Identity?.Name" type="hidden">

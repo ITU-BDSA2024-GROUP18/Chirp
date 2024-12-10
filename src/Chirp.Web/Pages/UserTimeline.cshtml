@@ -6,6 +6,12 @@
     var routeName = HttpContext.GetRouteValue("author");
 }
 
+<style>
+    .followbutton {
+    padding: 4px;
+    }
+</style>
+
 <div>
     <h2> @routeName's Timeline </h2>
     @* Render Partial view and pass that view the proper Model *@

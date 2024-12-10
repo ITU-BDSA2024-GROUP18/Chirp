@@ -53,6 +53,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             }
             returnUrl = returnUrl ?? Url.Content("~/");
 
+
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
