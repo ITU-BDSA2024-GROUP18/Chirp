@@ -4,6 +4,7 @@ using Chirp.Infrastructure.Repositories;
 using Chirp.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Entities;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
 builder.Services.AddDefaultIdentity<Author>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
+    options.User.RequireUniqueEmail = true)
     .AddEntityFrameworkStores<ChirpDBContext>();
 
 
@@ -45,6 +46,9 @@ builder.Services.AddAuthentication(options => { })
         }
 
         o.CallbackPath = "/signin-github";
+
+        o.Scope.Add("user:email");
+        o.Scope.Add("read:user");
     });
 
 if (builder.Environment.IsDevelopment())
