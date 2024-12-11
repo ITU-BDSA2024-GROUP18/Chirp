@@ -27,11 +27,11 @@ public class PublicModel : PageModel
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
 
 
-    public PublicModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository)
+    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService cheepService)
     {
         _CheepRepository = cheepRepository;
-        _CheepService = cheepService;
         _authorRepository = authorRepository;
+        _CheepService = cheepService;
     }
 
 
@@ -51,19 +51,18 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        string? UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(UserName))
+        string? UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(UserId))
         {
-            throw new ArgumentNullException(nameof(UserName), "User must be authenticated.");
+            throw new ArgumentNullException(nameof(UserId), "User must be authenticated.");
         }
         var CheepText = cheepBox.CheepText
             ?? throw new ArgumentNullException(nameof(cheepBox.CheepText), "CheepText cannot be null.");
 
-        var CheepToCreate = await _CheepService.CreateCheep(UserName, cheepBox.CheepText);
+        var CheepToCreate = await _CheepService.CreateCheep(UserId, cheepBox.CheepText);
 
         if (!string.IsNullOrEmpty(CheepToCreate.Text))
         {
-
             await _CheepRepository.AddCheep(CheepToCreate);
         }
 

@@ -320,9 +320,9 @@ namespace RazorApp.Tests
         }
 
         [Theory]
-        [InlineData("Adrian", "Creating Cheep to Adrian", 658)]
+        [InlineData("12", "Creating Cheep to Adrian", 658)]
 
-        public async Task CreateCheep_WhereAuthorExists(string username, string message, int expectedCheepId)
+        public async Task CreateCheep_WhereAuthorExists(string authorid, string message, int expectedCheepId)
         {
             //Arrange 
             await StartMockDB();
@@ -330,10 +330,10 @@ namespace RazorApp.Tests
             CheepService cheepservice = new CheepService(_repo, _authorRepo);
 
             //Act
-            var newCheepForAdrian = await cheepservice.CreateCheep(username, message);
+            var newCheepForAdrian = await cheepservice.CreateCheep(authorid, message);
 
             //Assert 
-            Assert.Equal(username, newCheepForAdrian.Author.UserName);
+            Assert.Equal(authorid, newCheepForAdrian.AuthorId);
             Assert.Equal(message, newCheepForAdrian.Text);
             Assert.Equal(expectedCheepId, newCheepForAdrian.CheepId);
         }

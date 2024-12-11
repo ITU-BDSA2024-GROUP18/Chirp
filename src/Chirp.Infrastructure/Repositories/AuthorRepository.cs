@@ -11,8 +11,8 @@ public class AuthorRepository : IAuthorRepository
     public AuthorRepository(ChirpDBContext dbContext)
     {
         _dbContext = dbContext;
-        //dbContext.Database.EnsureCreated();
-        //DbInitializer.SeedDatabase(_dbContext);
+        dbContext.Database.EnsureCreated();
+        DbInitializer.SeedDatabase(_dbContext);
     }
     public async Task<Author> GetAuthorByName(string name)
     {
@@ -117,6 +117,6 @@ public class AuthorRepository : IAuthorRepository
     public async Task<List<string>> GetFollowedUsers(string userId)
     {
         var author = await _dbContext.Authors.Include(a => a.Follows).FirstOrDefaultAsync(a => a.Id == userId);
-        return author?.Follows?.Select(f => f.UserName).ToList() ?? [];
+        return author!.Follows.Select(f => f.UserName!).ToList() ?? [];
     }
 }

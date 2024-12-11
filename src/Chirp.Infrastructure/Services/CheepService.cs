@@ -31,25 +31,22 @@ public class CheepService : ICheepService
 
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author)
     {
-
         var cheep_list = await _cheepRepository.ReadFromAuthor(pageNum, author);
-
         return cheep_list;
-
     }
 
-    public async Task<Cheep> CreateCheep(string authorname, string message)
+    public async Task<Cheep> CreateCheep(string authorid, string message)
     {
         //Checks if author exists in db based on an id, 
         //if the author does exists a new cheep is created for that author, if not a new author is created, before creating the cheep.
 
-        var author = await _authorRepository.GetAuthorByName(authorname);
+        var author = await _authorRepository.CheckAuthorExists(authorid);
 
         var cheep = new Cheep()
         {
             CheepId = await _cheepRepository.GetLatestIdCheep() + 1,
-            Author = author,
-            AuthorId = author.Id,
+            Author = author!,
+            AuthorId = author!.Id,
             Text = message,
             TimeStamp = DateTime.Now
         };
