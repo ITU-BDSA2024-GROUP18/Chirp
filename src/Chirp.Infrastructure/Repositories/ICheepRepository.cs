@@ -1,7 +1,7 @@
 using Chirp.Core.DTOs;
 using Chirp.Core.Entities;
 
-namespace Chirp.Core.Repositories;
+namespace Chirp.Infrastructure.Repositories;
 
 public interface ICheepRepository
 {

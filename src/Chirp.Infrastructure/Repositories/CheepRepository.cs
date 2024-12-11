@@ -1,7 +1,6 @@
 using System.Globalization;
 using Chirp.Core.DTOs;
 using Chirp.Core.Entities;
-using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
