@@ -38,7 +38,7 @@ public class CheepService : ICheepService
 
     }
 
-    public async Task<Cheep> CreateCheep(string message, string authorname)
+    public async Task<Cheep> CreateCheep(string authorname, string message)
     {
         //Checks if author exists in db based on an id, 
         //if the author does exists a new cheep is created for that author, if not a new author is created, before creating the cheep.
