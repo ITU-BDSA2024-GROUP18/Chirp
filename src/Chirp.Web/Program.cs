@@ -18,10 +18,13 @@ builder.Services.AddDefaultIdentity<Author>(options =>
 
 
 builder.Services.AddRazorPages();
-// Register the service
+// Register the services
 builder.Services.AddScoped<ICheepService, CheepService>();
-// Register the Repository
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
+// Register the repositories
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 builder.Services.AddAuthentication(options => { })
     .AddGitHub(o =>

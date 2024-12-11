@@ -1,8 +1,6 @@
 using Chirp.Infrastructure.Data;
 using Chirp.Infrastructure.Repositories;
 using Chirp.Core.Entities;
-using Chirp.Core.Repositories;
-using Chirp.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Services;

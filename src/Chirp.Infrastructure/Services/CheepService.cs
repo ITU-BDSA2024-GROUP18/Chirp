@@ -1,47 +1,28 @@
 using System.Data;
 using Chirp.Core.DTOs;
 using Chirp.Core.Entities;
-using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
+using Chirp.Infrastructure.Services;
 
 //always define namespace everywhere except for Program.cs
 namespace Chirp.Infrastructure.Services;
 
-public interface ICheepService
-{
-    public Task<List<CheepDTO>> GetCheeps(int pageNum);
-    public Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author);
-
-    public Task<Author> CreateAuthor(string name, string email);
-
-    public Task AddAuthor(Author author);
-
-    public Task AddCheep(Cheep cheep);
-
-    public Task<Cheep> CreateCheep(string authorid, string message, string? authorname = null, string? email = null);
-
-
-
-
-}
-
 public class CheepService : ICheepService
 {
+    private readonly ICheepRepository _cheepRepository;
+    private readonly IAuthorRepository _authorRepository;
 
-    private readonly ICheepRepository _CheepRepository;
-
-
-    public CheepService(ICheepRepository CheepRepository)
+    public CheepService(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
     {
-
-        _CheepRepository = CheepRepository;
-
+        _cheepRepository = cheepRepository;
+        _authorRepository = authorRepository;
     }
 
     public async Task<List<CheepDTO>> GetCheeps(int pageNum)
     {
 
-        var cheep_list = await _CheepRepository.ReadPublicTimeline(pageNum);
+        var cheep_list = await _cheepRepository.ReadPublicTimeline(pageNum);
 
         return cheep_list;
 
@@ -51,82 +32,34 @@ public class CheepService : ICheepService
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author)
     {
 
-        var cheep_list = await _CheepRepository.ReadFromAuthor(pageNum, author);
+        var cheep_list = await _cheepRepository.ReadFromAuthor(pageNum, author);
 
         return cheep_list;
 
     }
 
-    public async Task<Author> CreateAuthor(string name, string email)
-    {
-        // Fetch the latest ID as a string
-        var latestIdString = await _CheepRepository.GetLatestIdAuthor();
-
-        // Parse the ID to an integer 
-        var newId = (int.Parse(latestIdString) + 1).ToString();
-
-        var author = new Author()
-        {
-            Id = newId, // Assign the new incremented ID as a string
-            UserName = name,
-            Email = email,
-            Cheeps = new List<Cheep>()
-        };
-        return author;
-    }
-
-
-    public async Task<Cheep> CreateCheep(string authorid, string message, string? authorname = null, string? email = null)
+    public async Task<Cheep> CreateCheep(string message, string authorname)
     {
         //Checks if author exists in db based on an id, 
         //if the author does exists a new cheep is created for that author, if not a new author is created, before creating the cheep.
 
-        var CheckAuthor = await _CheepRepository.CheckAuthorExists(authorid);
+        var author = await _authorRepository.GetAuthorByName(authorname);
 
-        if (CheckAuthor != null)
+        var cheep = new Cheep()
         {
-            var cheep = new Cheep()
-            {
-                CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
-                Author = CheckAuthor,
-                AuthorId = CheckAuthor.Id,
-                Text = message,
-                TimeStamp = DateTime.Now
-            };
+            CheepId = await _cheepRepository.GetLatestIdCheep() + 1,
+            Author = author,
+            AuthorId = author.Id,
+            Text = message,
+            TimeStamp = DateTime.Now
+        };
 
-            return cheep;
-
-        }
-        else
-        {
-            //creating new author
-            var newAuthor = await CreateAuthor(authorname ?? "Default Author", email ?? "default@example.com");
-
-            var cheep = new Cheep()
-            {
-                CheepId = await _CheepRepository.GetLatestIdCheep() + 1,
-                Author = newAuthor,
-                AuthorId = newAuthor.Id,
-                Text = message,
-                TimeStamp = DateTime.Now
-            };
-
-            return cheep;
-
-        }
-
-    }
-    public async Task AddAuthor(Author author)
-    {
-
-        await _CheepRepository.AddAuthor(author);
-
+        return cheep;
     }
 
     public async Task AddCheep(Cheep cheep)
     {
-
-        await _CheepRepository.AddCheep(cheep);
+        await _cheepRepository.AddCheep(cheep);
     }
 
 }

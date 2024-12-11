@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Chirp.Web.Pages;
 
-public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService) : PageModel
+public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository, IAuthorService authorService) : PageModel
 {
 
     //SupportsGet = true is needed since BindProperty is for POST requests by default, this
@@ -22,8 +22,9 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
     public ICheepRepository _CheepRepository = cheepRepository;
-
     public ICheepService _CheepService = cheepService;
+    public IAuthorRepository _authorRepository = authorRepository;
+    public IAuthorService _authorService = authorService;
     public required List<CheepDTO> Cheeps { get; set; }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".
@@ -63,7 +64,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
-        await _CheepRepository.Unfollow(user, toUnfollow);
+        await _authorRepository.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
 

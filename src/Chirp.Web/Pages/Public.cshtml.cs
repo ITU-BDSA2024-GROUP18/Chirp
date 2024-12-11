@@ -1,6 +1,5 @@
 ﻿using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Services;
-using Chirp.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
@@ -21,16 +20,18 @@ public class PublicModel : PageModel
 
     public ICheepService _CheepService;
     public ICheepRepository _CheepRepository;
+    public IAuthorRepository _authorRepository;
     public required List<CheepDTO> Cheeps { get; set; }
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
 
 
-    public PublicModel(ICheepRepository cheepRepository, ICheepService cheepService)
+    public PublicModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository)
     {
         _CheepRepository = cheepRepository;
         _CheepService = cheepService;
+        _authorRepository = authorRepository;
     }
 
 
@@ -72,13 +73,13 @@ public class PublicModel : PageModel
 
     public async Task<ActionResult> OnPostFollow(string user, string toFollow)
     {
-        await _CheepRepository.Follow(user, toFollow);
+        await _authorRepository.Follow(user, toFollow);
         return RedirectToPage();
     }
 
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
-        await _CheepRepository.Unfollow(user, toUnfollow);
+        await _authorRepository.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
 

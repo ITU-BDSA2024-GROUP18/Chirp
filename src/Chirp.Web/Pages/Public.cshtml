@@ -39,7 +39,7 @@
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
                             {
-                                @if (User.Identity?.Name != null && !await Model._CheepRepository.Follows(User.Identity.Name,
+                                @if (User.Identity?.Name != null && !await Model._authorRepository.Follows(User.Identity.Name,
                                cheep.AuthorName))
                                 {
                                     <form method="post">
