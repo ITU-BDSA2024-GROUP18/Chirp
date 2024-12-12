@@ -2,10 +2,10 @@
 title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2024 Group `<18>`
 author:
-- "Anders Juul Ingerslev aing@itu.dk"
-- "Bruno Martinovic <brma@itu.dk"
+- "Anders Juul Ingerslev <aing@itu.dk>"
+- "Bruno Martinovic <brma@itu.dk>"
 - "Asger Ramlau Jørgensen <asjo@itu.dk>"
-- "Omar Lukman Semou <omse@itu.dk"
+- "Omar Lukman Semou <omse@itu.dk>"
 numbersections: true
 ---
 
@@ -29,7 +29,7 @@ Here comes a description of our domain model.
 
 Make sure that the illustrations are in line with the actual behavior of your application.>
 
-## Sequence of functionality/calls trough _Chirp!_
+## Sequence of functionality/calls through _Chirp!_
 <!With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
 
 Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)>
@@ -41,10 +41,12 @@ Make sure that your illustration is complete. That is, likely for many of you th
 
 Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.>
 
-## Team work
+## Team Work
 <!Show a screenshot of your project board right before hand-in. Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.
 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
+
+Picture of Kanban board at hand-in, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
 
 ## How to make _Chirp!_ work locally
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
@@ -66,6 +68,8 @@ Step 2:
 <!List all necessary steps that Adrian or Helge have to perform to execute your test suites. Here, you can assume that we already cloned your repository in the step above.
 
 Briefly describe what kinds of tests you have in your test suites and what they are testing.>
+
+Maybe include image of test coverage here
 
 Here's a guide on how to run the test suite for _Chirp!_:
 
