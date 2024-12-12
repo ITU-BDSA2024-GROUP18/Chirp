@@ -1,6 +1,5 @@
 ﻿using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Services;
-using Chirp.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
@@ -21,15 +20,17 @@ public class PublicModel : PageModel
 
     public ICheepService _CheepService;
     public ICheepRepository _CheepRepository;
+    public IAuthorRepository _authorRepository;
     public required List<CheepDTO> Cheeps { get; set; }
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
 
 
-    public PublicModel(ICheepRepository cheepRepository, ICheepService cheepService)
+    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService cheepService)
     {
         _CheepRepository = cheepRepository;
+        _authorRepository = authorRepository;
         _CheepService = cheepService;
     }
 
@@ -50,19 +51,18 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        string? UserName = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(UserName))
+        string? UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(UserId))
         {
-            throw new ArgumentNullException(nameof(UserName), "User must be authenticated.");
+            throw new ArgumentNullException(nameof(UserId), "User must be authenticated.");
         }
         var CheepText = cheepBox.CheepText
             ?? throw new ArgumentNullException(nameof(cheepBox.CheepText), "CheepText cannot be null.");
 
-        var CheepToCreate = await _CheepService.CreateCheep(UserName, cheepBox.CheepText);
+        var CheepToCreate = await _CheepService.CreateCheep(UserId, cheepBox.CheepText);
 
         if (!string.IsNullOrEmpty(CheepToCreate.Text))
         {
-
             await _CheepRepository.AddCheep(CheepToCreate);
         }
 
@@ -72,13 +72,13 @@ public class PublicModel : PageModel
 
     public async Task<ActionResult> OnPostFollow(string user, string toFollow)
     {
-        await _CheepRepository.Follow(user, toFollow);
+        await _authorRepository.Follow(user, toFollow);
         return RedirectToPage();
     }
 
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
-        await _CheepRepository.Unfollow(user, toUnfollow);
+        await _authorRepository.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
 
