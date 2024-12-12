@@ -36,11 +36,12 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
         return Page();
     }
 
-    public async Task<ActionResult> OnPost()
+    public async Task<ActionResult> OnPost([FromQuery] int page)
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("CheepText", "You have exceeded the max length for cheeps");
+            if (page <= 0) page = 1;
+            Cheeps = await _CheepRepository.ReadFromFollows(page, Author);
             return Page();
         }
 
