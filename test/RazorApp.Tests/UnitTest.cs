@@ -358,7 +358,7 @@ namespace RazorApp.Tests
             var cheepService = new CheepService(_repo, _authorRepo);
 
             // Act
-            var result = await cheepService.GetCheepsFromAuthor(1,"My Name Test");
+            var result = await cheepService.GetCheepsFromAuthor(1, "My Name Test");
 
             // Assert
             Assert.NotNull(result);
@@ -381,6 +381,32 @@ namespace RazorApp.Tests
             Assert.Empty(result);
         }
 
+        [Fact]
+        public async Task AddAuthor_ShouldAddAuthorToDatabase()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var authorService = new AuthorService(_authorRepo);
+            var newAuthor = new Author
+            {
+                Id = "17",
+                UserName = "New Author",
+                Email = "newauthor@itu.dk",
+                Cheeps = new List<Cheep>()
+            };
+
+            // Act
+            await authorService.AddAuthor(newAuthor);
+
+            // Assert
+            var authorInDb = await _context.Authors.FindAsync("17");
+            Assert.NotNull(authorInDb);
+            Assert.Equal("New Author", authorInDb.UserName);
+            Assert.Equal("newauthor@itu.dk", authorInDb.Email);
+        }
+
 
         // [Fact]
         // public void FromUnixTimeToDateTime_ConvertsCorrectly()
@@ -397,4 +423,3 @@ namespace RazorApp.Tests
     }
 
 }
-
