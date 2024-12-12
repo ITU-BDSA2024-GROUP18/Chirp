@@ -43,11 +43,12 @@ public class PublicModel : PageModel
         return Page();
     }
 
-    public async Task<ActionResult> OnPost()
+    public async Task<ActionResult> OnPost([FromQuery] int page)
     {
         if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("CheepText", "You have exeeded max length for cheeps");
+            if (page <= 0) page = 1;
+            Cheeps = await _CheepRepository.ReadPublicTimeline(page);
             return Page();
         }
 
