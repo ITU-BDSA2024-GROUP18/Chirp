@@ -319,6 +319,68 @@ namespace RazorApp.Tests
             Assert.Equal(expectedCheepId, newCheepForAdrian.CheepId);
         }
 
+        [Fact]
+        public async Task GetCheeps_ReturnsCheepsForGivenPage()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+            CheepService cheepService = new CheepService(_repo, _authorRepo);
+
+            // Act
+            var result = await cheepService.GetCheeps(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(32, result.Count);
+        }
+
+        [Fact]
+        public async Task GetCheeps_ReturnsEmptyList_WhenNoCheepsExistForPage()
+        {
+            // Arrange
+            await StartMockDB();
+            var cheepService = new CheepService(_repo, _authorRepo);
+
+            // Act
+            var result = await cheepService.GetCheeps(22); // Page 22 has no cheeps in mock data
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetCheepsFromAuthor_ReturnsCheepsForSpecifiedAuthor()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+            var cheepService = new CheepService(_repo, _authorRepo);
+
+            // Act
+            var result = await cheepService.GetCheepsFromAuthor(1,"My Name Test");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Count);
+            Assert.All(result, c => Assert.Equal("My Name Test", c.AuthorName));
+        }
+
+        [Fact]
+        public async Task GetCheepsFromAuthor_ReturnsEmptyList_WhenAuthorHasNoCheeps()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+            var cheepService = new CheepService(_repo, _authorRepo);
+
+            // Act
+            var result = await cheepService.GetCheepsFromAuthor(1, "NonExistentAuthor");
+
+            // Assert
+            Assert.Empty(result);
+        }
+
 
         // [Fact]
         // public void FromUnixTimeToDateTime_ConvertsCorrectly()
