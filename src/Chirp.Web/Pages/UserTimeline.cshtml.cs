@@ -62,6 +62,12 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
         return RedirectToPage();
     }
 
+    public async Task<ActionResult> OnPostFollow(string user, string toFollow)
+    {
+        await _authorRepository.Follow(user, toFollow);
+        return RedirectToPage();
+    }
+
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
         await _authorRepository.Unfollow(user, toUnfollow);

@@ -40,7 +40,7 @@
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
                             {
                                 @if (User.Identity?.Name != null && !await Model._authorRepository.Follows(User.Identity.Name,
-                               cheep.AuthorName))
+                                cheep.AuthorName))
                                 {
                                     <form method="post">
                                         <button class="button paddedbutton" name="followbutton" asp-page-handler="Follow">
