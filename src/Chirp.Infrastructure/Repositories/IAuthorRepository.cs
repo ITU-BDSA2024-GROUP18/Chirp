@@ -6,7 +6,6 @@ namespace Chirp.Infrastructure.Repositories;
 public interface IAuthorRepository
 {
     public Task<AuthorDTO> GetAuthorByName(string name);
-    public Task<AuthorDTO> GetAuthorByEmail(string email);
     public Task AddAuthor(Author author);
     public Task<Author?> CheckAuthorExists(string authorId);
     public Task<string> GetLatestIdAuthor();

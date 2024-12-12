@@ -159,22 +159,6 @@ namespace RazorApp.Tests
         }
 
         [Theory]
-        [InlineData("ropf@itu.dk", "ropf@itu.dk", "Helge")]
-        [InlineData("adho@itu.dk", "adho@itu.dk", "Adrian")]
-        public async Task GetAuthorByEmail_ReturnsCorrectAuthor(string Email, string expectedEmail, string expectedName)
-        {
-            //Arrange
-
-            //Act
-            await StartMockDB();
-
-            //Assert
-            var actualAuthor = await _authorRepo.GetAuthorByEmail(Email);
-            Assert.Equal(expectedEmail, actualAuthor.Email);
-            Assert.Equal(expectedName, actualAuthor.Username);
-        }
-
-        [Theory]
         [InlineData("Jacqualine Gilcoine", "Jacqualine Gilcoine", "10")]
         [InlineData("Octavio Wagganer", "Octavio Wagganer", "8")]
         public async Task GetAuthorByName_ReturnsCorrectAuthorName(string Name, string expectedName, string id)
@@ -185,7 +169,7 @@ namespace RazorApp.Tests
 
             //Assert
             var actualAuthor = await _authorRepo.GetAuthorByName(Name);
-            Assert.Equal(expectedName, actualAuthor.UserName);
+            Assert.Equal(expectedName, actualAuthor.Username);
             Assert.Equal(id, actualAuthor.Id);
         }
 
@@ -313,10 +297,7 @@ namespace RazorApp.Tests
 
             //Assert
             Assert.Equal(expectedAuthorId, newAuthor.Id);
-            Assert.Equal(Name, newAuthor.UserName);
-            Assert.Equal(Email, newAuthor.Email);
-
-
+            Assert.Equal(Name, newAuthor.Username);
         }
 
         [Theory]
