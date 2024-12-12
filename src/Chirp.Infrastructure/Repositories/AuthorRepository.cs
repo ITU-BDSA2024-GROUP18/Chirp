@@ -1,4 +1,5 @@
 using Chirp.Core.Entities;
+using Chirp.Core.DTOs;
 using Chirp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,24 +15,36 @@ public class AuthorRepository : IAuthorRepository
         dbContext.Database.EnsureCreated();
         DbInitializer.SeedDatabase(_dbContext);
     }
-    public async Task<Author> GetAuthorByName(string name)
+    public async Task<AuthorDTO> GetAuthorByName(string name)
     {
         var query =
             from author in _dbContext.Authors
             where author.UserName == name
             select author;
 
-        return await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        var result = await query.FirstOrDefaultAsync();
+
+        return new AuthorDTO
+        {
+            Id = result?.Id!,
+            Username = result?.UserName!,
+        } ?? throw new Exception("Author does not exist.");
     }
 
-    public async Task<Author> GetAuthorByEmail(string email)
+    public async Task<AuthorDTO> GetAuthorByEmail(string email)
     {
         var query =
             from author in _dbContext.Authors
             where author.Email == email
             select author;
 
-        return await query.FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        var result = await query.FirstOrDefaultAsync();
+
+        return new AuthorDTO
+        {
+            Id = result?.Id!,
+            Username = result?.UserName!,
+        } ?? throw new Exception("Author does not exist.");
     }
 
     public async Task<string> GetLatestIdAuthor()
@@ -62,20 +75,18 @@ public class AuthorRepository : IAuthorRepository
 
     public async Task<bool> Follows(string user, string following)
     {
-        Author author = await GetAuthorByName(user);
-        Author authorFollowed = await GetAuthorByName(following);
+        AuthorDTO authordto = await GetAuthorByName(user);
+        AuthorDTO authorfolloweddto = await GetAuthorByName(following);
+
+        Author author = _dbContext.Authors.First(auth => auth.UserName == authordto.Username);
+        Author authorfollowed = _dbContext.Authors.First(auth => auth.UserName == authorfolloweddto.Username);
 
         if (author.Follows == null)
         {
             author.Follows = [];
         }
 
-
-        /// In this method we would maybe use LINQ instead
-
-
-
-        if (author.Follows.Contains(authorFollowed))
+        if (author.Follows.Contains(authorfollowed))
         {
             return true;
         }
@@ -87,29 +98,35 @@ public class AuthorRepository : IAuthorRepository
 
     public async Task Follow(string user, string toFollow)
     {
-        Author author = await GetAuthorByName(user);
-        Author authorToFollow = await GetAuthorByName(toFollow);
+        AuthorDTO authordto = await GetAuthorByName(user);
+        AuthorDTO tofollowdto = await GetAuthorByName(toFollow);
+
+        Author author = _dbContext.Authors.First(auth => auth.UserName == authordto.Username);
+        Author tofollow = _dbContext.Authors.First(auth => auth.UserName == tofollowdto.Username);
 
         if (author.Follows == null)
         {
             author.Follows = [];
         }
 
-        //Linq here also?
-
-        author.Follows.Add(authorToFollow);
+        author.Follows.Add(tofollow);
 
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task Unfollow(string user, string toUnfollow)
     {
-        Author author = await GetAuthorByName(user);
-        Author authorToUnfollow = await GetAuthorByName(toUnfollow);
+        AuthorDTO authordto = await GetAuthorByName(user);
+        AuthorDTO tounfollowdto = await GetAuthorByName(toUnfollow);
+
+        //Linq here also?
+
+        Author author = _dbContext.Authors.First(auth => auth.UserName == authordto.Username);
+        Author tounfollow = _dbContext.Authors.First(auth => auth.UserName == tounfollowdto.Username);
 
         //And perhaps here?
 
-        author.Follows?.Remove(authorToUnfollow);
+        author.Follows?.Remove(tounfollow);
 
         await _dbContext.SaveChangesAsync();
     }

@@ -171,7 +171,7 @@ namespace RazorApp.Tests
             //Assert
             var actualAuthor = await _authorRepo.GetAuthorByEmail(Email);
             Assert.Equal(expectedEmail, actualAuthor.Email);
-            Assert.Equal(expectedName, actualAuthor.UserName);
+            Assert.Equal(expectedName, actualAuthor.Username);
         }
 
         [Theory]

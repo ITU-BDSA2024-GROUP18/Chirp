@@ -16,7 +16,7 @@ public class AuthorService : IAuthorService
         _authorRepository = authorRepository;
     }
 
-    public async Task<Author> CreateAuthor(string name, string email)
+    public async Task<AuthorDTO> CreateAuthor(string name, string email)
     {
         // Fetch the latest ID as a string
         var latestIdString = await _authorRepository.GetLatestIdAuthor();
@@ -24,12 +24,10 @@ public class AuthorService : IAuthorService
         // Parse the ID to an integer 
         var newId = (int.Parse(latestIdString) + 1).ToString();
 
-        var author = new Author()
+        var author = new AuthorDTO()
         {
             Id = newId, // Assign the new incremented ID as a string
-            UserName = name,
-            Email = email,
-            Cheeps = new List<Cheep>()
+            Username = name,
         };
         return author;
     }
