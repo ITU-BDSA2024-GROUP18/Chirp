@@ -8,15 +8,13 @@ using System.Security.Claims;
 
 namespace Chirp.Web.Pages;
 
-public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository, IAuthorService authorService) : PageModel
+public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository) : PageModel
 {
 
     //SupportsGet = true is needed since BindProperty is for POST requests by default, this
     //just allows it to get bound data on a GET request as well
     [BindProperty(SupportsGet = true)]
 
-    //author is passed by the cshtml because in it we have @page "/{author}".
-    //How you name the parameter here matters, at it has to match the {paramater_name} in @page
     public required string Author { get; set; }
 
     [BindProperty]
@@ -24,7 +22,6 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
     public ICheepRepository _CheepRepository = cheepRepository;
     public ICheepService _CheepService = cheepService;
     public IAuthorRepository _authorRepository = authorRepository;
-    public IAuthorService _authorService = authorService;
     public required List<CheepDTO> Cheeps { get; set; }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".
@@ -80,7 +77,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
         var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        await _CheepRepository.DeleteCheeps(userid, timestamp, message);
+        await _CheepRepository.DeleteCheep(userid, timestamp, message);
 
         return RedirectToPage();
 

@@ -9,4 +9,5 @@ public interface ICheepService
     public Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author);
     public Task AddCheep(Cheep cheep);
     public Task<Cheep> CreateCheep(string authorname, string message);
+    public Task DeleteCheep(string? authorid, string timestamp, string message);
 }

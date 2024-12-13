@@ -23,7 +23,7 @@ namespace RazorApp.Tests
         private IAuthorRepository _authorRepo = null!;
 
         private SqliteConnection _connection = null!;
-        private AuthorRepository _authorRepository= null!;
+        private AuthorRepository _authorRepository = null!;
 
         //Method is private to remove warnings concerning visibility.
         private void InitMockDB()
@@ -134,7 +134,7 @@ namespace RazorApp.Tests
 
             };
 
-            await _repo.DeleteCheeps(CheepDTO.AuthorName, CheepDTO.Timestamp, CheepDTO.Message);
+            await _repo.DeleteCheep(CheepDTO.AuthorName, CheepDTO.Timestamp, CheepDTO.Message);
 
             //actualCheep = await _context.Cheeps.Where(cheep => cheep.CheepId == 658).FirstOrDefaultAsync();
 
@@ -409,83 +409,83 @@ namespace RazorApp.Tests
             Assert.Equal("newauthor@itu.dk", authorInDb.Email);
         }
 
-    [Fact]
-    public async Task Follows_ShouldReturnTrueIfUserIsFollowing()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+        [Fact]
+        public async Task Follows_ShouldReturnTrueIfUserIsFollowing()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        user1.Follows.Add(user2);
-        await _context.SaveChangesAsync();
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
 
-        // Act
-        var result = await _authorRepository.Follows("Tester Testerington", "Testine Testsson");
+            // Act
+            var result = await _authorRepository.Follows("Tester Testerington", "Testine Testsson");
 
-        // Assert
-        Assert.True(result);
-    }
+            // Assert
+            Assert.True(result);
+        }
 
-    [Fact]
-    public async Task Follow_ShouldAddFollowedUser()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+        [Fact]
+        public async Task Follow_ShouldAddFollowedUser()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
-        // Act
-        await _authorRepository.Follow("Tester Testerington", "Testine Testsson");
+            // Act
+            await _authorRepository.Follow("Tester Testerington", "Testine Testsson");
 
-        // Assert
-        var user1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
-        Assert.Contains(user1.Follows, a => a.UserName == "Testine Testsson");
-    }
+            // Assert
+            var user1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.Contains(user1.Follows, a => a.UserName == "Testine Testsson");
+        }
 
-    [Fact]
-    public async Task Unfollow_ShouldRemoveFollowedUser()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+        [Fact]
+        public async Task Unfollow_ShouldRemoveFollowedUser()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        user1.Follows.Add(user2);
-        await _context.SaveChangesAsync();
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
 
-        // Act
-        await _authorRepository.Unfollow("Tester Testerington", "Testine Testsson");
+            // Act
+            await _authorRepository.Unfollow("Tester Testerington", "Testine Testsson");
 
-        // Assert
-        var updatedUser1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
-        Assert.DoesNotContain(updatedUser1.Follows, a => a.UserName == "Testine Testsson");
-    }
+            // Assert
+            var updatedUser1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.DoesNotContain(updatedUser1.Follows, a => a.UserName == "Testine Testsson");
+        }
 
-    [Fact]
-    public async Task GetFollowedUsers_ShouldReturnFollowedUsers()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+        [Fact]
+        public async Task GetFollowedUsers_ShouldReturnFollowedUsers()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        var user3 = await _context.Authors.FirstAsync(a => a.UserName == "Testy Testitez");
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            var user3 = await _context.Authors.FirstAsync(a => a.UserName == "Testy Testitez");
 
-        user1.Follows.Add(user2);
-        user1.Follows.Add(user3);
-        await _context.SaveChangesAsync();
+            user1.Follows.Add(user2);
+            user1.Follows.Add(user3);
+            await _context.SaveChangesAsync();
 
-        // Act
-        var followedUsers = await _authorRepository.GetFollowedUsers(user1.Id);
+            // Act
+            var followedUsers = await _authorRepository.GetFollowedUsers(user1.Id);
 
-        // Assert
-        Assert.Contains("Testine Testsson", followedUsers);
-        Assert.Contains("Testy Testitez", followedUsers);
-        Assert.Equal(2, followedUsers.Count);
-    }
+            // Assert
+            Assert.Contains("Testine Testsson", followedUsers);
+            Assert.Contains("Testy Testitez", followedUsers);
+            Assert.Equal(2, followedUsers.Count);
+        }
 
         // [Fact]
         // public void FromUnixTimeToDateTime_ConvertsCorrectly()

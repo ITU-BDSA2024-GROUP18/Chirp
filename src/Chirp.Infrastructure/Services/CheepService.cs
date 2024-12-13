@@ -59,4 +59,9 @@ public class CheepService : ICheepService
         await _cheepRepository.AddCheep(cheep);
     }
 
+    public async Task DeleteCheep(string? authorid, string timestamp, string message)
+    {
+        await _cheepRepository.DeleteCheep(authorid, timestamp, message);
+    }
+
 }

@@ -36,4 +36,24 @@ public class AuthorService : IAuthorService
     {
         await _authorRepository.AddAuthor(author);
     }
+
+    public async Task Follow(string user, string toFollow)
+    {
+        await _authorRepository.Follow(user, toFollow);
+    }
+
+    public async Task Unfollow(string user, string toUnfollow)
+    {
+        await _authorRepository.Unfollow(user, toUnfollow);
+    }
+
+    public async Task<List<string>> GetFollowedUsers(string userId)
+    {
+        return await _authorRepository.GetFollowedUsers(userId);
+    }
+
+    public async Task<bool> Follows(string user, string following)
+    {
+        return await _authorRepository.Follows(user, following);
+    }
 }

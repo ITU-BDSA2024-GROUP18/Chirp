@@ -113,7 +113,7 @@ public class CheepRepository : ICheepRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteCheeps(string? authorid, string timestamp, string message)
+    public async Task DeleteCheep(string? authorid, string timestamp, string message)
     {
 
         //Fetch all cheeps from an author that has a match between DTO message and cheep text
@@ -124,8 +124,6 @@ public class CheepRepository : ICheepRepository
 
         var cheepToDelete = cheeps.SingleOrDefault(c => c.TimeStamp.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture) == timestamp);
 
-        Console.WriteLine($"Database: {cheepToDelete?.TimeStamp}");
-        Console.WriteLine($"Input: {timestamp}");
         if (cheepToDelete != null)
         {
 

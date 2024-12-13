@@ -10,5 +10,5 @@ public interface ICheepRepository
     public Task<List<CheepDTO>> ReadFromFollows(int pageNum, string author);
     public Task AddCheep(Cheep cheep);
     public Task<int> GetLatestIdCheep();
-    public Task DeleteCheeps(string? authorid, string timestamp, string message);
+    public Task DeleteCheep(string? authorid, string timestamp, string message);
 }
