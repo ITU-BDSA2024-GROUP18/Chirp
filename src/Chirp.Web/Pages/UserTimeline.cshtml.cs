@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Chirp.Web.Pages;
 
-public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService cheepService, IAuthorRepository authorRepository) : PageModel
+public class UserTimelineModel(ICheepService cheepService, IAuthorService authorService) : PageModel
 {
 
     //SupportsGet = true is needed since BindProperty is for POST requests by default, this
@@ -19,9 +19,8 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
-    public ICheepRepository _CheepRepository = cheepRepository;
     public ICheepService _CheepService = cheepService;
-    public IAuthorRepository _authorRepository = authorRepository;
+    public IAuthorService _AuthorService = authorService;
     public required List<CheepDTO> Cheeps { get; set; }
 
     public async Task<ActionResult> OnGet([FromQuery] int page) //author is passed by the cshtml because in it we have @page "/{author}".
@@ -29,7 +28,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
     {
         //Ensure first page is returned on invalid query for page
         if (page <= 0) page = 1;
-        Cheeps = await _CheepRepository.ReadFromFollows(page, Author);
+        Cheeps = await _CheepService.GetCheepsFromFollows(page, Author);
         return Page();
     }
 
@@ -38,7 +37,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
         if (!ModelState.IsValid)
         {
             if (page <= 0) page = 1;
-            Cheeps = await _CheepRepository.ReadFromFollows(page, Author);
+            Cheeps = await _CheepService.GetCheepsFromFollows(page, Author);
             return Page();
         }
 
@@ -54,7 +53,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
         if (!string.IsNullOrEmpty(CheepText))
         {
-            await _CheepRepository.AddCheep(CheepToCreate);
+            await _CheepService.AddCheep(CheepToCreate);
         }
 
         return RedirectToPage();
@@ -62,13 +61,13 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
     public async Task<ActionResult> OnPostFollow(string user, string toFollow)
     {
-        await _authorRepository.Follow(user, toFollow);
+        await _AuthorService.Follow(user, toFollow);
         return RedirectToPage();
     }
 
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
-        await _authorRepository.Unfollow(user, toUnfollow);
+        await _AuthorService.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
 
@@ -77,7 +76,7 @@ public class UserTimelineModel(ICheepRepository cheepRepository, ICheepService c
 
         var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        await _CheepRepository.DeleteCheep(userid, timestamp, message);
+        await _CheepService.DeleteCheep(userid, timestamp, message);
 
         return RedirectToPage();
 

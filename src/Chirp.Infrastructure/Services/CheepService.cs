@@ -64,4 +64,8 @@ public class CheepService : ICheepService
         await _cheepRepository.DeleteCheep(authorid, timestamp, message);
     }
 
+    public async Task<List<CheepDTO>> GetCheepsFromFollows(int pageNum, string author)
+    {
+        return await _cheepRepository.ReadFromFollows(pageNum, author);
+    }
 }
