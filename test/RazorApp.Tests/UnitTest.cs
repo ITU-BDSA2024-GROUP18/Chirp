@@ -25,6 +25,8 @@ namespace RazorApp.Tests
         private SqliteConnection _connection = null!;
         private AuthorRepository _authorRepository = null!;
         private AuthorService _authorService = null!;
+        private CheepService _cheepService = null!;
+        private CheepRepository _cheepRepository = null!;
 
         //Method is private to remove warnings concerning visibility.
         private void InitMockDB()
@@ -87,6 +89,8 @@ namespace RazorApp.Tests
             _authorRepo = new AuthorRepository(_context);
             _authorRepository = new AuthorRepository(_context);
             _authorService = new AuthorService(_authorRepo);
+            _cheepRepository = new CheepRepository(_context);
+            _cheepService = new CheepService(_cheepRepository, _authorRepository);
         }
 
         //Latest Id: 12
@@ -437,6 +441,85 @@ namespace RazorApp.Tests
 
             // Assert
             Assert.False(result);
+        }
+
+        [Fact]
+        public async Task AddCheep_ShouldSaveCheepToDatabase()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+            
+            var authorId = "13";
+            var author = await _context.Authors.FirstAsync(a => a.Id == authorId);
+            var message = "This is a new cheep!";
+            var cheep = new Cheep
+            {
+                CheepId = 999,
+                Author = author,
+                AuthorId = authorId,
+                Text = message,
+                TimeStamp = DateTime.UtcNow
+            };
+
+            // Act
+            await _cheepService.AddCheep(cheep);
+
+            // Assert
+            var savedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.CheepId == 999);
+            Assert.NotNull(savedCheep);
+            Assert.Equal(message, savedCheep!.Text);
+            Assert.Equal(authorId, savedCheep.AuthorId);
+        }
+
+        [Fact]
+        public async Task DeleteCheep_ShouldRemoveCheepFromDatabase()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var authorId = "13";
+            var author = await _context.Authors.FirstAsync(a => a.Id == authorId);
+            var message = "This is a new cheep!";
+            var timestamp = DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            var cheep = new Cheep
+            {
+                CheepId = 999,
+                Author = author,
+                AuthorId = authorId,
+                Text = message,
+                TimeStamp = DateTime.UtcNow
+            };
+            await _cheepService.AddCheep(cheep);
+
+            // Act
+            await _cheepService.DeleteCheep(authorId, timestamp, message);
+
+            // Assert
+            var deletedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.CheepId == 999);
+            Assert.Null(deletedCheep);
+        }
+
+        [Fact]
+        public async Task AddCheep_ShouldCreateNewCheepForExistingAuthor()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var authorId = "13";
+            var message = "Creating a new cheep for an existing author";
+
+            // Act
+            var cheep = await _cheepService.CreateCheep(authorId, message);
+            await _cheepService.AddCheep(cheep);
+
+            // Assert
+            var savedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.Text == message);
+            Assert.NotNull(savedCheep);
+            Assert.Equal(authorId, savedCheep!.AuthorId);
         }
     }
 }
