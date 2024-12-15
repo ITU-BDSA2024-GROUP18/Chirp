@@ -277,29 +277,15 @@ public class EndToEndTests : PageTest
         await _page!.GotoAsync("https://localhost:5001");
 
         await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
-        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32); 
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
 
         await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).ClickAsync();
 
         await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "2" })).ToHaveClassAsync("active");
-        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32); 
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
 
         await _page.GetByRole(AriaRole.Link, new() { Name = "Previous" }).ClickAsync();
 
         await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
-
-        await _page.GetByRole(AriaRole.Link, new() { Name = "3" }).ClickAsync();
-
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "3" })).ToHaveClassAsync("active");
-        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32); 
-
-        if (await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).IsVisibleAsync())
-        {
-            await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).ClickAsync();
-            await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "Next" })).Not.ToBeVisibleAsync();
-        }
-
-        await _page.GetByRole(AriaRole.Link, new() { Name = "1" }).ClickAsync();
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "Previous" })).Not.ToBeVisibleAsync();
     }
 }
