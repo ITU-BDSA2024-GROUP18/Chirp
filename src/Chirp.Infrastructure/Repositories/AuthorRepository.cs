@@ -31,35 +31,6 @@ public class AuthorRepository : IAuthorRepository
         } ?? throw new Exception("Author does not exist.");
     }
 
-    public async Task<AuthorDTO> GetAuthorByEmail(string email)
-    {
-        var query =
-            from author in _dbContext.Authors
-            where author.Email == email
-            select author;
-
-        var result = await query.FirstOrDefaultAsync();
-
-        return new AuthorDTO
-        {
-            Id = result?.Id!,
-            Username = result?.UserName!,
-        } ?? throw new Exception("Author does not exist.");
-    }
-
-    public async Task<string> GetLatestIdAuthor()
-    {
-        var authors = await _dbContext.Authors
-            .ToListAsync(); // Get all authors 
-
-        var latestId = authors
-            .OrderByDescending(a => int.Parse(a.Id))
-            .Select(a => a.Id)
-            .FirstOrDefault();
-
-        return latestId ?? throw new InvalidOperationException("No authors found in the database.");
-    }
-
     public async Task<Author?> CheckAuthorExists(string authorId)
     {
         var query = _dbContext.Authors.Where(a => a.Id == authorId);
@@ -67,11 +38,7 @@ public class AuthorRepository : IAuthorRepository
     }
 
     // Commands
-    public async Task AddAuthor(Author author)
-    {
-        await _dbContext.Authors.AddAsync(author);
-        await _dbContext.SaveChangesAsync();
-    }
+
 
     public async Task<bool> Follows(string user, string following)
     {
