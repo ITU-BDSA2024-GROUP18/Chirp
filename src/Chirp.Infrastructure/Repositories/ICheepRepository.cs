@@ -6,9 +6,8 @@ namespace Chirp.Infrastructure.Repositories;
 public interface ICheepRepository
 {
     public Task<List<CheepDTO>> ReadPublicTimeline(int pageNum);
-    public Task<List<CheepDTO>> ReadFromAuthor(int pageNum, string author);
     public Task<List<CheepDTO>> ReadFromFollows(int pageNum, string author);
     public Task AddCheep(Cheep cheep);
     public Task<int> GetLatestIdCheep();
-    public Task DeleteCheeps(string? authorid, string timestamp, string message);
+    public Task DeleteCheep(string? authorid, string timestamp, string message);
 }

@@ -42,10 +42,12 @@
     .paddedbutton {
         padding: 0px 6px;
     }
+
     .deletebutton {
         padding: 2px 6px;
         background-color: red;
     }
+
     .deletebutton:hover {
         background-color: rgb(187, 5, 5);
     }
@@ -66,8 +68,8 @@
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                             @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
                             {
-                                @if (User.Identity?.Name != null && !await Model._authorRepository.Follows(User.Identity.Name,
-                                cheep.AuthorName))
+                                @if (User.Identity?.Name != null && !await Model._AuthorService.Follows(User.Identity.Name,
+                               cheep.AuthorName))
                                 {
                                     <form method="post">
                                         <button class="button paddedbutton" name="followbutton" asp-page-handler="Follow">
@@ -79,7 +81,7 @@
                                 }
                                 else
                                 {
-                                <form method="post">
+                                    <form method="post">
                                         <button class="button paddedbutton" name="unfollowbutton" asp-page-handler="Unfollow">
                                             <span>Unfollow</span>
                                         </button>

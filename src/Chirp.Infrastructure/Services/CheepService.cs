@@ -29,11 +29,6 @@ public class CheepService : ICheepService
 
     }
 
-    public async Task<List<CheepDTO>> GetCheepsFromAuthor(int pageNum, string author)
-    {
-        var cheep_list = await _cheepRepository.ReadFromAuthor(pageNum, author);
-        return cheep_list;
-    }
 
     public async Task<Cheep> CreateCheep(string authorid, string message)
     {
@@ -59,4 +54,13 @@ public class CheepService : ICheepService
         await _cheepRepository.AddCheep(cheep);
     }
 
+    public async Task DeleteCheep(string? authorid, string timestamp, string message)
+    {
+        await _cheepRepository.DeleteCheep(authorid, timestamp, message);
+    }
+
+    public async Task<List<CheepDTO>> GetCheepsFromFollows(int pageNum, string author)
+    {
+        return await _cheepRepository.ReadFromFollows(pageNum, author);
+    }
 }

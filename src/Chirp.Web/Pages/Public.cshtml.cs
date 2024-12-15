@@ -16,21 +16,17 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
 
-    // private readonly UserManager<ApplicationUser> _userManager;
-
     public ICheepService _CheepService;
-    public ICheepRepository _CheepRepository;
-    public IAuthorRepository _authorRepository;
+    public IAuthorService _AuthorService;
     public required List<CheepDTO> Cheeps { get; set; }
 
     [BindProperty]
     public CheepBoxModel cheepBox { get; set; } = new CheepBoxModel();
 
 
-    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ICheepService cheepService)
+    public PublicModel(ICheepService cheepService, IAuthorService authorService)
     {
-        _CheepRepository = cheepRepository;
-        _authorRepository = authorRepository;
+        _AuthorService = authorService;
         _CheepService = cheepService;
     }
 
@@ -39,7 +35,7 @@ public class PublicModel : PageModel
     {
         //Ensure first page is returned on invalid query value for page
         if (page <= 0) page = 1;
-        Cheeps = await _CheepRepository.ReadPublicTimeline(page);
+        Cheeps = await _CheepService.GetCheeps(page);
         return Page();
     }
 
@@ -48,7 +44,7 @@ public class PublicModel : PageModel
         if (!ModelState.IsValid)
         {
             if (page <= 0) page = 1;
-            Cheeps = await _CheepRepository.ReadPublicTimeline(page);
+            Cheeps = await _CheepService.GetCheeps(page);
             return Page();
         }
 
@@ -64,7 +60,7 @@ public class PublicModel : PageModel
 
         if (!string.IsNullOrEmpty(CheepToCreate.Text))
         {
-            await _CheepRepository.AddCheep(CheepToCreate);
+            await _CheepService.AddCheep(CheepToCreate);
         }
 
         return RedirectToPage();
@@ -73,13 +69,13 @@ public class PublicModel : PageModel
 
     public async Task<ActionResult> OnPostFollow(string user, string toFollow)
     {
-        await _authorRepository.Follow(user, toFollow);
+        await _AuthorService.Follow(user, toFollow);
         return RedirectToPage();
     }
 
     public async Task<ActionResult> OnPostUnFollow(string user, string toUnfollow)
     {
-        await _authorRepository.Unfollow(user, toUnfollow);
+        await _AuthorService.Unfollow(user, toUnfollow);
         return RedirectToPage();
     }
 
@@ -88,7 +84,7 @@ public class PublicModel : PageModel
 
         var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        await _CheepRepository.DeleteCheeps(userid, timestamp, message);
+        await _CheepService.DeleteCheep(userid, timestamp, message);
 
         return RedirectToPage();
 

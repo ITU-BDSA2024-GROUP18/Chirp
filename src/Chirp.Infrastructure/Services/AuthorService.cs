@@ -16,24 +16,23 @@ public class AuthorService : IAuthorService
         _authorRepository = authorRepository;
     }
 
-    public async Task<AuthorDTO> CreateAuthor(string name, string email)
+    public async Task Follow(string user, string toFollow)
     {
-        // Fetch the latest ID as a string
-        var latestIdString = await _authorRepository.GetLatestIdAuthor();
-
-        // Parse the ID to an integer 
-        var newId = (int.Parse(latestIdString) + 1).ToString();
-
-        var author = new AuthorDTO()
-        {
-            Id = newId, // Assign the new incremented ID as a string
-            Username = name,
-        };
-        return author;
+        await _authorRepository.Follow(user, toFollow);
     }
 
-    public async Task AddAuthor(Author author)
+    public async Task Unfollow(string user, string toUnfollow)
     {
-        await _authorRepository.AddAuthor(author);
+        await _authorRepository.Unfollow(user, toUnfollow);
+    }
+
+    public async Task<List<string>> GetFollowedUsers(string userId)
+    {
+        return await _authorRepository.GetFollowedUsers(userId);
+    }
+
+    public async Task<bool> Follows(string user, string following)
+    {
+        return await _authorRepository.Follows(user, following);
     }
 }

@@ -23,7 +23,7 @@ namespace RazorApp.Tests
         private IAuthorRepository _authorRepo = null!;
 
         private SqliteConnection _connection = null!;
-        private AuthorRepository _authorRepository= null!;
+        private AuthorRepository _authorRepository = null!;
 
         //Method is private to remove warnings concerning visibility.
         private void InitMockDB()
@@ -134,7 +134,7 @@ namespace RazorApp.Tests
 
             };
 
-            await _repo.DeleteCheeps(CheepDTO.AuthorName, CheepDTO.Timestamp, CheepDTO.Message);
+            await _repo.DeleteCheep(CheepDTO.AuthorName, CheepDTO.Timestamp, CheepDTO.Message);
 
             //actualCheep = await _context.Cheeps.Where(cheep => cheep.CheepId == 658).FirstOrDefaultAsync();
 
@@ -145,20 +145,6 @@ namespace RazorApp.Tests
             Assert.Null(actualCheep);
         }
 
-        [Fact]
-        public async Task AddedAuthor_IsSavedToDB()
-        {
-            //Arrange
-            var ta1 = new Author() { Id = "13", UserName = "My Name Test", Email = "test@itu.dk", Cheeps = new List<Cheep>() };
-
-            //Act
-            await StartMockDB();
-            await _authorRepo.AddAuthor(ta1);
-
-            //Assert
-            var actualAuthor = await _context.Authors.Where(auth => auth.Id == ta1.Id).FirstOrDefaultAsync();
-            Assert.Equal("My Name Test", actualAuthor!.UserName);
-        }
 
         [Theory]
         [InlineData("Jacqualine Gilcoine", "Jacqualine Gilcoine", "10")]
@@ -175,19 +161,6 @@ namespace RazorApp.Tests
             Assert.Equal(id, actualAuthor.Id);
         }
 
-        // [Fact]
-        // public async Task CheckAuthorExists_ThrowsExceptionWhenNotFound()
-        // {
-        //     //Arrange
-        //     var Id = 13;
-
-        //     //Act
-        //     await StartMockDB();
-
-        //     //Assert
-        //     var actualException = await Assert.ThrowsAnyAsync<InvalidOperationException>(() => _repo.CheckAuthorExists(Id));
-        //     Assert.Equal($"Author with ID {Id} does not exist.", actualException.Message);
-        // }
 
         [Fact]
         public async Task CheckAuthorExists_ReturnsAuthor()
@@ -215,44 +188,6 @@ namespace RazorApp.Tests
             Assert.Equal(663, actualCheepId);
         }
 
-        [Fact]
-        public async Task GetLatestIdAuthor_ReturnsLastAddedId()
-        {
-
-            //Act
-            await StartMockDB();
-            //InitMock adds multiple authors and cheeps - highest Id after initmock() is 16
-            InitMockDB();
-
-            //Assert
-            var actualId = await _authorRepo.GetLatestIdAuthor();
-            Assert.Equal("16", actualId);
-        }
-
-        [Fact]
-        public async Task ReadFromAuthor_ReturnsAllCheepsByAuthor()
-        {
-
-            //Act
-            await StartMockDB();
-            InitMockDB();
-            var actualAuthorCheeps = await _repo.ReadFromAuthor(1, "My Name Test");
-
-            //Assert
-            Assert.All(actualAuthorCheeps, testcheeps => Assert.Equal("My Name Test", testcheeps.AuthorName));
-        }
-
-        [Fact]
-        public async Task ReadFromAuthor_ReturnsEmptyList_NonExistantAuthor()
-        {
-
-            //Act
-            await StartMockDB();
-            var actualAuthorCheeps = await _repo.ReadFromAuthor(1, "Non Existant Author");
-
-            //Assert
-            Assert.Empty(actualAuthorCheeps);
-        }
 
         //The test below will fail if we have a future db with many cheeps, so we should consider correctly mocking a clean empty version of the db.
         [Fact]
@@ -282,25 +217,6 @@ namespace RazorApp.Tests
             Assert.Equal(expectedNumOfCheeps, actualPageCheeps.Count);
         }
 
-
-        [Theory]
-        [InlineData("Donald", "testing@itu.dk", "13")]
-
-        public async Task CreateAuthor(string Name, string Email, string expectedAuthorId)
-        {
-
-            //Arrange 
-            await StartMockDB();
-
-            AuthorService authorservice = new AuthorService(_authorRepo);
-            //Act
-            //CreateAuthor should get the latestID present in the database, and increment it by 1
-            var newAuthor = await authorservice.CreateAuthor(Name, Email);
-
-            //Assert
-            Assert.Equal(expectedAuthorId, newAuthor.Id);
-            Assert.Equal(Name, newAuthor.Username);
-        }
 
         [Theory]
         [InlineData("12", "Creating Cheep to Adrian", 658)]
@@ -352,153 +268,83 @@ namespace RazorApp.Tests
         }
 
         [Fact]
-        public async Task GetCheepsFromAuthor_ReturnsCheepsForSpecifiedAuthor()
+        public async Task Follows_ShouldReturnTrueIfUserIsFollowing()
         {
             // Arrange
             await StartMockDB();
             InitMockDB();
-            var cheepService = new CheepService(_repo, _authorRepo);
+
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
 
             // Act
-            var result = await cheepService.GetCheepsFromAuthor(1, "My Name Test");
+            var result = await _authorRepository.Follows("Tester Testerington", "Testine Testsson");
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(3, result.Count);
-            Assert.All(result, c => Assert.Equal("My Name Test", c.AuthorName));
+            Assert.True(result);
         }
 
         [Fact]
-        public async Task GetCheepsFromAuthor_ReturnsEmptyList_WhenAuthorHasNoCheeps()
+        public async Task Follow_ShouldAddFollowedUser()
         {
             // Arrange
             await StartMockDB();
             InitMockDB();
-            var cheepService = new CheepService(_repo, _authorRepo);
 
             // Act
-            var result = await cheepService.GetCheepsFromAuthor(1, "NonExistentAuthor");
+            await _authorRepository.Follow("Tester Testerington", "Testine Testsson");
 
             // Assert
-            Assert.Empty(result);
+            var user1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.Contains(user1.Follows, a => a.UserName == "Testine Testsson");
         }
 
         [Fact]
-        public async Task AddAuthor_ShouldAddAuthorToDatabase()
+        public async Task Unfollow_ShouldRemoveFollowedUser()
         {
             // Arrange
             await StartMockDB();
             InitMockDB();
 
-            var authorService = new AuthorService(_authorRepo);
-            var newAuthor = new Author
-            {
-                Id = "17",
-                UserName = "New Author",
-                Email = "newauthor@itu.dk",
-                Cheeps = new List<Cheep>()
-            };
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
 
             // Act
-            await authorService.AddAuthor(newAuthor);
+            await _authorRepository.Unfollow("Tester Testerington", "Testine Testsson");
 
             // Assert
-            var authorInDb = await _context.Authors.FindAsync("17");
-            Assert.NotNull(authorInDb);
-            Assert.Equal("New Author", authorInDb.UserName);
-            Assert.Equal("newauthor@itu.dk", authorInDb.Email);
+            var updatedUser1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.DoesNotContain(updatedUser1.Follows, a => a.UserName == "Testine Testsson");
         }
 
-    [Fact]
-    public async Task Follows_ShouldReturnTrueIfUserIsFollowing()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+        [Fact]
+        public async Task GetFollowedUsers_ShouldReturnFollowedUsers()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        user1.Follows.Add(user2);
-        await _context.SaveChangesAsync();
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            var user3 = await _context.Authors.FirstAsync(a => a.UserName == "Testy Testitez");
 
-        // Act
-        var result = await _authorRepository.Follows("Tester Testerington", "Testine Testsson");
+            user1.Follows.Add(user2);
+            user1.Follows.Add(user3);
+            await _context.SaveChangesAsync();
 
-        // Assert
-        Assert.True(result);
-    }
+            // Act
+            var followedUsers = await _authorRepository.GetFollowedUsers(user1.Id);
 
-    [Fact]
-    public async Task Follow_ShouldAddFollowedUser()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
+            // Assert
+            Assert.Contains("Testine Testsson", followedUsers);
+            Assert.Contains("Testy Testitez", followedUsers);
+            Assert.Equal(2, followedUsers.Count);
+        }
 
-        // Act
-        await _authorRepository.Follow("Tester Testerington", "Testine Testsson");
-
-        // Assert
-        var user1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
-        Assert.Contains(user1.Follows, a => a.UserName == "Testine Testsson");
-    }
-
-    [Fact]
-    public async Task Unfollow_ShouldRemoveFollowedUser()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
-
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        user1.Follows.Add(user2);
-        await _context.SaveChangesAsync();
-
-        // Act
-        await _authorRepository.Unfollow("Tester Testerington", "Testine Testsson");
-
-        // Assert
-        var updatedUser1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
-        Assert.DoesNotContain(updatedUser1.Follows, a => a.UserName == "Testine Testsson");
-    }
-
-    [Fact]
-    public async Task GetFollowedUsers_ShouldReturnFollowedUsers()
-    {
-        // Arrange
-        await StartMockDB();
-        InitMockDB();
-
-        var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
-        var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
-        var user3 = await _context.Authors.FirstAsync(a => a.UserName == "Testy Testitez");
-
-        user1.Follows.Add(user2);
-        user1.Follows.Add(user3);
-        await _context.SaveChangesAsync();
-
-        // Act
-        var followedUsers = await _authorRepository.GetFollowedUsers(user1.Id);
-
-        // Assert
-        Assert.Contains("Testine Testsson", followedUsers);
-        Assert.Contains("Testy Testitez", followedUsers);
-        Assert.Equal(2, followedUsers.Count);
-    }
-
-        // [Fact]
-        // public void FromUnixTimeToDateTime_ConvertsCorrectly()
-        // {
-        //     // Arrange
-        //     double unixTime = 1728383396; //Unixtimestamp for: 12:29:50 08-10-2024
-
-        //     //Act 
-        //     string actualDateTime = _repo.UnixTimeStampToDateTimeString(unixTime);
-
-        //     // Assert
-        //     Assert.Equal("08/10/24 10:29:56", actualDateTime);
-        // }
     }
 
 }
