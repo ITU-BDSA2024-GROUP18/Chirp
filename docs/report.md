@@ -31,6 +31,8 @@ Illustrate the architecture of your deployed application. Remember, you develope
 
 Make sure that the illustrations are in line with the actual behavior of your application.>
 
+![ActivityDiagram](images/ActivityDiagram.png)
+
 ## Sequence of functionality/calls through _Chirp!_
 With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
 
@@ -50,7 +52,9 @@ Describe the illustration briefly, i.e., how your application is built, tested, 
 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
 
-Picture of Kanban board at hand-in, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
+**Picture of Kanban board at hand-in**, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
+![Development Workflow](images/WorkflowDiagram.png)
+The above diagram shows our development process, all the way from creating issues until merging into main. Furthermore, our GitHub Actions workflows run all of the application's tests on every commit and pull request.
 
 ## How to make _Chirp!_ work locally
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
