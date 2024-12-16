@@ -3,8 +3,8 @@ title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2024 Group `<18>`
 author:
 - "Anders Juul Ingerslev <aing@itu.dk>"
-- "Bruno Martinovic <brma@itu.dk>"
 - "Asger Ramlau Jørgensen <asjo@itu.dk>"
+- "Bruno Martinovic <brma@itu.dk>"
 - "Omar Lukman Semou <omse@itu.dk>"
 numbersections: true
 ---
@@ -53,7 +53,9 @@ Describe the illustration briefly, i.e., how your application is built, tested, 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
 
 **Picture of Kanban board at hand-in**, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
+
 ![Development Workflow](images/WorkflowDiagram.png)
+
 The above diagram shows our development process, all the way from creating issues until merging into main. Furthermore, our GitHub Actions workflows run all of the application's tests on every commit and pull request.
 
 ## How to make _Chirp!_ work locally
