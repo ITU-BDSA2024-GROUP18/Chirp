@@ -24,6 +24,9 @@ namespace RazorApp.Tests
 
         private SqliteConnection _connection = null!;
         private AuthorRepository _authorRepository = null!;
+        private AuthorService _authorService = null!;
+        private CheepService _cheepService = null!;
+        private CheepRepository _cheepRepository = null!;
 
         //Method is private to remove warnings concerning visibility.
         private void InitMockDB()
@@ -85,6 +88,9 @@ namespace RazorApp.Tests
             _repo = new CheepRepository(_context);
             _authorRepo = new AuthorRepository(_context);
             _authorRepository = new AuthorRepository(_context);
+            _authorService = new AuthorService(_authorRepo);
+            _cheepRepository = new CheepRepository(_context);
+            _cheepService = new CheepService(_cheepRepository, _authorRepository);
         }
 
         //Latest Id: 12
@@ -345,6 +351,175 @@ namespace RazorApp.Tests
             Assert.Equal(2, followedUsers.Count);
         }
 
-    }
+        [Fact]
+        public async Task Follow_ShouldAddFollowedUserViaService()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
 
+            // Act
+            await _authorService.Follow("Tester Testerington", "Testine Testsson");
+
+            // Assert
+            var user1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.Contains(user1.Follows, a => a.UserName == "Testine Testsson");
+        }
+
+        [Fact]
+        public async Task Unfollow_ShouldRemoveFollowedUserViaService()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
+
+            // Act
+            await _authorService.Unfollow("Tester Testerington", "Testine Testsson");
+
+            // Assert
+            var updatedUser1 = await _context.Authors.Include(a => a.Follows).FirstAsync(a => a.UserName == "Tester Testerington");
+            Assert.DoesNotContain(updatedUser1.Follows, a => a.UserName == "Testine Testsson");
+        }
+
+        [Fact]
+        public async Task GetFollowedUsers_ShouldReturnFollowedUsersViaService()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            var user3 = await _context.Authors.FirstAsync(a => a.UserName == "Testy Testitez");
+
+            user1.Follows.Add(user2);
+            user1.Follows.Add(user3);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var followedUsers = await _authorService.GetFollowedUsers(user1.Id);
+
+            // Assert
+            Assert.Contains("Testine Testsson", followedUsers);
+            Assert.Contains("Testy Testitez", followedUsers);
+            Assert.Equal(2, followedUsers.Count);
+        }
+
+        [Fact]
+        public async Task Follows_ShouldReturnTrueIfUserIsFollowingViaService()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var user1 = await _context.Authors.FirstAsync(a => a.UserName == "Tester Testerington");
+            var user2 = await _context.Authors.FirstAsync(a => a.UserName == "Testine Testsson");
+            user1.Follows.Add(user2);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _authorService.Follows("Tester Testerington", "Testine Testsson");
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task Follows_ShouldReturnFalseIfUserIsNotFollowingViaService()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            // Act
+            var result = await _authorService.Follows("Tester Testerington", "Testine Testsson");
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task AddCheep_ShouldSaveCheepToDatabase()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+            
+            var authorId = "13";
+            var author = await _context.Authors.FirstAsync(a => a.Id == authorId);
+            var message = "This is a new cheep!";
+            var cheep = new Cheep
+            {
+                CheepId = 999,
+                Author = author,
+                AuthorId = authorId,
+                Text = message,
+                TimeStamp = DateTime.UtcNow
+            };
+
+            // Act
+            await _cheepService.AddCheep(cheep);
+
+            // Assert
+            var savedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.CheepId == 999);
+            Assert.NotNull(savedCheep);
+            Assert.Equal(message, savedCheep!.Text);
+            Assert.Equal(authorId, savedCheep.AuthorId);
+        }
+
+        [Fact]
+        public async Task DeleteCheep_ShouldRemoveCheepFromDatabase()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var authorId = "13";
+            var author = await _context.Authors.FirstAsync(a => a.Id == authorId);
+            var message = "This is a new cheep!";
+            var timestamp = DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+            var cheep = new Cheep
+            {
+                CheepId = 999,
+                Author = author,
+                AuthorId = authorId,
+                Text = message,
+                TimeStamp = DateTime.UtcNow
+            };
+            await _cheepService.AddCheep(cheep);
+
+            // Act
+            await _cheepService.DeleteCheep(authorId, timestamp, message);
+
+            // Assert
+            var deletedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.CheepId == 999);
+            Assert.Null(deletedCheep);
+        }
+
+        [Fact]
+        public async Task AddCheep_ShouldCreateNewCheepForExistingAuthor()
+        {
+            // Arrange
+            await StartMockDB();
+            InitMockDB();
+
+            var authorId = "13";
+            var message = "Creating a new cheep for an existing author";
+
+            // Act
+            var cheep = await _cheepService.CreateCheep(authorId, message);
+            await _cheepService.AddCheep(cheep);
+
+            // Assert
+            var savedCheep = await _context.Cheeps.FirstOrDefaultAsync(c => c.Text == message);
+            Assert.NotNull(savedCheep);
+            Assert.Equal(authorId, savedCheep!.AuthorId);
+        }
+    }
 }
