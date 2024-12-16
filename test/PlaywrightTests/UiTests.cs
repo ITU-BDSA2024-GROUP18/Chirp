@@ -212,9 +212,9 @@ public class EndToEndTests : PageTest
         {
             //Console.WriteLine($"Dialog message: {dialog.Message}");
             dialog.AcceptAsync();
-            _page.Dialog -= Page_Dialog_EventHandler;
+            _page.Dialog -= Page_Dialog_EventHandler!;
         }
-        _page.Dialog += Page_Dialog_EventHandler;
+        _page.Dialog += Page_Dialog_EventHandler!;
         await _page.Locator("li").Filter(new() { HasText = "testuser Delete me from public" }).GetByRole(AriaRole.Button).ClickAsync();
 
         await Expect(_page.Locator("#messagelist")).Not.ToContainTextAsync("Delete me from public");
@@ -232,9 +232,9 @@ public class EndToEndTests : PageTest
         {
             //Console.WriteLine($"Dialog message: {dialog.Message}");
             dialog.AcceptAsync();
-            _page.Dialog -= Page2_Dialog_EventHandler;
+            _page.Dialog -= Page2_Dialog_EventHandler!;
         }
-        _page.Dialog += Page2_Dialog_EventHandler;
+        _page.Dialog += Page2_Dialog_EventHandler!;
         await _page.Locator("li").Filter(new() { HasText = "testuser Delete me from private" }).GetByRole(AriaRole.Button).ClickAsync();
 
         //await Expect(_page.GetByRole(AriaRole.Button, new() { Name = "Delete" })).Not.ToBeVisibleAsync();
@@ -250,53 +250,14 @@ public class EndToEndTests : PageTest
 
     }
 
-    [Test, Order(9)]
-    public async Task ForgetTestUser()
-    {
-        await _page!.GotoAsync("https://localhost:5001/");
-        await _page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await _page.GetByPlaceholder("username").ClickAsync();
-        await _page.GetByPlaceholder("username").FillAsync("testuser");
-        await _page.GetByPlaceholder("password").ClickAsync();
-        await _page.GetByPlaceholder("password").FillAsync("Hello_1");
-        await _page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await _page.GetByRole(AriaRole.Link, new() { Name = "About Me" }).ClickAsync();
-        await Expect(_page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" })).ToBeVisibleAsync();
-        await _page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" }).ClickAsync();
-        await Expect(_page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" })).Not.ToBeVisibleAsync();
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
-        await Expect(_page!.GetByRole(AriaRole.Button, new() { Name = "Share" })).Not.ToBeVisibleAsync();
-
-
-
-    }
-
-    [Test, Order(10)]
-    public async Task PaginationWorksCorrectlyOnPublicTimeline()
-    {
-        await _page!.GotoAsync("https://localhost:5001");
-
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
-        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
-
-        await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).ClickAsync();
-
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "2" })).ToHaveClassAsync("active");
-        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
-
-        await _page.GetByRole(AriaRole.Link, new() { Name = "Previous" }).ClickAsync();
-
-        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
-    }
-
     // Co-authored by ChatGPT
-    [Test, Order(11)]
+    [Test, Order(9)]
     public async Task FollowUnfollowWorksCorrectly()
     {
         await _page!.GotoAsync("https://localhost:5001/");
         await _page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
-        await _page.GetByPlaceholder("username").FillAsync("osemhx");
-        await _page.GetByPlaceholder("password").FillAsync("Test1234!");
+        await _page.GetByPlaceholder("username").FillAsync("testuser");
+        await _page.GetByPlaceholder("password").FillAsync("Hello_1");
         await _page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
 
         string authorName = "Jacqualine Gilcoine";
@@ -357,4 +318,45 @@ public class EndToEndTests : PageTest
             throw new Exception("No Unfollow button found to click.");
         }
     }
+
+    [Test, Order(10)]
+    public async Task ForgetTestUser()
+    {
+        await _page!.GotoAsync("https://localhost:5001/");
+        await _page.GetByRole(AriaRole.Link, new() { Name = "login" }).ClickAsync();
+        await _page.GetByPlaceholder("username").ClickAsync();
+        await _page.GetByPlaceholder("username").FillAsync("testuser");
+        await _page.GetByPlaceholder("password").ClickAsync();
+        await _page.GetByPlaceholder("password").FillAsync("Hello_1");
+        await _page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await _page.GetByRole(AriaRole.Link, new() { Name = "About Me" }).ClickAsync();
+        await Expect(_page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" })).ToBeVisibleAsync();
+        await _page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" }).ClickAsync();
+        await Expect(_page.GetByRole(AriaRole.Button, new() { Name = "Forget Me!" })).Not.ToBeVisibleAsync();
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "login" })).ToBeVisibleAsync();
+        await Expect(_page!.GetByRole(AriaRole.Button, new() { Name = "Share" })).Not.ToBeVisibleAsync();
+
+
+
+    }
+
+    [Test, Order(11)]
+    public async Task PaginationWorksCorrectlyOnPublicTimeline()
+    {
+        await _page!.GotoAsync("https://localhost:5001");
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
+
+        await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).ClickAsync();
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "2" })).ToHaveClassAsync("active");
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
+
+        await _page.GetByRole(AriaRole.Link, new() { Name = "Previous" }).ClickAsync();
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
+    }
+
+
 }
