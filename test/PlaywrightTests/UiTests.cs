@@ -270,7 +270,22 @@ public class EndToEndTests : PageTest
 
 
     }
+
+    [Test, Order(10)]
+    public async Task PaginationWorksCorrectlyOnPublicTimeline()
+    {
+        await _page!.GotoAsync("https://localhost:5001");
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
+
+        await _page.GetByRole(AriaRole.Link, new() { Name = "Next" }).ClickAsync();
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "2" })).ToHaveClassAsync("active");
+        await Expect(_page.Locator("#messagelist li")).ToHaveCountAsync(32);
+
+        await _page.GetByRole(AriaRole.Link, new() { Name = "Previous" }).ClickAsync();
+
+        await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
+    }
 }
-
-
-
