@@ -12,9 +12,6 @@ numbersections: true
 # Design and Architecture of _Chirp!_
 
 ## Domain model
-<!Provide an illustration of your domain model. Make sure that it is correct and complete. In case you are using ASP.NET Identity, make sure to illustrate that accordingly.>
-
-Here comes a description of our domain model.
 
 ![Domain Model Class Diagram](images/DomainModelClassDiagram.png)
 
@@ -24,21 +21,22 @@ Here comes a description of our domain model.
 ## Architecture of deployed application
 Illustrate the architecture of your deployed application. Remember, you developed a client-server application. Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
-![Component diagram for architecture of deployed app](images/component%20diagram-Page-1.jpg)
+![Deployment diagram for architecture of deployed app](images/Deployment.drawio%20(1).png)
 
 ## User activities
-<!Illustrate typical scenarios of a user journey through your Chirp! application. That is, start illustrating the first page that is presented to a non-authorized user, illustrate what a non-authorized user can do with your Chirp! application, and finally illustrate what a user can do after authentication.
-
-Make sure that the illustrations are in line with the actual behavior of your application.>
 
 ![ActivityDiagram](images/ActivityDiagram.png)
+
+This activity diagram shows a typical user journey through the Chirp! application.  
+A non-authorized user only has the options to view the public timeline, view user’s with cheeps’ timelines or login/register.  
+For the sake of simplicity, the activity diagram does not show every possibility a user has at every given stage. When authorized, it is possible to navigate between public timeline, private timeline, about me and logout at all times through the navigation bar at the top of the page. It is also possible to follow users from their private timelines.  
 
 ## Sequence of functionality/calls through _Chirp!_
 With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
 
 Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)
 
-![Sequence diagram functionality/calls through _Chirp!_](images/Sequence.drawio.png)
+![Sequence diagram functionality/calls through _Chirp!_](images/Sequence.drawio%20(3).png)
 
 # Process
 
@@ -52,11 +50,19 @@ Describe the illustration briefly, i.e., how your application is built, tested, 
 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
 
-**Picture of Kanban board at hand-in**, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
+**PICTURE OF KANBAN BOARD AT HAND-IN**
 
 ![Development Workflow](images/WorkflowDiagram.png)
 
-The above diagram shows our development process, all the way from creating issues until merging into main. Furthermore, our GitHub Actions workflows run all of the application's tests on every commit and pull request.
+The above diagram shows our flow of activities, all the way from creating issues until merging into main.  
+For each issue, the assigned person(s) would create a new branch, frequently committing during development. When the acceptance criteria and definition of done were met, a pull request would be created.  
+Merging into main was blocked until approved. As such, the branch would be merged into main upon approval from one or more peers.  
+
+We have also used GitHub Actions to auto-move issues in two cases:
+ - From ‘Todo’ to ‘In Progress’ when an issue is assigned to a user.
+ - From ‘In Progress’ to ‘Done’ when an issue is closed.
+
+Furthermore, our GitHub Actions workflows run all of the application's tests on every commit as well as pull requests.  
 
 ## How to make _Chirp!_ work locally
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
@@ -170,4 +176,10 @@ The result of the command should be 6 passed tests
 We decided to go with the MIT License because it's simple and developer friendly. It gives others the freedom to use, modify, and share our code. At the same time, it requires people to give credit to us as the original creators. The license also keeps things straightforward by not holding us responsible for how others use the app. More importantly the license also has low amount of constrictions on our code. 
 
 ## LLMs, ChatGPT, CoPilot, and others
-<!State which LLM(s) were used during development of your project. In case you were not using any, just state so. In case you were using an LLM to support your development, briefly describe when and how it was applied. Reflect in writing to which degree the responses of the LLM were helpful. Discuss briefly if application of LLMs sped up your development or if the contrary was the case.>
+State which LLM(s) were used during development of your project. In case you were not using any, just state so. In case you were using an LLM to support your development, briefly describe when and how it was applied. Reflect in writing to which degree the responses of the LLM were helpful. Discuss briefly if application of LLMs sped up your development or if the contrary was the case.
+
+
+We have primarily used ChatGPT as a tool for knowledge exchange and to assist in debugging code. When a concept has been challenging to understand, the tool has been utilized as a consultant to help clarify and deepen our understanding. In certain cases, the tool has contributed directly to the generation of code that was integrated into the codebase. When this has occurred, ChatGPT has been acknowledged as a co-author either within the source code itself or in the associated commit messages, or both
+
+—Co-Authored-by: ChatGPT (remember to delete this bad joke)
+
