@@ -5,7 +5,7 @@
     Layout = "Shared/_Layout";
 
     int pageSize = 32;
-    int currentPage = string.IsNullOrEmpty(Request.Query["page"]) ? 1 : int.Parse(Request.Query["page"]);
+    int currentPage = string.IsNullOrEmpty(Request.Query["page"]) ? 1 : int.TryParse(Request.Query["page"], out var parsedPage) ? parsedPage : 1;
     var cheeps = Model.Cheeps;
     int totalCheeps = cheeps.Count;
     var routeName = HttpContext.GetRouteValue("author");
