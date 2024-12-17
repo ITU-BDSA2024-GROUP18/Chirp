@@ -49,9 +49,10 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
         {
             if (email == null)
             {
-                return RedirectToPage("/Index");
+                return LocalRedirect("/Index");
             }
             returnUrl = returnUrl ?? Url.Content("~/");
+
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)

@@ -45,7 +45,7 @@ namespace PlaywrightTests
             {
                 if (!string.IsNullOrEmpty(args.Data))
                 {
-                    Console.WriteLine(args.Data);
+                    //Console.WriteLine(args.Data); Uncomment this line for debugging of Playwright tests!
 
                     if (args.Data.Contains("Now listening on") || args.Data.Contains("Application started"))
                     {

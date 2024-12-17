@@ -1,9 +1,9 @@
-using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Data;
 using Chirp.Infrastructure.Repositories;
 using Chirp.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Entities;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,15 +13,18 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 builder.Services.AddDbContext<ChirpDBContext>(options => options.UseSqlite(connectionString, b => b.MigrationsAssembly("Chirp.Web")));
 
 builder.Services.AddDefaultIdentity<Author>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
+    options.User.RequireUniqueEmail = true)
     .AddEntityFrameworkStores<ChirpDBContext>();
 
 
 builder.Services.AddRazorPages();
-// Register the service
+// Register the services
 builder.Services.AddScoped<ICheepService, CheepService>();
-// Register the Repository
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
+// Register the repositories
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 builder.Services.AddAuthentication(options => { })
     .AddGitHub(o =>
@@ -29,9 +32,9 @@ builder.Services.AddAuthentication(options => { })
         // Use different secrets based on the environment
         if (builder.Environment.IsDevelopment())
         {
-            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ?? 
+            o.ClientId = builder.Configuration["authentication:github:clientId:local"] ??
                          throw new ArgumentException("GitHub ClientId for local dev not provided.");
-            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ?? 
+            o.ClientSecret = builder.Configuration["authentication:github:clientSecret:local"] ??
                              throw new ArgumentException("GitHub ClientSecret for local dev not provided.");
         }
         else
@@ -45,15 +48,21 @@ builder.Services.AddAuthentication(options => { })
         }
 
         o.CallbackPath = "/signin-github";
+
+        o.Scope.Add("user:email");
+        o.Scope.Add("read:user");
     });
 
-builder.WebHost.ConfigureKestrel(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.ListenLocalhost(5001, listenOptions =>
+    builder.WebHost.ConfigureKestrel(options =>
     {
-        listenOptions.UseHttps(); // Enable HTTPS on port 5001
+        options.ListenLocalhost(5001, listenOptions =>
+        {
+            listenOptions.UseHttps(); // Enable HTTPS on port 5001
+        });
     });
-});
+}
 
 
 var app = builder.Build();

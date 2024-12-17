@@ -1,0 +1,32 @@
+@page
+@model Chirp.Web.Areas.Identity.Pages.Account.ExternalLoginModel;
+@using Microsoft.AspNetCore.Identity;
+@using Chirp.Core.Entities;
+@inject SignInManager<Author> SignInManager;
+@inject UserManager<Author> UserManager;
+@{
+    ViewData["Title"] = "Registration error";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        </form>
+    </div>
+</div>
+
+
+<p id="external-login-description" class="text-info">
+    Registration with your <strong>@Model.ProviderDisplayName</strong> account failed.
+    Please try to register with a different account.
+</p>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

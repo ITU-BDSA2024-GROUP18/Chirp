@@ -6,8 +6,8 @@ using Chirp.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Chirp.Infrastructure.Repositories;
-using Chirp.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Infrastructure.Services;
 
 namespace Chirp.Web.Areas.Identity.Pages.Account
 {
@@ -15,12 +15,13 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
     public class AboutMeModel : PageModel
     {
         private readonly ChirpDBContext _dbContext;
-        private readonly ICheepRepository _cheepRepository;
+        private readonly IAuthorService _AuthorService;
 
-        public AboutMeModel(ChirpDBContext dbContext, ICheepRepository cheepRepository)
+
+        public AboutMeModel(ChirpDBContext dbContext, IAuthorService authorService)
         {
             _dbContext = dbContext;
-            _cheepRepository = cheepRepository;
+            _AuthorService = authorService;
         }
 
         public string? UserName { get; set; }
@@ -45,7 +46,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             UserCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
 
             // Get following list 
-            Following = await _cheepRepository.GetFollowedUsers(userId);
+            Following = await _AuthorService.GetFollowedUsers(userId);
         }
 
         public async Task<IActionResult> OnPostForgetMeAsync()
@@ -55,14 +56,14 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
             // Fetch the user from db
             var user = await _dbContext.Authors
-                .Include(a => a.Follows) 
+                .Include(a => a.Follows)
                 .FirstOrDefaultAsync(a => a.Id == userId);
             if (user == null) return NotFound();
 
             // Remove entries where the user is a follower
             if (user.Follows != null && user.Follows.Any())
             {
-                _dbContext.Entry(user).Collection(u => u.Follows).Load(); 
+                _dbContext.Entry(user).Collection(u => u.Follows).Load();
                 user.Follows.Clear(); // Remove all follows
             }
 

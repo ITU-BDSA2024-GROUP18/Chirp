@@ -16,16 +16,14 @@ Context.Request.Path.Equals("/")))
 {
 
     <div class="cheepbox">
-    <h3>What's on your mind @(User.Identity?.Name)</h3>
-    <form method="post">
-        <input type="text" asp-for="CheepText" id="cheepTextInput">
-        <span asp-validation-for="CheepText" class="text-danger"></span>
-        <p id="charCount" class="text-muted">160 characters remaining</p>
-        <input type="submit" value="Share">
-
-
-    </form>
-</div>
+        <h3>What's on your mind @(User.Identity?.Name)</h3>
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="text" asp-for="CheepText" id="cheepTextInput">
+            <p id="charCount" class="text-muted">160 characters remaining</p>
+            <input type="submit" value="Share">
+        </form>
+    </div>
 
 }
 
