@@ -61,33 +61,106 @@ The above diagram shows our development process, all the way from creating issue
 ## How to make _Chirp!_ work locally
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
 
-Here's a guide on how to make _Chirp!_ work locally:
+### Here's a guide on how to make _Chirp!_ work locally:
 
-Step 1:
+**Step 1:**
 
 Clone the project into a desired folder via the terminal:
-  ```
+
+  ``` sh
   git clone https://github.com/ITU-BDSA2024-GROUP18/Chirp.git
   ```
 
-Step 2:
+**Step 2:**
 
+Switch to Chirp directory
 
+  ``` sh
+  cd Chirp
+  ```
+
+**Step 3:**
+
+In order to run the application with Github oAuth working, Github secrets are required. They are added as such:
+
+  ```sh
+  dotnet user-secrets set "authentication:github:clientId:local" "<Local Github client Id>"
+  dotnet user-secrets set "authentication:github:clientSecret:local" "<Local Github client Secret>"
+  ```
+
+**Step 4:**
+
+Switch to the Chirp.Web folder:
+
+  ``` sh
+  cd src/Chirp.Web
+  ```
+
+**Step 5:**
+
+The application can now be run via the command:
+
+  ``` sh
+  dotnet run
+  ```
+
+The command will build the application and can be accessed via https://localhost:5001/ (While the application is running locally)
 
 ## How to run test suite locally
 <!List all necessary steps that Adrian or Helge have to perform to execute your test suites. Here, you can assume that we already cloned your repository in the step above.
 
-Briefly describe what kinds of tests you have in your test suites and what they are testing.>
+Briefly describe what kinds of tests you have in your test suites and what they are testing.
 
-Maybe include image of test coverage here
+Maybe include image of test coverage here>
 
-Here's a guide on how to run the test suite for _Chirp!_:
+### Here's a guide on how to run the test suite for _Chirp!_:
+The unit and integration tests are in the RazorApp.Tests folder while the UI tests are in the PlaywrightTests folder. 
 
-If you haven't already cloned the project look at step 1 in the section above
+#### Unit & integration tests
 
-Step 1:
+**Step 1:**
 
+Switch to the RazorApp.Tests folder (From the root of the project):
+  ``` sh
+  cd test/PlaywrightTests
+  ```
 
+**Step 2:**
+
+Simply run the following command to run the tests
+  ``` sh
+  dotnet test
+  ```
+The test will now be run and they will show that all 21 tests are passing
+
+These tests are testing the database, repository, and API layers. They check that data operations (adding, querying, and retrieving authors and cheeps) are accurate, business logic behaves correctly, and API endpoints return the expected responses. Edge cases, such as missing data or empty results, are also tested to ensure robustness.
+
+#### UI tests
+
+**Step 1:**
+
+In order to run the Playwright UI tests, first run the following command to install the required browsers for Playwright:
+
+  ``` sh
+  pwsh test/PlaywrightTests/bin/Debug/net8.0/playwright.ps1 install
+  ```
+
+**Step 2:**
+
+Now switch to the following directory (From root of project):
+
+  ``` sh
+  cd test/PlaywrightTests
+  ```
+
+**Step 3:**
+
+You can now run the tests (Very important that no instance of Chirp is running locally):
+
+  ``` sh
+  dotnet test
+  ```
+The result of the command should be 6 passed tests
 
 # Ethics
 
