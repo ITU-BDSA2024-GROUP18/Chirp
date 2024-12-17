@@ -12,9 +12,6 @@ numbersections: true
 # Design and Architecture of _Chirp!_
 
 ## Domain model
-<!Provide an illustration of your domain model. Make sure that it is correct and complete. In case you are using ASP.NET Identity, make sure to illustrate that accordingly.>
-
-Here comes a description of our domain model.
 
 ![Domain Model Class Diagram](images/DomainModelClassDiagram.png)
 
@@ -27,11 +24,12 @@ Illustrate the architecture of your deployed application. Remember, you develope
 ![Component diagram for architecture of deployed app](images/component%20diagram-Page-1.jpg)
 
 ## User activities
-<!Illustrate typical scenarios of a user journey through your Chirp! application. That is, start illustrating the first page that is presented to a non-authorized user, illustrate what a non-authorized user can do with your Chirp! application, and finally illustrate what a user can do after authentication.
-
-Make sure that the illustrations are in line with the actual behavior of your application.>
 
 ![ActivityDiagram](images/ActivityDiagram.png)
+
+This activity diagram shows a typical user journey through the Chirp! application.  
+A non-authorized user only has the options to view the public timeline, view user’s with cheeps’ timelines or login/register.  
+For the sake of simplicity, the activity diagram does not show every possibility a user has at every given stage. When authorized, it is possible to navigate between public timeline, private timeline, about me and logout at all times through the navigation bar at the top of the page. It is also possible to follow users from their private timelines.  
 
 ## Sequence of functionality/calls through _Chirp!_
 With a UML sequence diagram, illustrate the flow of messages and data through your Chirp! application. Start with an HTTP request that is send by an unauthorized user to the root endpoint of your application and end with the completely rendered web-page that is returned to the user.
@@ -52,7 +50,7 @@ Describe the illustration briefly, i.e., how your application is built, tested, 
 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
 
-**Picture of Kanban board at hand-in**, flow of activities (creating issues, assigning, branching out, developing, continuous commits, creating PR’s, reviewing, merging)
+**PICTURE OF KANBAN BOARD AT HAND-IN**
 
 ![Development Workflow](images/WorkflowDiagram.png)
 
@@ -87,7 +85,8 @@ Step 2:
 
 Briefly describe what kinds of tests you have in your test suites and what they are testing.>
 
-Maybe include image of test coverage here
+**IMAGE OF TEST COVERAGE!**
+
 
 Here's a guide on how to run the test suite for _Chirp!_:
 
@@ -96,6 +95,14 @@ If you haven't already cloned the project look at step 1 in the section above
 Step 1:
 
 
+
+We have unit tests that test individual methods. These tests cover nearly all lines of code in Chirp.Core and Chirp.Infrastructure.  
+The unit tests assure that our service and repository methods work as intended.
+
+**IMAGE OF TEST COVERAGE!**
+
+Additionally, we have a number of PlayWright tests for End-to-End testing.  
+These tests ...  
 
 # Ethics
 
