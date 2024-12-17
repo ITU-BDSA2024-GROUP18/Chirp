@@ -21,7 +21,7 @@ numbersections: true
 ## Architecture of deployed application
 Illustrate the architecture of your deployed application. Remember, you developed a client-server application. Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
-![Component diagram for architecture of deployed app](images/component%20diagram-Page-1.jpg)
+![Deployment diagram for architecture of deployed app](images/Deployment.drawio%20(1).png)
 
 ## User activities
 
