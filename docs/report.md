@@ -128,7 +128,7 @@ The unit and integration tests are in the RazorApp.Tests folder while the UI tes
 
 Switch to the RazorApp.Tests folder (From the root of the project):
   ``` sh
-  cd test/PlaywrightTests
+  cd test/RazorApp.Tests
   ```
 
 **Step 2:**
@@ -137,7 +137,7 @@ Simply run the following command to run the tests
   ``` sh
   dotnet test
   ```
-The test will now be run and they will show that all 21 tests are passing
+The test will now be run and they will show that all 27 tests are passing
 
 These tests are testing the database, repository, and API layers. They check that data operations (adding, querying, and retrieving authors and cheeps) are accurate, business logic behaves correctly, and API endpoints return the expected responses. Edge cases, such as missing data or empty results, are also tested to ensure robustness.
 
@@ -166,7 +166,7 @@ You can now run the tests (Very important that no instance of Chirp is running l
   ``` sh
   dotnet test
   ```
-The result of the command should be 6 passed tests
+The result of the command should be 11 passed tests. These tests test workflows like user registration, login, cheep creation, and deletion, ensuring the UI updates appropriately and data reflects accurately. The tests also test for edge cases, such as input limits, pagination, follow/unfollow functionality, and XSS prevention.
 
 # Ethics
 
