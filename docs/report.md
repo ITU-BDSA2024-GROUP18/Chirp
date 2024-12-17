@@ -56,7 +56,15 @@ Briefly describe and illustrate the flow of activities that happen from the new 
 
 ![Development Workflow](images/WorkflowDiagram.png)
 
-The above diagram shows our development process, all the way from creating issues until merging into main. Furthermore, our GitHub Actions workflows run all of the application's tests on every commit and pull request.
+The above diagram shows our flow of activities, all the way from creating issues until merging into main.  
+For each issue, the assigned person(s) would create a new branch, frequently committing during development. When the acceptance criteria and definition of done were met, a pull request would be created.  
+Merging into main was blocked until approved. As such, the branch would be merged into main upon approval from one or more peers.  
+
+We have also used GitHub Actions to auto-move issues in two cases:
+ - From ‘Todo’ to ‘In Progress’ when an issue is assigned to a user.
+ - From ‘In Progress’ to ‘Done’ when an issue is closed.
+
+Furthermore, our GitHub Actions workflows run all of the application's tests on every commit as well as pull requests.  
 
 ## How to make _Chirp!_ work locally
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
