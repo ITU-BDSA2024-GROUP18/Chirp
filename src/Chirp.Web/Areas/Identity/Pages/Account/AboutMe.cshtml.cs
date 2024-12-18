@@ -9,89 +9,112 @@ using Chirp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure.Services;
 
-namespace Chirp.Web.Areas.Identity.Pages.Account
+namespace Chirp.Web.Areas.Identity.Pages.Account;
+
+/// <summary>
+/// PageModel for the "About Me" page, managing user profile and account operations.
+/// </summary>
+[Authorize]
+public class AboutMeModel : PageModel
 {
-    [Authorize]
-    public class AboutMeModel : PageModel
+    private readonly ChirpDBContext _dbContext;
+    private readonly IAuthorService _AuthorService;
+
+    /// <summary>
+    /// Initializes a new instance of the AboutMeModel with database and author services.
+    /// </summary>
+    /// <param name="dbContext">The database context to use.</param>
+    /// <param name="authorService">The service for author-related operations.</param>
+    public AboutMeModel(ChirpDBContext dbContext, IAuthorService authorService)
     {
-        private readonly ChirpDBContext _dbContext;
-        private readonly IAuthorService _AuthorService;
+        _dbContext = dbContext;
+        _AuthorService = authorService;
+    }
 
+    /// <summary>
+    /// The username of the current user.
+    /// </summary>
+    public string? UserName { get; set; }
 
-        public AboutMeModel(ChirpDBContext dbContext, IAuthorService authorService)
+    /// <summary>
+    /// The email address of the current user.
+    /// </summary>
+    public string? Email { get; set; }
+
+    /// <summary>
+    /// List of Cheeps posted by the current user.
+    /// </summary>
+    public List<Cheep> UserCheeps { get; set; } = new();
+
+    /// <summary>
+    /// List of usernames the current user is following.
+    /// </summary>
+    public List<string> Following { get; set; } = new();
+
+    /// <summary>
+    /// Handles the GET request to populate the "About Me" page with user data.
+    /// </summary>
+    public async Task OnGetAsync()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId)) return;
+
+        // Fetch user data
+        var user = await _dbContext.Users.FindAsync(userId);
+        if (user != null)
         {
-            _dbContext = dbContext;
-            _AuthorService = authorService;
+            UserName = user.UserName;
+            Email = user.Email;
         }
 
-        public string? UserName { get; set; }
-        public string? Email { get; set; }
-        public List<Cheep> UserCheeps { get; set; } = new();
-        public List<string> Following { get; set; } = new();
+        // Fetch cheeps posted by user
+        UserCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
 
-        public async Task OnGetAsync()
+        // Fetch the list of users being followed
+        Following = await _AuthorService.GetFollowedUsers(userId);
+    }
+
+    /// <summary>
+    /// Handles the POST request to remove all user data ("Forget Me" operation).
+    /// </summary>
+    /// <returns>An IActionResult indicating the result of the operation.</returns>
+    public async Task<IActionResult> OnPostForgetMeAsync()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId)) return BadRequest();
+
+        // Fetch the user and related data
+        var user = await _dbContext.Authors
+            .Include(a => a.Follows)
+            .FirstOrDefaultAsync(a => a.Id == userId);
+        if (user == null) return NotFound();
+
+        // Remove follow relationships
+        if (user.Follows != null && user.Follows.Any())
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return;
-
-            // Get user data
-            var user = await _dbContext.Users.FindAsync(userId);
-            if (user != null)
-            {
-                UserName = user.UserName;
-                Email = user.Email;
-            }
-
-            // Get cheeps posted by user
-            UserCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
-
-            // Get following list 
-            Following = await _AuthorService.GetFollowedUsers(userId);
+            _dbContext.Entry(user).Collection(u => u.Follows).Load();
+            user.Follows.Clear();
         }
 
-        public async Task<IActionResult> OnPostForgetMeAsync()
+        var followers = await _dbContext.Authors
+            .Where(a => a.Follows.Contains(user))
+            .ToListAsync();
+
+        foreach (var follower in followers)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId)) return BadRequest();
-
-            // Fetch the user from db
-            var user = await _dbContext.Authors
-                .Include(a => a.Follows)
-                .FirstOrDefaultAsync(a => a.Id == userId);
-            if (user == null) return NotFound();
-
-            // Remove entries where the user is a follower
-            if (user.Follows != null && user.Follows.Any())
-            {
-                _dbContext.Entry(user).Collection(u => u.Follows).Load();
-                user.Follows.Clear(); // Remove all follows
-            }
-
-            // Remove entries where the user is being followed
-            var followers = await _dbContext.Authors
-                .Where(a => a.Follows.Contains(user))
-                .ToListAsync();
-
-            foreach (var follower in followers)
-            {
-                follower.Follows.Remove(user); // Remove the user from others' follows
-            }
-
-            // Delete user's cheeps
-            var userCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
-            _dbContext.Cheeps.RemoveRange(userCheeps);
-
-            // Delete the user account
-            _dbContext.Authors.Remove(user);
-
-            // Save changes
-            await _dbContext.SaveChangesAsync();
-
-            // Log the user out
-            await HttpContext.SignOutAsync();
-
-            // Redirect to Public Timeline
-            return RedirectToPage("/Account/Logout", new { area = "Identity", returnUrl = "/" });
+            follower.Follows.Remove(user);
         }
+
+        // Delete user's cheeps and account
+        var userCheeps = _dbContext.Cheeps.Where(c => c.AuthorId == userId).ToList();
+        _dbContext.Cheeps.RemoveRange(userCheeps);
+        _dbContext.Authors.Remove(user);
+
+        // Save changes and sign out
+        await _dbContext.SaveChangesAsync();
+        await HttpContext.SignOutAsync();
+
+        // Redirect to the logout page
+        return RedirectToPage("/Account/Logout", new { area = "Identity", returnUrl = "/" });
     }
 }
