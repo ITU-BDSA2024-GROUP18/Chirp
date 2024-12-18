@@ -108,6 +108,7 @@ Furthermore, our GitHub Actions workflows run all of the application's tests on 
 <!There has to be some documentation on how to come from cloning your project to a running system. That is, Adrian or Helge have to know precisely what to do in which order. Likely, it is best to describe how we clone your project, which commands we have to execute, and what we are supposed to see then.>
 
 ### Here's a guide on how to make _Chirp!_ work locally:
+_Note: This project uses .Net 8_
 
 **Step 1:**
 
@@ -159,6 +160,8 @@ _Note:_ When opening the link you might encounter an error telling you that the 
   ```
 
 ## How to run test suite locally
+_Note: This project uses .Net 8_
+
 <!List all necessary steps that Adrian or Helge have to perform to execute your test suites. Here, you can assume that we already cloned your repository in the step above.
 
 Briefly describe what kinds of tests you have in your test suites and what they are testing.
