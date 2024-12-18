@@ -230,4 +230,3 @@ We have primarily used ChatGPT as a tool for knowledge gathering and to assist i
 The answers we received were mostly helpful and accelerated our process. ChatGPT was helpful in understanding new topics and technologies. While it made occasional mistakes in debugging and code generation, these were usually easy to spot and correct.
 
 Co-authored-by: ChatGPT (remember to delete this bad joke)
-
