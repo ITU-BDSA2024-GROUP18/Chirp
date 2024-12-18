@@ -53,14 +53,14 @@ When an instance of CheepRepository invokes method ReadPublicTimeline() it will 
 
 ## Wildstyle Features and Design Choices
 
-We added the option to delete cheeps as a wildstyle feature. 
+We added the option to delete cheeps as a wildstyle feature, as seen below.
 
 ![Delete Cheep](images/DeleteCheep.png)
 
 In regards to design choices, we have chosen to make users log in with their username instead of their e-mail.  
-Both usernames and e-mails are case-insensitive.
+Both usernames and e-mails are case-insensitive and must be unique.
 
-Furthermore, we have chosen to remove the e-mail confirmation step, since it was not user friendly and did not actually confirm the e-mail.
+Furthermore, we have chosen to remove the e-mail confirmation step, as it was not user friendly and did not actually confirm the e-mail.
 
 # Process
 
