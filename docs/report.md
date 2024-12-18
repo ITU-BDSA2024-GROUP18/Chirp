@@ -57,6 +57,10 @@ We added the option to delete cheeps as a wildstyle feature, as seen below.
 
 ![Delete Cheep](images/DeleteCheep.png)
 
+We also added pagination to the UI, so users can navigate between pages without having to alter the URL.
+
+![Pagination](images/Pagination.png)
+
 In regards to design choices, we have chosen to make users log in with their username instead of their e-mail.  
 Both usernames and e-mails are case-insensitive and must be unique.
 
