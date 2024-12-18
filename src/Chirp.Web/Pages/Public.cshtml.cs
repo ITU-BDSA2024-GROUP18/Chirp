@@ -15,8 +15,8 @@ namespace Chirp.Web.Pages;
 /// </summary>
 public class PublicModel : PageModel
 {
-    private readonly ICheepService _CheepService;
-    private readonly IAuthorService _AuthorService;
+    public ICheepService _CheepService;
+    public IAuthorService _AuthorService;
 
     /// <summary>
     /// List of Cheeps displayed on the public timeline.
