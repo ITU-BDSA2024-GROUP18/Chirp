@@ -42,6 +42,7 @@ Make sure that your illustration is complete. That is, likely for many of you th
 
 ## Build, test, release, and deployment
 <!Illustrate with a UML activity diagram how your Chirp! applications are build, tested, released, and deployed. That is, illustrate the flow of activities in your respective GitHub Actions workflows.
+Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.>
 
 [UML activity diagram here]
 
@@ -59,7 +60,7 @@ After a successful deployment, the process ends.
 
 
 
-Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.>
+
 
 ## Team Work
 <!Show a screenshot of your project board right before hand-in. Briefly describe which tasks are still unresolved, i.e., which features are missing from your applications or which functionality is incomplete.
