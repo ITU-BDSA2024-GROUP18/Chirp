@@ -71,7 +71,9 @@ After a successful deployment, the process ends.
 
 Briefly describe and illustrate the flow of activities that happen from the new creation of an issue (task description), over development, etc. until a feature is finally merged into the main branch of your repository.>
 
-**PICTURE OF KANBAN BOARD AT HAND-IN**
+![Kanban Board](images/Kanban_18-12-24.png)
+
+We had two open issues at the time of hand-in, none of which were direct requirements.
 
 ![Development Workflow](images/WorkflowDiagram.png)
 
