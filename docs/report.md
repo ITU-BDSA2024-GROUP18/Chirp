@@ -35,7 +35,7 @@ The diagram illustrates the architecture of our deployed application. The Chirp 
 ![ActivityDiagram](images/ActivityDiagram.png)
 
 This activity diagram shows a typical user journey through the Chirp! application.  
-A non-authorized user only has the options to view the public timeline, view user’s with cheeps’ timelines or login/register.  
+A non-authorized user only has the option to view the public timeline, view users with cheeps’ timelines, or login/register.  
 For the sake of simplicity, the activity diagram does not show every possibility a user has at every given stage. When authorized, it is possible to navigate between public timeline, private timeline, about me and logout at all times through the navigation bar at the top of the page. It is also possible to follow users from their private timelines.  
 
 ## Sequence of functionality/calls through _Chirp!_
@@ -49,6 +49,19 @@ When an instance of CheepRepository invokes method ReadPublicTimeline() it will 
 
 
 ![Sequence diagram functionality/calls through _Chirp!_](images/Sequence.drawio%20(3).png)
+
+
+
+## Wildstyle Features and Design Choices
+
+We added the option to delete cheeps as a wildstyle feature. 
+
+![Delete Cheep](images/DeleteCheep.png)
+
+In regards to design choices, we have chosen to make users log in with their username instead of their e-mail.  
+Both usernames and e-mails are case-insensitive.
+
+Furthermore, we have chosen to remove the e-mail confirmation step, since it was not user friendly and did not actually confirm the e-mail.
 
 # Process
 
@@ -69,9 +82,6 @@ A tag is manually created on the latest commit of the main branch. When pushed, 
 On success, the Linux release is automatically deployed to Azure. If the deployment fails, the workflow and Azure setting are reviewed and fixed.
 
 After a successful deployment, the process ends.
-
-
-
 
 
 ## Team Work
@@ -142,6 +152,12 @@ The application can now be run via the command:
   ```
 
 The command will build the application and can be accessed via https://localhost:5001/ (While the application is running locally)
+
+_Note:_ When opening the link you might encounter an error telling you that the website is unsafe and not trusted, to solve this, you need a localhost certificate, this can be achieved by the following command:
+
+  ``` sh
+  dotnet dev-certs https --trust
+  ```
 
 ## How to run test suite locally
 <!List all necessary steps that Adrian or Helge have to perform to execute your test suites. Here, you can assume that we already cloned your repository in the step above.
