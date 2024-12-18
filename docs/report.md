@@ -18,6 +18,10 @@ numbersections: true
 ## Architecture — In the small
 <!Illustrate the organization of your code base. That is, illustrate which layers exist in your (onion) architecture. Make sure to illustrate which part of your code is residing in which layer.>
 
+Below is our Onion Architecture diagram where Chirp.Core contains entities and DTOs, while repositories interact with these core entities to abstract data access. The Services layer provides business logic and interacts with repositories, and the outermost Chirp.Web layer handles the user interface through page models and Razor pages. At the bottom, Chirp.Infrastructure supports repositories and services. Arrows indicate dependency flow, emphasizing clean separation of concerns.
+
+![Onion Architecture Diagram](images/OnionArchitecture.png)
+
 ## Architecture of deployed application
 Illustrate the architecture of your deployed application. Remember, you developed a client-server application. Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
