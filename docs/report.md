@@ -73,7 +73,7 @@ Since both usernames and e-mails are unique, you will not be able to register a 
 
 ## Build, test, release, and deployment
 
-![Build and Test Workflow](images/build_and_test.png) ![Release Workflow](images/release.png)
+![Build and Test Workflow](images/build_and_test.png){ width=25% } ![Release Workflow](images/release.png){ width=25% }
 
 The "build and test" workflow tries to build the application and, if built successfully, tests it. Both occur in an isolated environment.  
 The workflow is triggered on every push and pull request for all branches.
@@ -95,6 +95,7 @@ For each issue, the assigned person(s) would create a new branch, frequently com
 Merging into main was blocked until approved. As such, the branch would be merged into main upon approval from one or more peers.  
 
 We have also used GitHub Actions to auto-move issues in two cases:
+
  - From ‘Todo’ to ‘In Progress’ when an issue is assigned to a user.
  - From ‘In Progress’ to ‘Done’ when an issue is closed.
 
