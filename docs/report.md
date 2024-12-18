@@ -25,10 +25,11 @@ Below is our Onion Architecture diagram where Chirp.Core contains entities and D
 ## Architecture of deployed application
 Illustrate the architecture of your deployed application. Remember, you developed a client-server application. Illustrate the server component and to where it is deployed, illustrate a client component, and show how these communicate with each other.
 
-The diagram illustrates the architecture of our deployed application. The Chirp web application is hosted on Azure Web App Service. While only the web server Chirp.Web is deployed to Azure, the internal structure is included to highlight key dependencies. Clients communicate with the Chirp web server via HTTPS, which interacts with the GitHub web server for OAuth-based authorization
-
+The diagram illustrates the architecture of our deployed application.
 
 ![Deployment diagram for architecture of deployed app](images/DeploymentArchitecture.drawio.png)
+
+The Chirp web application is hosted on Azure WebApp Service. Although only the Chirp.Web server is deployed to Azure, the internal structure is included to highlight key dependencies. Clients communicate with the Chirp web server via HTTPS. The web server communicates withthe GitHub web server for oAuth authorization.
 
 ## User activities
 
@@ -43,13 +44,11 @@ With a UML sequence diagram, illustrate the flow of messages and data through yo
 
 Make sure that your illustration is complete. That is, likely for many of you there will be different kinds of "calls" and responses. Some HTTP calls and responses, some calls and responses in C# and likely some more. (Note the previous sentence is vague on purpose. I want that you create a complete illustration.)
 
-Sequence diagram illustrating the flow of messages and data through Chirp! application, when an non-authorized user sends a HTTPS request to the root endpoint of our application. 
-
-When an instance of CheepRepository invokes method ReadPublicTimeline() it will Query the database. Our application uses LINQ and Ef Core, which translates the query into SQL, and maps the result of the query to Cheep objects.
-
+Sequence diagram illustrating the flow of messages and data through Chirp! application, when an unauthorized user sends a HTTPS request to the root endpoint of our application.
 
 ![Sequence diagram functionality/calls through _Chirp!_](images/Sequence.drawio%20(3).png)
 
+When an instance of CheepRepository invokes method ReadPublicTimeline() it will Query the database. Our application uses LINQ and Ef Core, which translates the query into SQL, and maps the result of the query to Cheep objects.
 
 
 ## Wildstyle Features and Design Choices
