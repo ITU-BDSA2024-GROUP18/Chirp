@@ -190,6 +190,10 @@ The test will now be run and they will show that all 27 tests are passing
 
 These tests are testing the database, repository, and API layers. They check that data operations (adding, querying, and retrieving authors and cheeps) are accurate, business logic behaves correctly, and API endpoints return the expected responses. Edge cases, such as missing data or empty results, are also tested to ensure robustness.
 
+We have also used a Code Coverage tool called Coverlet to see how much of our codebase is being tested and ReportGenerator to turn the output of Coverlet into a html file to view.
+
+![Code Coverage report](images/CodeCoverage.png)
+
 #### UI tests
 
 **Step 1:**
