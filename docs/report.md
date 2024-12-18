@@ -73,19 +73,14 @@ Since both usernames and e-mails are unique, you will not be able to register a 
 
 ## Build, test, release, and deployment
 
-[UML activity diagram here]
+![Build and Test Workflow](images/build_and_test.png) ![Release Workflow](images/release.png)
 
-When an issue is resolved, a pull request is created. This triggers the "build and test" workflow, which tries to build the application and, if built successfully, test it. Both occur in an isolated environment.
+The "build and test" workflow tries to build the application and, if built successfully, tests it. Both occur in an isolated environment.  
+The workflow is triggered on every push and pull request for all branches.
 
-If the build or test fails, the application code and the workflow are reviewed, refactored and pushed to the branch, restarting the build and test process.
-
-On passing tests, the team considered whether solving this issue justifies a release. If not, another issue is addressed, otherwise the process continues.
-
-A tag is manually created on the latest commit of the main branch. When pushed, it triggers the "release" workflow. This workflow attempts to create a release for Windows, Mac and Linux respectively.
-
-On success, the Linux release is automatically deployed to Azure. If the deployment fails, the workflow and Azure setting are reviewed and fixed.
-
-After a successful deployment, the process ends.
+The "release" workflow attempts to create a release for Linux, Windows, and MacOS respectively.  
+It is triggered when a tag of format 'v.\*.\*' is pushed.  
+If successful, the Linux release is deployed to Azure.  
 
 ## Team Work
 
