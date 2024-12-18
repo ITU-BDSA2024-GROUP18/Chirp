@@ -1,6 +1,6 @@
 ---
 title: _Chirp!_ Project Report
-subtitle: ITU BDSA 2024 Group `<18>`
+subtitle: ITU BDSA 2024 Group `18`
 author:
 - "Anders Juul Ingerslev <aing@itu.dk>"
 - "Asger Ramlau Jørgensen <asjo@itu.dk>"
@@ -8,6 +8,7 @@ author:
 - "Omar Lukman Semou <omse@itu.dk>"
 numbersections: true
 ---
+\newpage
 
 # Design and Architecture of _Chirp!_
 
@@ -180,13 +181,15 @@ The unit and integration tests are in the RazorApp.Tests folder while the UI tes
 **Step 1:**
 
 Switch to the RazorApp.Tests folder (From the root of the project):
-  ``` sh
+
+  ```sh
   cd test/RazorApp.Tests
   ```
 
 **Step 2:**
 
 Simply run the following command to run the tests
+
   ``` sh
   dotnet test
   ```
