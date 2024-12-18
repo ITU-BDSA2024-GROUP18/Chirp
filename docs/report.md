@@ -7,6 +7,11 @@ author:
 - "Bruno Martinovic <brma@itu.dk>"
 - "Omar Lukman Semou <omse@itu.dk>"
 numbersections: true
+header-includes:
+  - \usepackage{float}
+  - \let\origfigure\figure
+  - \let\endorigfigure\endfigure
+  - \renewenvironment{figure}[1][H] {\origfigure[H]} {\endorigfigure}
 ---
 \newpage
 
@@ -20,7 +25,7 @@ numbersections: true
 
 Below is our Onion Architecture diagram where Chirp.Core contains entities and DTOs, while repositories interact with these core entities to abstract data access. The Services layer provides business logic and interacts with repositories, and the outermost Chirp.Web layer handles the user interface through page models and Razor pages. At the bottom, Chirp.Infrastructure supports repositories and services. Arrows indicate dependency flow, emphasizing clean separation of concerns.
 
-![Onion Architecture Diagram](images/OnionArchitecture.png)
+![Onion Architecture Diagram](images/OnionArchitecture.png){ width=75% }
 
 ## Architecture of deployed application
 
