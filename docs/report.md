@@ -43,6 +43,22 @@ Make sure that your illustration is complete. That is, likely for many of you th
 ## Build, test, release, and deployment
 <!Illustrate with a UML activity diagram how your Chirp! applications are build, tested, released, and deployed. That is, illustrate the flow of activities in your respective GitHub Actions workflows.
 
+[UML activity diagram here]
+
+When an issue is resolved, a pull request is created. This triggers the "build and test" workflow, which tries to build the application and, if built successfully, test it. Both occur in an isolated environment.
+
+If the build or test fails, the application code and the workflow are reviewed, refactored and pushed to the branch, restarting the build and test process.
+
+On passing tests, the team considered whether solving this issue justifies a release. If not, another issue is addressed, otherwise the process continues.
+
+A tag is manually created on the latest commit of the main branch. When pushed, it triggers the "release" workflow. This workflow attempts to create a release for Windows, Mac and Linux respectively.
+
+On success, the Linux release is automatically deployed to Azure. If the deployment fails, the workflow and Azure setting are reviewed and fixed.
+
+After a successful deployment, the process ends.
+
+
+
 Describe the illustration briefly, i.e., how your application is built, tested, released, and deployed.>
 
 ## Team Work
