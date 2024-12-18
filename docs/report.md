@@ -28,7 +28,7 @@ Illustrate the architecture of your deployed application. Remember, you develope
 The diagram illustrates the architecture of our deployed application. The Chirp web application is hosted on Azure Web App Service. While only the web server Chirp.Web is deployed to Azure, the internal structure is included to highlight key dependencies. Clients communicate with the Chirp web server via HTTPS, which interacts with the GitHub web server for OAuth-based authorization
 
 
-![Deployment diagram for architecture of deployed app](images/Deployment.drawio%20(1).png)
+![Deployment diagram for architecture of deployed app](images/DeploymentArchitecture.drawio.png)
 
 ## User activities
 
