@@ -135,6 +135,12 @@ The application can now be run via the command:
 
 The command will build the application and can be accessed via https://localhost:5001/ (While the application is running locally)
 
+_Note:_ When opening the link you might encounter an error telling you that the website is unsafe and not trusted, to solve this, you need a localhost certificate, this can be achieved by the following command:
+
+  ``` sh
+  dotnet dev-certs https --trust
+  ```
+
 ## How to run test suite locally
 <!List all necessary steps that Adrian or Helge have to perform to execute your test suites. Here, you can assume that we already cloned your repository in the step above.
 
