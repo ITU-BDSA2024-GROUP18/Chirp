@@ -161,7 +161,9 @@ _Note: This project uses .Net 8_
 ### Here's a guide on how to run the test suite for _Chirp!_:
 Our project has unit and integration tests in the RazorApp.Tests folder, while it has UI tests in the PlaywrightTests folder. 
 
-#### Unit & integration tests
+#### Unit & integration tests \newline 
+
+Below is a guide on how to run unit & integration tests.
 
 **Step 1:**
 
@@ -186,7 +188,9 @@ We have also used a Code Coverage tool called Coverlet to see how much of our co
 
 ![Code Coverage report](images/CodeCoverage.png)
 
-#### UI tests
+#### UI tests \newline
+
+Below is a guide on how to run the UI tests.
 
 **Step 1:**
 
