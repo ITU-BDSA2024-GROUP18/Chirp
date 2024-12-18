@@ -357,6 +357,4 @@ public class EndToEndTests : PageTest
 
         await Expect(_page.GetByRole(AriaRole.Link, new() { Name = "1" })).ToHaveClassAsync("active");
     }
-
-
 }
