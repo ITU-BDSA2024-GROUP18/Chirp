@@ -224,5 +224,3 @@ We decided to go with the MIT License because it is simple and developer friendl
 We have primarily used ChatGPT as a tool for knowledge gathering and to assist in debugging code. When a concept has been challenging to understand, the tool has been utilized as a consultant to help clarify and deepen our understanding. In certain cases, the tool has contributed directly to the generation of code that was integrated into the codebase. When this has occurred, ChatGPT has been acknowledged as a co-author either within the source code itself or in the associated commit messages, or both.
 
 The answers we received were mostly helpful and accelerated our process. ChatGPT was helpful in understanding new topics and technologies. While it made occasional mistakes in debugging and code generation, these were usually easy to spot and correct.
-
-Co-authored-by: ChatGPT (remember to delete this bad joke)
