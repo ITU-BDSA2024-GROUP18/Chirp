@@ -66,6 +66,9 @@ Both usernames and e-mails are case-insensitive and must be unique.
 
 Furthermore, we have chosen to remove the e-mail confirmation step, as it was not user friendly and did not actually confirm the e-mail.
 
+The users ‘Helge’ and ‘Adrian’ are created in the DbInitializer script with the e-mails ‘ropf@itu.dk’ and ‘adho@itu.dk’. As such, they do not have passwords, and can therefore not log in to the application.  
+Since both usernames and e-mails are unique, you will not be able to register a new user with any of these usernames/e-mails.
+
 # Process
 
 ## Build, test, release, and deployment
